@@ -13,10 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import rainbowplayer.Core.SongPlayer;
+import rainbowplayer.db.Database;
 
 public class FXMLDocumentController implements Initializable {
     
     private SongPlayer songPlayer;
+    private Database db;
     
     @FXML
     private Label titleLabel;

@@ -58,7 +58,9 @@ public class Database {
             try {
                 stmt = c.createStatement();
                 String sql = "CREATE TABLE IF NOT EXISTS TRACKS" +
-                        "(track_title TEXT NOT NULL," +
+                        "(track_id TEXT PRIMARY KEY NOT NULL," +
+                        "track_title TEXT NOT NULL," +
+                        "track_path TEXT NOT NULL," +
                         "track_artist TEXT NOT NULL, " +
                         "track_album TEXT NOT NULL, " +
                         "track_release_date TEXT NOT NULL, " +
@@ -116,5 +118,5 @@ public class Database {
                 System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
                 return null;
             }
-        }
+    }
 }

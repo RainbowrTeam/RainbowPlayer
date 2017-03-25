@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import rainbowplayer.Classes.Duration;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
 
@@ -94,11 +95,9 @@ public class FXMLDocumentController implements Initializable {
                 titleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
             artistLabel.setText(songPlayer.getPlayingTrack().getArtistName());
             
-            int remSeconds = songPlayer.getPlayingTrack().getRemainingSeconds();
-            int minutes = remSeconds/60;
-            int seconds = remSeconds - minutes*60;
+            Duration dur = songPlayer.getPlayingTrack().getRemainingDuration();
             
-            timeLabel.setText(minutes + ":" + seconds);
+            timeLabel.setText(dur.getMinutes() + ":" + dur.getSeconds());
         } else {
             titleLabel.setText("N/A");
             artistLabel.setText("N/A");

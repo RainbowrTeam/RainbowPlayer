@@ -13,7 +13,7 @@ public class Title {
     private String filePath;
     private String titleName;
     private String artistName;
-    private int duration;
+    int duration;
     
     public Title(String path, String tit, String art){
         this.filePath = path;

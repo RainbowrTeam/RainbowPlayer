@@ -14,20 +14,23 @@ public class LiveTrack extends Title {
     private boolean isPaused;
     private int remainingSeconds;
     
+    private Duration remainingDuration;
+    
     public LiveTrack(String path, String tit, String art) {
         super(path, tit, art);
+        remainingDuration = new Duration();
     }
     
     public void setRemainingSeconds(int sec) {
-        remainingSeconds = sec;
+        remainingDuration.setTotalSeconds(sec);
+    }
+    
+    public Duration getRemainingDuration(){
+        return remainingDuration;
     }
     
     public void setIsPaused(boolean paused) {
         isPaused = paused;
-    }
-    
-    public int getRemainingSeconds() {
-        return remainingSeconds;
     }
     
     public boolean getIsPaused() {

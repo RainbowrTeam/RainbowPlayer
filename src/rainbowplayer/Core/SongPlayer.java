@@ -5,7 +5,6 @@
  */
 package rainbowplayer.Core;
 
-import java.awt.event.ActionListener;
 import rainbowplayer.Classes.Title;
 import java.io.File;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import javafx.scene.media.MediaPlayer;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.event.ActionEvent;
 import rainbowplayer.Classes.LiveTrack;
 import rainbowplayer.FXMLDocumentController;
 
@@ -55,28 +53,28 @@ public class SongPlayer {
         stopPlayback();
         titleQueue = tQueue;
         isQueued = true;
-        playQueuedTitle(true, true);
+        playTitle(titleQueue.get(queuePosition));
     }
     
     /**
-     * Plays, skips and repeats the previous title depending on the action.
-     * @param skip Should be set to true when the title needs to be skipped.
-     * @param firstTitle Whether the title is the first in the queue. Only for the first time in the queue.
+     * Skips the currently playing track and plays the next in queue.
      */
-    private void playQueuedTitle(boolean skip, boolean firstTitle) {
-        if(titleQueue.size() > queuePosition && queuePosition >= 0) {
-            if(skip) {
-                if(!firstTitle)
-                    queuePosition++;
-                playTitle(titleQueue.get(queuePosition));
-            } else {
-                if(queuePosition != 0){
-                    queuePosition--;
-                    playTitle(titleQueue.get(queuePosition));
-                } else {
-                    stopPlayback();
-                }
-            }
+    private void skipTrack(){
+        if(titleQueue.size() > queuePosition + 1 && queuePosition >= 0) {
+            queuePosition++;
+            playTitle(titleQueue.get(queuePosition));
+        } else {
+            stopPlayback();
+        }
+    }
+    
+    /**
+     * Stops the currently playing track and reverts to the track before the current in the queue.
+     */
+    private void reverseTrack(){
+        if(queuePosition != 0){
+            queuePosition--;
+            playTitle(titleQueue.get(queuePosition));
         } else {
             stopPlayback();
         }
@@ -143,9 +141,6 @@ public class SongPlayer {
             if(songRemainingSeconds <= 0){
                 skipSong();
             }
-            
-            System.out.println("my time is now: " + songRemainingSeconds + " | " + currentTrack.getDuration());
-            // pInterface.updateInterface();
         }    
     }
     
@@ -197,7 +192,7 @@ public class SongPlayer {
      */
     public void skipSong() {
         if(isQueued){
-            playQueuedTitle(true, false);
+            skipTrack();
         }
     }
     
@@ -206,7 +201,7 @@ public class SongPlayer {
      */
     public void prevSong() {
         if(isQueued){
-            playQueuedTitle(false, false);
+            reverseTrack();
         }
     }
     

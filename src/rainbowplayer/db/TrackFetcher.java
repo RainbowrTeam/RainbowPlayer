@@ -19,6 +19,7 @@ public class TrackFetcher {
     /**
      * Fetch track information and create returnable Title/Track object
      * @param trackId
+     * @return status
      */
     public boolean retrieveTrack(String trackId){
         try {

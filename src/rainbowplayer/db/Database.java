@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -62,11 +58,14 @@ public class Database {
             try {
                 stmt = c.createStatement();
                 String sql = "CREATE TABLE IF NOT EXISTS TRACKS" +
-                        "(TRACK_TITLE TEXT NOT NULL," +
-                        "TRACK_ARTIST TEXT NOT NULL, " +
-                        "TRACK_ALBUM TEXT NOT NULL, " +
-                        "TRACK_RELEASE_DATE TEXT NOT NULL, " +
-                        "TRACK_GENRE TEXT NOT NULL)";
+                        "(track_id TEXT PRIMARY KEY NOT NULL," +
+                        "track_title TEXT NOT NULL," +
+                        "track_path TEXT NOT NULL," +
+                        "track_artist TEXT NOT NULL, " +
+                        "track_album TEXT NOT NULL, " +
+                        "track_release_date TEXT NOT NULL, " +
+                        "track_duration TEXT NOT NULL," +
+                        "track_genre TEXT NOT NULL)";
                 stmt.executeUpdate(sql);
                 stmt.close();
                 
@@ -83,7 +82,7 @@ public class Database {
     
     /**
      * Executes INSERT/UPDATE/DELETE/COUNT query 
-     * @param query
+     * @param query string
      * @return true/fals whether query was successful
      */
     public boolean execute_query(String query)
@@ -100,5 +99,24 @@ public class Database {
         }else{
             return false;
         }
+    }
+    
+    /**
+     * Executes SELECT query
+     * @param query string
+     * @return ResultSet
+     */
+    public ResultSet select_query(String query){
+        if(!connect()){
+            return null;
+        }
+         
+        try {
+                stmt = c.createStatement();
+                return stmt.executeQuery(query);
+            } catch (SQLException ex) {
+                System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
+                return null;
+            }
     }
 }

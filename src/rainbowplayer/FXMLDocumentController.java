@@ -5,6 +5,7 @@
  */
 package rainbowplayer;
 
+import java.io.File;
 import rainbowplayer.Classes.Title;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,9 +15,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
+import rainbowplayer.db.TrackFetcher;
+import rainbowplayer.db.TrackInsertion;
+import rainbowplayer.io.TrackImport;
 
 public class FXMLDocumentController implements Initializable {
     
@@ -76,6 +82,51 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handlePrevButtonAction(ActionEvent event) {
         songPlayer.prevSong();
+    }
+    
+    @FXML
+    private void handleImportButtonAction(ActionEvent event){
+        TrackImport tImport = new TrackImport();
+        switch(tImport.openSingleFileChooser()){
+            case "success":
+                File trackFile = tImport.getFile();
+                if(trackFile != null){
+                        //insert title into db
+                        Media tMedia = new Media(trackFile.toURI().toString());
+                        MediaPlayer mediaPlayer = new MediaPlayer(tMedia);
+                        mediaPlayer.setOnReady(()->{
+                            Title track = new Title(trackFile.getPath(),tMedia.getMetadata().get("title").toString(),tMedia.getMetadata().get("artist").toString());
+                        
+                            TrackInsertion tIns = new TrackInsertion();
+                            if(!tIns.insertTrack(track)){
+                              //could not insert track into db
+                            }
+                            
+                            //Feedback > returns inserted track
+                            TrackFetcher tFetch = new TrackFetcher();
+                            if(!tFetch.retrieveTrack(tIns.getTrackId())){
+                              //could not retrieve track from db
+                            }
+
+                            Title returnedTrack = tFetch.getTrack();
+                            System.out.println(returnedTrack.getFormattedTitle());
+                        
+                        });
+                      
+                }
+            break;
+            case "invalid":
+                    if(tImport.getFile() != null){
+                        System.out.println(tImport.getExtension(tImport.getFile()));
+                    }else{
+                        System.out.println("null");
+                    }
+                    System.out.println("Invalid file format. Supported file types are: .mp3 .wav");
+            break;
+            case "cancelled":
+                    System.out.println("No file selected.");
+            break;
+        }
     }
     
     @Override

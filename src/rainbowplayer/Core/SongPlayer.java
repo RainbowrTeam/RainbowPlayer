@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import rainbowplayer.Classes.LiveTrack;
+import rainbowplayer.FXMLDocumentController;
+
 /**
  *
  * @author Tim Weiß
@@ -18,6 +23,8 @@ import javafx.scene.media.MediaPlayer;
 public class SongPlayer {
  
     private MediaPlayer mediaPlayer;
+    
+    private LiveTrack currentTrack;
     private Title currentTitle;
     
     private boolean isPlaying;
@@ -25,10 +32,17 @@ public class SongPlayer {
     
     private int queuePosition = 0;
     
+    private Timer songTimer;
+    
     private ArrayList<Title> titleQueue;
     
-    public SongPlayer() {
+    // wee need this to update the interface
+    private final FXMLDocumentController pInterface;
+    
+    public SongPlayer(FXMLDocumentController interf) {
         titleQueue = new ArrayList<>();
+        // songTimer = new Timer();
+        pInterface = interf;
     }
     
     /**
@@ -39,28 +53,28 @@ public class SongPlayer {
         stopPlayback();
         titleQueue = tQueue;
         isQueued = true;
-        playQueuedTitle(true, true);
+        playTitle(titleQueue.get(queuePosition));
     }
     
     /**
-     * Plays, skips and repeats the previous title depending on the action.
-     * @param skip Should be set to true when the title needs to be skipped.
-     * @param firstTitle Wheter the title is the first in the queue. Only for the first time in the queue.
+     * Skips the currently playing track and plays the next in queue.
      */
-    private void playQueuedTitle(boolean skip, boolean firstTitle) {
-        if(titleQueue.size() > queuePosition && queuePosition >= 0) {
-            if(skip) {
-                if(!firstTitle)
-                    queuePosition++;
-                playTitle(titleQueue.get(queuePosition));
-            } else {
-                if(queuePosition != 0){
-                    queuePosition--;
-                    playTitle(titleQueue.get(queuePosition));
-                } else {
-                    stopPlayback();
-                }
-            }
+    private void skipTrack(){
+        if(titleQueue.size() > queuePosition + 1 && queuePosition >= 0) {
+            queuePosition++;
+            playTitle(titleQueue.get(queuePosition));
+        } else {
+            stopPlayback();
+        }
+    }
+    
+    /**
+     * Stops the currently playing track and reverts to the track before the current in the queue.
+     */
+    private void reverseTrack(){
+        if(queuePosition != 0){
+            queuePosition--;
+            playTitle(titleQueue.get(queuePosition));
         } else {
             stopPlayback();
         }
@@ -72,8 +86,9 @@ public class SongPlayer {
      */
     public void playTitle(Title title) {
         currentTitle = title;
+        currentTrack = new LiveTrack(title.getFilePath(), title.getTitleName(), title.getArtistName());
         
-        Media tMedia = new Media(new File(currentTitle.getFilePath()).toURI().toString());
+        Media tMedia = new Media(new File(currentTrack.getFilePath()).toURI().toString());
         
         if(mediaPlayer == null) {
             mediaPlayer = new MediaPlayer(tMedia);
@@ -84,6 +99,49 @@ public class SongPlayer {
         
         mediaPlayer.play();
         isPlaying = true;
+        currentTrack.setIsPaused(false);
+        
+        // we need to run the timer after the player loaded the song
+        mediaPlayer.setOnReady(() -> {
+            currentTrack.setDuration((int) tMedia.getDuration().toSeconds());
+            trackStarted();
+        });
+    }
+    
+    /**
+     * Starts the timer for continuous playback.
+     */
+    private void trackStarted() {
+        if(songTimer != null) {
+            songTimer.cancel();
+            songTimer.purge();
+            songTimer = null;
+            songTimer = new Timer();
+        } else {
+            songTimer = new Timer();
+        }
+        
+        songTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+              playbackTimerTick();
+            }
+          }, 0, 1000);
+
+        songRemainingSeconds = currentTrack.getDuration();
+        pInterface.updateInterface();
+    }
+    
+    private int songRemainingSeconds;
+    
+    private void playbackTimerTick(){
+        if(isPlaying){
+            songRemainingSeconds--;
+            currentTrack.setRemainingSeconds(songRemainingSeconds);
+            if(songRemainingSeconds <= 0){
+                skipSong();
+            }
+        }    
     }
     
     /**
@@ -93,10 +151,13 @@ public class SongPlayer {
         if(mediaPlayer != null && isPlaying) {
             mediaPlayer.pause();
             isPlaying = false;
+            currentTrack.setIsPaused(!isPlaying);
         } else if (mediaPlayer != null) {
             mediaPlayer.play();
             isPlaying = true;
+            currentTrack.setIsPaused(!isPlaying);
         }
+        pInterface.updateInterface();
     }
     
     /**
@@ -108,8 +169,9 @@ public class SongPlayer {
             isPlaying = false;
             isQueued = false;
             
-            currentTitle = null;
+            currentTrack = null;
             queuePosition = 0;
+            pInterface.updateInterface();
         }
     }
     
@@ -121,12 +183,16 @@ public class SongPlayer {
         return currentTitle;
     }
     
+    public LiveTrack getPlayingTrack(){
+        return currentTrack;
+    }
+    
     /**
      * Skips the current song and triggers the next title.
      */
     public void skipSong() {
         if(isQueued){
-            playQueuedTitle(true, false);
+            skipTrack();
         }
     }
     
@@ -135,7 +201,11 @@ public class SongPlayer {
      */
     public void prevSong() {
         if(isQueued){
-            playQueuedTitle(false, false);
+            reverseTrack();
         }
+    }
+    
+    public boolean isPlaybackActive(){
+        return isPlaying;
     }
 }

@@ -13,6 +13,7 @@ public class Title {
     private String filePath;
     private String titleName;
     private String artistName;
+    private int duration;
     
     public Title(String path, String tit, String art){
         this.filePath = path;
@@ -34,5 +35,13 @@ public class Title {
     
     public String getFormattedTitle(){
         return artistName + " - " + titleName;
+    }
+    
+    public int getDuration() {
+        return duration;
+    }
+    
+    public void setDuration(int seconds) {
+        duration = seconds;
     }
 }

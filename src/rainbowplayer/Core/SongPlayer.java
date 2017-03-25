@@ -5,11 +5,18 @@
  */
 package rainbowplayer.Core;
 
+import java.awt.event.ActionListener;
 import rainbowplayer.Classes.Title;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.event.ActionEvent;
+import rainbowplayer.Classes.LiveTrack;
+import rainbowplayer.FXMLDocumentController;
 
 /**
  *
@@ -18,6 +25,8 @@ import javafx.scene.media.MediaPlayer;
 public class SongPlayer {
  
     private MediaPlayer mediaPlayer;
+    
+    private LiveTrack currentTrack;
     private Title currentTitle;
     
     private boolean isPlaying;
@@ -25,10 +34,17 @@ public class SongPlayer {
     
     private int queuePosition = 0;
     
+    private Timer songTimer;
+    
     private ArrayList<Title> titleQueue;
     
-    public SongPlayer() {
+    // wee need this to update the interface
+    private final FXMLDocumentController pInterface;
+    
+    public SongPlayer(FXMLDocumentController interf) {
         titleQueue = new ArrayList<>();
+        // songTimer = new Timer();
+        pInterface = interf;
     }
     
     /**
@@ -45,7 +61,7 @@ public class SongPlayer {
     /**
      * Plays, skips and repeats the previous title depending on the action.
      * @param skip Should be set to true when the title needs to be skipped.
-     * @param firstTitle Wheter the title is the first in the queue. Only for the first time in the queue.
+     * @param firstTitle Whether the title is the first in the queue. Only for the first time in the queue.
      */
     private void playQueuedTitle(boolean skip, boolean firstTitle) {
         if(titleQueue.size() > queuePosition && queuePosition >= 0) {
@@ -72,8 +88,9 @@ public class SongPlayer {
      */
     public void playTitle(Title title) {
         currentTitle = title;
+        currentTrack = new LiveTrack(title.getFilePath(), title.getTitleName(), title.getArtistName());
         
-        Media tMedia = new Media(new File(currentTitle.getFilePath()).toURI().toString());
+        Media tMedia = new Media(new File(currentTrack.getFilePath()).toURI().toString());
         
         if(mediaPlayer == null) {
             mediaPlayer = new MediaPlayer(tMedia);
@@ -84,6 +101,52 @@ public class SongPlayer {
         
         mediaPlayer.play();
         isPlaying = true;
+        currentTrack.setIsPaused(false);
+        
+        // we need to run the timer after the player loaded the song
+        mediaPlayer.setOnReady(() -> {
+            currentTrack.setDuration((int) tMedia.getDuration().toSeconds());
+            trackStarted();
+        });
+    }
+    
+    /**
+     * Starts the timer for continuous playback.
+     */
+    private void trackStarted() {
+        if(songTimer != null) {
+            songTimer.cancel();
+            songTimer.purge();
+            songTimer = null;
+            songTimer = new Timer();
+        } else {
+            songTimer = new Timer();
+        }
+        
+        songTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+              playbackTimerTick();
+            }
+          }, 0, 1000);
+
+        songRemainingSeconds = currentTrack.getDuration();
+        pInterface.updateInterface();
+    }
+    
+    private int songRemainingSeconds;
+    
+    private void playbackTimerTick(){
+        if(isPlaying){
+            songRemainingSeconds--;
+            currentTrack.setRemainingSeconds(songRemainingSeconds);
+            if(songRemainingSeconds <= 0){
+                skipSong();
+            }
+            
+            System.out.println("my time is now: " + songRemainingSeconds + " | " + currentTrack.getDuration());
+            // pInterface.updateInterface();
+        }    
     }
     
     /**
@@ -93,10 +156,13 @@ public class SongPlayer {
         if(mediaPlayer != null && isPlaying) {
             mediaPlayer.pause();
             isPlaying = false;
+            currentTrack.setIsPaused(!isPlaying);
         } else if (mediaPlayer != null) {
             mediaPlayer.play();
             isPlaying = true;
+            currentTrack.setIsPaused(!isPlaying);
         }
+        pInterface.updateInterface();
     }
     
     /**
@@ -108,8 +174,9 @@ public class SongPlayer {
             isPlaying = false;
             isQueued = false;
             
-            currentTitle = null;
+            currentTrack = null;
             queuePosition = 0;
+            pInterface.updateInterface();
         }
     }
     
@@ -119,6 +186,10 @@ public class SongPlayer {
      */
     public Title getCurrentTitle() {
         return currentTitle;
+    }
+    
+    public LiveTrack getPlayingTrack(){
+        return currentTrack;
     }
     
     /**
@@ -137,5 +208,9 @@ public class SongPlayer {
         if(isQueued){
             playQueuedTitle(false, false);
         }
+    }
+    
+    public boolean isPlaybackActive(){
+        return isPlaying;
     }
 }

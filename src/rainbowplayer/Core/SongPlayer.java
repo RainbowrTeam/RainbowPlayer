@@ -14,6 +14,7 @@ import javafx.scene.media.MediaPlayer;
 import java.util.Timer;
 import java.util.TimerTask;
 import rainbowplayer.Classes.LiveTrack;
+import rainbowplayer.Classes.Playlist;
 import rainbowplayer.FXMLDocumentController;
 
 /**
@@ -35,6 +36,7 @@ public class SongPlayer {
     private Timer songTimer;
     
     private ArrayList<Title> titleQueue;
+    private Playlist currentPlaylist;
     
     // wee need this to update the interface
     private final FXMLDocumentController pInterface;
@@ -43,6 +45,11 @@ public class SongPlayer {
         titleQueue = new ArrayList<>();
         // songTimer = new Timer();
         pInterface = interf;
+    }
+    
+    public void playPlaylist(Playlist plist){
+        currentPlaylist = plist;
+        playTitleQueue(currentPlaylist.getTracks());
     }
     
     /**
@@ -185,6 +192,10 @@ public class SongPlayer {
     
     public LiveTrack getPlayingTrack(){
         return currentTrack;
+    }
+    
+    public Playlist getPlaylist(){
+        return currentPlaylist;
     }
     
     /**

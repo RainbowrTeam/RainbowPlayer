@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import rainbowplayer.Classes.Duration;
+import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
 
@@ -31,17 +32,20 @@ public class FXMLDocumentController implements Initializable {
     private Label artistLabel;
     @FXML
     private Label timeLabel;
+    @FXML
+    private Label playlistLabel;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        ArrayList<Title> tQueue = new ArrayList<>();
-        //tQueue.add(new Title("C:\\Users\\Tim\\Music\\01 - we came to gangbang.mp3", "we came to gangbang", "goreshit"));
-        //tQueue.add(new Title("C:\\Users\\Tim\\Music\\05 - Awg.mp3", "Awg", "Farin Urlaub Racing Team"));
-        tQueue.add(new Title("Z:\\Musik\\Artists\\Crusher-P\\Echo\\echo.mp3", "Echo", "Crusher-P"));
-        tQueue.add(new Title("Z:\\Musik\\Artists\\Fleetwood Mac\\Fleetwood Mac Greatest Hits\\MP3\\12 Fleetwood Mac - Little Lies.mp3", "Little Lies", "Fleetwood Mac"));
-        tQueue.add(new Title("Z:\\Musik\\Artists\\Rammstein\\Mutter\\05 Feuer frei.mp3", "Feuer Frei", "Rammstein"));
+        ArrayList<Title> tQueueNotebook = new ArrayList<>();
+        tQueueNotebook.add(new Title("C:\\Users\\Tim\\Music\\01 - we came to gangbang.mp3", "we came to gangbang", "goreshit"));
+        tQueueNotebook.add(new Title("C:\\Users\\Tim\\Music\\05 - Awg.mp3", "Awg", "Farin Urlaub Racing Team"));
+        Playlist notebook = new Playlist("Tims Notebook-Playlist", tQueueNotebook);
+        //tQueue.add(new Title("Z:\\Musik\\Artists\\Crusher-P\\Echo\\echo.mp3", "Echo", "Crusher-P"));
+        //tQueue.add(new Title("Z:\\Musik\\Artists\\Fleetwood Mac\\Fleetwood Mac Greatest Hits\\MP3\\12 Fleetwood Mac - Little Lies.mp3", "Little Lies", "Fleetwood Mac"));
+        //tQueue.add(new Title("Z:\\Musik\\Artists\\Rammstein\\Mutter\\05 Feuer frei.mp3", "Feuer Frei", "Rammstein"));
         
-        songPlayer.playTitleQueue(tQueue);
+        songPlayer.playPlaylist(notebook);
         startTimer();
     }
     
@@ -98,6 +102,10 @@ public class FXMLDocumentController implements Initializable {
             Duration dur = songPlayer.getPlayingTrack().getRemainingDuration();
             
             timeLabel.setText(dur.getMinutes() + ":" + dur.getSeconds());
+            
+            if(songPlayer.getPlaylist() != null){
+                playlistLabel.setText(songPlayer.getPlaylist().getName());
+            }
         } else {
             titleLabel.setText("N/A");
             artistLabel.setText("N/A");

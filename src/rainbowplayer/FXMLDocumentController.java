@@ -5,7 +5,7 @@
  */
 package rainbowplayer;
 
-import rainbowplayer.Classes.Title;
+import rainbowplayer.Classes.Track;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,15 +37,18 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        ArrayList<Title> tQueueNotebook = new ArrayList<>();
-        tQueueNotebook.add(new Title("C:\\Users\\Tim\\Music\\01 - we came to gangbang.mp3", "we came to gangbang", "goreshit"));
-        tQueueNotebook.add(new Title("C:\\Users\\Tim\\Music\\05 - Awg.mp3", "Awg", "Farin Urlaub Racing Team"));
+        ArrayList<Track> tQueueNotebook = new ArrayList<>();
+        tQueueNotebook.add(new Track("C:\\Users\\Tim\\Music\\01 - we came to gangbang.mp3", "we came to gangbang", "goreshit"));
+        tQueueNotebook.add(new Track("C:\\Users\\Tim\\Music\\05 - Awg.mp3", "Awg", "Farin Urlaub Racing Team"));
         Playlist notebook = new Playlist("Tims Notebook-Playlist", tQueueNotebook);
-        //tQueue.add(new Title("Z:\\Musik\\Artists\\Crusher-P\\Echo\\echo.mp3", "Echo", "Crusher-P"));
-        //tQueue.add(new Title("Z:\\Musik\\Artists\\Fleetwood Mac\\Fleetwood Mac Greatest Hits\\MP3\\12 Fleetwood Mac - Little Lies.mp3", "Little Lies", "Fleetwood Mac"));
-        //tQueue.add(new Title("Z:\\Musik\\Artists\\Rammstein\\Mutter\\05 Feuer frei.mp3", "Feuer Frei", "Rammstein"));
         
-        songPlayer.playPlaylist(notebook);
+        ArrayList<Track> tQueueDesktop = new ArrayList<>();
+        tQueueDesktop.add(new Track("D:\\Musik\\Artists\\Crusher-P\\Echo\\echo.mp3", "Echo", "Crusher-P"));
+        tQueueDesktop.add(new Track("D:\\Musik\\Artists\\Fleetwood Mac\\Fleetwood Mac Greatest Hits\\MP3\\12 Fleetwood Mac - Little Lies.mp3", "Little Lies", "Fleetwood Mac"));
+        tQueueDesktop.add(new Track("D:\\Musik\\Artists\\Rammstein\\Mutter\\05 Feuer frei.mp3", "Feuer Frei", "Rammstein"));
+        Playlist desktop = new Playlist("Tims Desktop-Playlist", tQueueDesktop);
+        
+        songPlayer.playPlaylist(desktop);
         startTimer();
     }
     

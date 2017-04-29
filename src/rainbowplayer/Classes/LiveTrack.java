@@ -9,7 +9,7 @@ package rainbowplayer.Classes;
  *
  * @author Tim
  */
-public class LiveTrack extends Title {
+public class LiveTrack extends Track {
     
     private boolean isPaused;
     private int remainingSeconds;

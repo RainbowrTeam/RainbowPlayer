@@ -2,7 +2,7 @@ package rainbowplayer.db;
 
 import java.util.Date;
 import java.util.UUID;
-import rainbowplayer.Classes.Title;
+import rainbowplayer.Classes.Track;
 
 /**
  *
@@ -15,7 +15,7 @@ public class TrackInsertion {
      * Insert track into database and generate unique identifier
      * @returns status
      */
-    public boolean insertTrack(Title t){
+    public boolean insertTrack(Track t){
         Database db = new Database();
         
         if(!db.initDB()){

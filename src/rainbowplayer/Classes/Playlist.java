@@ -17,7 +17,7 @@ public class Playlist {
     private String description;
     private String tags;
     private Date createdAt;
-    private ArrayList<Title> tracks;
+    private ArrayList<Track> tracks;
     
     // Constructors
     
@@ -26,7 +26,7 @@ public class Playlist {
         tracks = new ArrayList<>();
     }
     
-    public Playlist(String name, ArrayList<Title> tracks){
+    public Playlist(String name, ArrayList<Track> tracks){
         this.name = name;
         this.tracks = tracks;
     }
@@ -45,7 +45,7 @@ public class Playlist {
         tags = text;
     }
     
-    public void addTrack(Title track){
+    public void addTrack(Track track){
         tracks.add(track);
     }
     
@@ -67,7 +67,7 @@ public class Playlist {
         return createdAt;
     }
     
-    public ArrayList<Title> getTracks(){
+    public ArrayList<Track> getTracks(){
         return tracks;
     }
 }

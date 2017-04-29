@@ -5,7 +5,7 @@
  */
 package rainbowplayer.Core;
 
-import rainbowplayer.Classes.Title;
+import rainbowplayer.Classes.Track;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.media.Media;
@@ -26,7 +26,7 @@ public class SongPlayer {
     private MediaPlayer mediaPlayer;
     
     private LiveTrack currentTrack;
-    private Title currentTitle;
+    private Track currentTitle;
     
     private boolean isPlaying;
     private boolean isQueued;
@@ -35,7 +35,7 @@ public class SongPlayer {
     
     private Timer songTimer;
     
-    private ArrayList<Title> titleQueue;
+    private ArrayList<Track> titleQueue;
     private Playlist currentPlaylist;
     
     // wee need this to update the interface
@@ -56,7 +56,7 @@ public class SongPlayer {
      * The entry point for playing queued titles like playlists.
      * @param tQueue The ArrayList of titles
      */
-    public void playTitleQueue(ArrayList<Title> tQueue) {
+    public void playTitleQueue(ArrayList<Track> tQueue) {
         stopPlayback();
         titleQueue = tQueue;
         isQueued = true;
@@ -91,7 +91,7 @@ public class SongPlayer {
      * Plays the title from the Title class.
      * @param title The designated title.
      */
-    public void playTitle(Title title) {
+    public void playTitle(Track title) {
         currentTitle = title;
         currentTrack = new LiveTrack(title.getFilePath(), title.getTitleName(), title.getArtistName());
         
@@ -186,7 +186,7 @@ public class SongPlayer {
      * Retrieves the currently playing title.
      * @return The playing title.
      */
-    public Title getCurrentTitle() {
+    public Track getCurrentTitle() {
         return currentTitle;
     }
     

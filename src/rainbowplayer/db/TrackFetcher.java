@@ -2,14 +2,14 @@ package rainbowplayer.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import rainbowplayer.Classes.Title;
+import rainbowplayer.Classes.Track;
 
 /**
  *
  * @author Bruno
  */
 public class TrackFetcher {
-    private Title t = null; //rename to Track
+    private Track t = null; //rename to Track
     
     /**
      * Fetch track information and create returnable Title/Track object
@@ -32,7 +32,7 @@ public class TrackFetcher {
                 String trackTitle = result.getString("track_title");
                 String trackArtist = result.getString("track_artist");
                 
-                t = new Title(trackPath,trackTitle,trackArtist);
+                t = new Track(trackPath,trackTitle,trackArtist);
             }
             return true;
         } catch (SQLException ex) {
@@ -45,7 +45,7 @@ public class TrackFetcher {
      * Returns Title/Track object
      * @return Title/Track object
      */
-    public Title getTrack(){
+    public Track getTrack(){
        return t;
     }
     

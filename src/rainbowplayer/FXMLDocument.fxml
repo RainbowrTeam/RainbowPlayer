@@ -48,11 +48,6 @@
                         <Insets right="10.0" />
                      </FlowPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#handleImportButtonAction" text="Import">
-                     <FlowPane.margin>
-                        <Insets right="10.0" />
-                     </FlowPane.margin>
-                  </Button>
                </children>
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

@@ -77,15 +77,14 @@ public class Database {
                         "playlist_desc TEXT NOT NULL," +
                         "playlist_tags TEXT NOT NULL, " +
                         "playlist_creation TEXT NOT NULL, " +
-                        "playlist_tracks TEXT NOT NULL)";
+                        "playlist_entries TEXT NOT NULL)";
                 stmt.executeUpdate(sql);
                 
                 //PLAYLIST_ENTRIES table
                 sql = "CREATE TABLE IF NOT EXISTS PLAYLIST_ENTRIES" +
-                        "(playlist_id TEXT PRIMARY KEY NOT NULL," +
-                        "entry_id TEXT NOT NULL," +
-                        "track_id TEXT NOT NULL," +
-                        "entry_added TEXT NOT NULL)";
+                        "(entry_id TEXT PRIMARY KEY NOT NULL," +
+                        "playlist_id TEXT NOT NULL," +
+                        "track_id TEXT NOT NULL)";
                 
                 stmt.executeUpdate(sql);
                 

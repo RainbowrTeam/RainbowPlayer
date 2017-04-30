@@ -12,6 +12,7 @@ public class TrackRemoval {
             return false;
         }
         
+        String query = "DELETE FROM TRACKS WHERE track_id='" + trackId +"';";
         
         return db.execute_query(query);
     }

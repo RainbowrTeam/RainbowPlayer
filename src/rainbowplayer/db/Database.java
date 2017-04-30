@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *
+ * @version STABLE
  * @author Bruno
  */
 public class Database {
@@ -57,6 +57,8 @@ public class Database {
         if(connect()){
             try {
                 stmt = c.createStatement();
+                
+                //TRACKS table
                 String sql = "CREATE TABLE IF NOT EXISTS TRACKS" +
                         "(track_id TEXT PRIMARY KEY NOT NULL," +
                         "track_title TEXT NOT NULL," +
@@ -67,6 +69,26 @@ public class Database {
                         "track_duration TEXT NOT NULL," +
                         "track_genre TEXT NOT NULL)";
                 stmt.executeUpdate(sql);
+                
+                //PLAYLISTS table
+                sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS" +
+                        "(playlist_id TEXT PRIMARY KEY NOT NULL," +
+                        "playlist_name TEXT NOT NULL," +
+                        "playlist_desc TEXT NOT NULL," +
+                        "playlist_tags TEXT NOT NULL, " +
+                        "playlist_creation TEXT NOT NULL, " +
+                        "playlist_tracks TEXT NOT NULL)";
+                stmt.executeUpdate(sql);
+                
+                //PLAYLIST_ENTRIES table
+                sql = "CREATE TABLE IF NOT EXISTS PLAYLIST_ENTRIES" +
+                        "(playlist_id TEXT PRIMARY KEY NOT NULL," +
+                        "entry_id TEXT NOT NULL," +
+                        "track_id TEXT NOT NULL," +
+                        "entry_added TEXT NOT NULL)";
+                
+                stmt.executeUpdate(sql);
+                
                 stmt.close();
                 
                 return closeConnection();

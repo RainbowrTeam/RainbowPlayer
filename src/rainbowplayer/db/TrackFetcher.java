@@ -5,14 +5,14 @@ import java.sql.SQLException;
 import rainbowplayer.Classes.Track;
 
 /**
- *
+ * @version STABLE
  * @author Bruno
  */
 public class TrackFetcher {
-    private Track t = null; //rename to Track
+    private Track t = null;
     
     /**
-     * Fetch track information and create returnable Title/Track object
+     * Fetch track information and create returnable Track object
      * @param trackId
      * @return status
      */
@@ -31,8 +31,13 @@ public class TrackFetcher {
                 String trackPath = result.getString("track_path");
                 String trackTitle = result.getString("track_title");
                 String trackArtist = result.getString("track_artist");
+                String trackAlbum = result.getString("track_album");
+                String trackGenre = result.getString("track_genre");
                 
-                t = new Track(trackPath,trackTitle,trackArtist);
+                int trackReleaseDate = Integer.parseInt(result.getString("track_release_date"));
+                int trackDuration = Integer.parseInt(result.getString("track_duration"));
+                
+                t.setDuration(trackDuration);
             }
             return true;
         } catch (SQLException ex) {
@@ -42,8 +47,8 @@ public class TrackFetcher {
     }
     
     /**
-     * Returns Title/Track object
-     * @return Title/Track object
+     * Returns Track object
+     * @return Track object
      */
     public Track getTrack(){
        return t;

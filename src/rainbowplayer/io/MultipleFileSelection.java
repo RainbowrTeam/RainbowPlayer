@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.io;
 
 import java.io.File;
@@ -13,7 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
- *
+ * @version STABLE
  * @author Bruno
  */
 public class MultipleFileSelection {
@@ -39,8 +34,13 @@ public class MultipleFileSelection {
         
         for (Iterator<File> iter = trackFiles.listIterator(); iter.hasNext(); ) {
             File f = iter.next();
-            if (!getExtension(f).equalsIgnoreCase("mp3")) {
-                iter.remove();
+            switch(getExtension(f)){
+                case "mp3":
+                case "wav":
+                    break;
+                default:
+                    iter.remove();
+                    break;
             }
         }
         

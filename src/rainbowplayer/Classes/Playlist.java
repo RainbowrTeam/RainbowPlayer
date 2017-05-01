@@ -45,6 +45,10 @@ public class Playlist {
         tags = text;
     }
     
+    public void setDate(Date date){
+        createdAt = date;
+    }
+    
     public void addTrack(Track track){
         tracks.add(track);
     }

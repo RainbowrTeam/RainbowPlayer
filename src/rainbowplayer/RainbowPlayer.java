@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import rainbowplayer.Core.FeatureManager;
 
 public class RainbowPlayer extends Application {
     
@@ -22,6 +23,9 @@ public class RainbowPlayer extends Application {
         stage.setScene(scene);
         stage.show();
         stage.setTitle("Rainbow Player");
+        
+        // initialize features
+        FeatureManager.getInstance().initializeFeatures();
     }
 
     /**

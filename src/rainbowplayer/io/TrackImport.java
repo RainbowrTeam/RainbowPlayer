@@ -7,6 +7,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,7 @@ public class TrackImport {
                     String trackAlbum;
                     String trackGenre;
                     int trackReleaseYear;
-                    int trackDuration;
+                    int trackDuration = (int)sFileParsed.getLengthInSeconds();
                             
                     if(sFileParsed.hasId3v1Tag()){
                         ID3v1 metadata = sFileParsed.getId3v1Tag();
@@ -53,8 +54,13 @@ public class TrackImport {
                         trackAlbum = metadata.getAlbum();
                         trackGenre = metadata.getGenreDescription();
                         
-                        trackReleaseYear = Integer.parseInt(metadata.getYear());
-                        trackDuration = (int)sFileMedia.getDuration().toSeconds();            
+                        if(metadata.getYear() != null){
+                            trackReleaseYear = Integer.parseInt(metadata.getYear());
+                        }else{
+                            Calendar c = Calendar.getInstance();
+                            trackReleaseYear = c.get(Calendar.YEAR);
+                        }
+                           
                     }else if(sFileParsed.hasId3v2Tag()){
                         ID3v2 metadata = sFileParsed.getId3v2Tag();
                         
@@ -63,10 +69,21 @@ public class TrackImport {
                         trackAlbum = metadata.getAlbum();
                         trackGenre = metadata.getGenreDescription();
                         
-                        trackReleaseYear = Integer.parseInt(metadata.getYear());
-                        trackDuration = (int)sFileMedia.getDuration().toSeconds();
+                        if(metadata.getYear() != null){
+                            trackReleaseYear = Integer.parseInt(metadata.getYear());
+                        }else{
+                            Calendar c = Calendar.getInstance();
+                            trackReleaseYear = c.get(Calendar.YEAR);
+                        }
+                        
                     }else{
-                        return "error";
+                        trackTitle = "Unknown";
+                        trackArtist = "Unknown Artist";
+                        trackAlbum = "Unknown";
+                        trackGenre = "";
+                        
+                        Calendar c = Calendar.getInstance();
+                        trackReleaseYear = c.get(Calendar.YEAR);
                     }
                     //TODO copy file to library
                     Track t = new Track(selectedFile.getPath(),trackTitle,trackArtist,trackAlbum,trackGenre,trackReleaseYear);
@@ -114,7 +131,7 @@ public class TrackImport {
                         String trackAlbum;
                         String trackGenre;
                         int trackReleaseYear;
-                        int trackDuration;
+                        int trackDuration = (int)sFileParsed.getLengthInSeconds();
 
                         if(sFileParsed.hasId3v1Tag()){
                             ID3v1 metadata = sFileParsed.getId3v1Tag();
@@ -124,8 +141,13 @@ public class TrackImport {
                             trackAlbum = metadata.getAlbum();
                             trackGenre = metadata.getGenreDescription();
 
-                            trackReleaseYear = Integer.parseInt(metadata.getYear());
-                            trackDuration = (int)sFileMedia.getDuration().toSeconds();
+                            if(metadata.getYear() != null){
+                                trackReleaseYear = Integer.parseInt(metadata.getYear());
+                            }else{
+                                Calendar c = Calendar.getInstance();
+                                trackReleaseYear = c.get(Calendar.YEAR);
+                            }
+                            
                         }else if(sFileParsed.hasId3v2Tag()){
                             ID3v2 metadata = sFileParsed.getId3v2Tag();
 
@@ -134,10 +156,21 @@ public class TrackImport {
                             trackAlbum = metadata.getAlbum();
                             trackGenre = metadata.getGenreDescription();
 
-                            trackReleaseYear = Integer.parseInt(metadata.getYear());
-                            trackDuration = (int)sFileMedia.getDuration().toSeconds();
+                            if(metadata.getYear() != null){
+                                trackReleaseYear = Integer.parseInt(metadata.getYear());
+                            }else{
+                                Calendar c = Calendar.getInstance();
+                                trackReleaseYear = c.get(Calendar.YEAR);
+                            }
+                            
                         }else{
-                            break;
+                            trackTitle = "Unknown";
+                            trackArtist = "Unknown Artist";
+                            trackAlbum = "Unknown";
+                            trackGenre = "";
+
+                            Calendar c = Calendar.getInstance();
+                            trackReleaseYear = c.get(Calendar.YEAR);
                         }
                         //TODO copy file to library
                         Track t = new Track(selectedFile.getPath(),trackTitle,trackArtist,trackAlbum,trackGenre,trackReleaseYear);

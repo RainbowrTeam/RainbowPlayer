@@ -40,7 +40,7 @@ public class Database {
                 c.close();
                 return true;
             } catch (SQLException ex) {
-                System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+                System.err.println(ex.getClass().getName() + ": " + ex.getMessage() );
                 return false;
             }
         }else{
@@ -76,8 +76,7 @@ public class Database {
                         "playlist_name TEXT NOT NULL," +
                         "playlist_desc TEXT NOT NULL," +
                         "playlist_tags TEXT NOT NULL, " +
-                        "playlist_creation TEXT NOT NULL, " +
-                        "playlist_entries TEXT NOT NULL)";
+                        "playlist_creation TEXT NOT NULL)";
                 stmt.executeUpdate(sql);
                 
                 //PLAYLIST_ENTRIES table

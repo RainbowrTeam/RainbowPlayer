@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rainbowplayer.Classes.Playlist;
-import rainbowplayer.Classes.Track;
 
 /**
- *
+ * @version UNSTABLE
  * @author Bruno Scheufler
  * 
  */
@@ -24,7 +18,7 @@ public class PlaylistFetcher {
     private Playlist playlist;
     
     /**
-     * 
+     * Retrieve Playlist object
      * @param playlistId
      * @return status (error, not_found, success)
      */
@@ -41,48 +35,63 @@ public class PlaylistFetcher {
             ResultSet result = db.select_query(query);
             
             if (result.next() == false){
-                return "not_found";
+                return "playlist_not_found";
             }else{ 
                 do{
                     String playlistName = result.getString("playlist_id");
                     String playlistDesc = result.getString("playlist_desc");
                     String playlistTags = result.getString("playlist_tags");
-                    String playlistEntries = result.getString("playlist_entries");
+                    String playlistCreation = result.getString("playlist_creation"); //add creation setter to Playlist object
 
                     playlist = new Playlist(playlistName);
+                    playlist.setId(playlistId);
                     playlist.setDescription(playlistDesc);
                     playlist.setTags(playlistTags);
                     
-                    //create array containing playlist entries
-                    List<String> entryIds = Arrays.asList(playlistEntries.split(","));
-                    
-                    EntryFetcher eFetcher = new EntryFetcher();
-                    
-                    if(entryIds.size() > 0){
-                       //loop through entries and fetch data
-                       for(String entryId : entryIds){
-                           switch(eFetcher.retrieveTrackByEntryId(entryId)){
-                               case "success":
-                                   playlist.addTrack(eFetcher.getTrack());
-                               break; 
-                               case "entry_not_found":
-                                   System.out.println("Could not add track to playlist because the entry was not found.");
-                               break;
-                               case "track_not_found":
-                                   System.out.println("Could not add track to playlist because the track data could not be found.");
-                               break;
-                               case "error":
-                               default:
-                                   System.out.println("An error occurred while trying to add the track to the playlist.");
-                               break;
-                           }
-                       }
-                    }else{
-                    //empty playlist
-                    }
-                }while(result.next()); 
-                return "success";
+                }while(result.next());
+                
             }
+                return "success";
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PlaylistFetcher.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
+    }
+
+    public String populatePlaylist(){
+        try {
+            Database db = new Database();
+            
+            if(!db.initDB()){
+                return "error";
+            }
+            
+            ResultSet result = db.select_query("SELECT entry_id FROM PLAYLIST_ENTRIES WHERE playlist_id='" + playlist.getId() + "'");
+            List<String> entryIds = new ArrayList<>();
+            if(result.next() == false){
+                //No Entries
+            }else{
+                do{
+                    entryIds.add(result.getString("entry_id")); 
+                }while(result.next());
+                    EntryFetcher eFetch = new EntryFetcher();
+                    for(String s : entryIds){
+                        switch(eFetch.retrievePlaylistEntry(s)){
+                            case "success":
+                                playlist.addEntry(eFetch.getEntry());
+                                break;
+                            case "entry_not_found":
+                                //Entry not found in database
+                            case "track_not_found":
+                                //Track not found in database
+                            case "error":
+                            default:
+                                break;
+                        }
+                    }
+            }
+            return "success";
         } catch (SQLException ex) {
             Logger.getLogger(PlaylistFetcher.class.getName()).log(Level.SEVERE, null, ex);
             return "error";

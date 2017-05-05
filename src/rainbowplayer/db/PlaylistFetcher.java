@@ -59,6 +59,10 @@ public class PlaylistFetcher {
         }
     }
 
+    /**
+     * Additional step to add entries to the playlist
+     * @return status
+     */
     public String populatePlaylist(){
         try {
             Database db = new Database();

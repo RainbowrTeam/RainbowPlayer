@@ -12,6 +12,12 @@ import rainbowplayer.Classes.Track;
 public class EntryGeneration {
     private PlaylistEntry pEntry;
     
+    /**
+     * Generates PlaylistEntry object and inserts it into the database
+     * @param p
+     * @param t
+     * @return status
+     */
     public boolean generateEntry(Playlist p, Track t){
         Database db = new Database();
         
@@ -35,6 +41,10 @@ public class EntryGeneration {
         return db.execute_query(query);  
     }
     
+    /**
+     * Return PlaylistEntry object
+     * @return pEntry
+     */
     public PlaylistEntry getEntry(){
         return pEntry;
     }

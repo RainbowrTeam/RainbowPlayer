@@ -5,6 +5,11 @@ package rainbowplayer.db;
  * @author Bruno Scheufler
  */
 public class EntryRemoval {
+    /**
+     * Remove entry from database
+     * @param entryId
+     * @return status
+     */
     public boolean removeEntry(String entryId){
         Database db = new Database();
         

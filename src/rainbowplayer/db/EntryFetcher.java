@@ -59,7 +59,7 @@ public class EntryFetcher {
     /**
      * Construct PlaylistEntry object from entryId
      * @param entryId
-     * @return 
+     * @return status
      */
     public String retrievePlaylistEntry(String entryId){
         try {

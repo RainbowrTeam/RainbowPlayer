@@ -1,6 +1,5 @@
 package rainbowplayer.db;
 
-import java.util.Date;
 import java.util.UUID;
 import rainbowplayer.Classes.Track;
 
@@ -13,7 +12,8 @@ public class TrackInsertion {
     
     /**
      * Insert track into database and generate unique identifier
-     * @returns status
+     * @param t Track object to insert
+     * @return status
      */
     public boolean insertTrack(Track t){
         Database db = new Database();
@@ -23,18 +23,27 @@ public class TrackInsertion {
         }
         
         String tId = UUID.randomUUID().toString();
-        //TODO add track album,track release date,track duration and track genre values
         String query = "INSERT INTO TRACKS"
-                + "(track_id,track_title,track_path,track_artist,track_album,track_release_date,track_duration,track_genre) "
-                + "VALUES('" + tId + "','" + t.getTitleName() +"','" + t.getFilePath() + "','" + t.getArtistName() +"','sample album','" + new Date().toString() + "','-','unset')";
+                + "(track_id,"
+                + "track_title,"
+                + "track_path,"
+                + "track_artist,"
+                + "track_album,"
+                + "track_release_date,"
+                + "track_duration,"
+                + "track_genre) "
+                + "VALUES('" + tId + "',"
+                + "'" + t.getTitleName() +"',"
+                + "'" + t.getFilePath() + "',"
+                + "'" + t.getArtistName() +"',"
+                + "'" + t.getAlbumName() +"',"
+                + "'" + t.getReleaseYear() + "',"
+                + "'" + t.getDuration() + "',"
+                + "'" + t.getGenreName() +"')";
         
         trackId = tId;
         //execute query
-        if(db.execute_query(query)){
-           return true; 
-        }else{
-            return false;
-        }
+        return db.execute_query(query);
         
     }
     

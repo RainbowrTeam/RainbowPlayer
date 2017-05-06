@@ -11,6 +11,7 @@ package rainbowplayer.Classes;
  */
 public class Track {
     // Database model data
+    private String trackId;
     private String filePath;
     private String titleName;
     private String artistName;
@@ -32,6 +33,20 @@ public class Track {
         this.albumName = album;
         this.genreName = genre;
         this.releaseYear = release;
+    }
+    
+    public Track(String id,String path, String tit, String art, String album, String genre, int release){
+        this.trackId = id;
+        this.filePath = path;
+        this.titleName = tit;
+        this.artistName = art;
+        this.albumName = album;
+        this.genreName = genre;
+        this.releaseYear = release;
+    }
+    
+    public String getTrackId(){
+        return trackId;
     }
     
     public String getFilePath(){

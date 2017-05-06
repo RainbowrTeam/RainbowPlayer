@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.Classes;
 
 import java.util.ArrayList;
@@ -13,25 +8,30 @@ import java.util.Date;
  * @author Tim
  */
 public class Playlist {
+    private String id;
     private String name;
     private String description;
     private String tags;
     private Date createdAt;
-    private ArrayList<Track> tracks;
+    private ArrayList<PlaylistEntry> entries;
     
     // Constructors
     
     public Playlist(String name){
         this.name = name;
-        tracks = new ArrayList<>();
+        entries = new ArrayList<>();
     }
     
-    public Playlist(String name, ArrayList<Track> tracks){
+    public Playlist(String name, ArrayList<PlaylistEntry> entries){
         this.name = name;
-        this.tracks = tracks;
+        this.entries = entries;
     }
     
     // Setters
+    
+    public void setId(String id){
+        this.id = id;
+    }
     
     public void setName(String text){
         name = text;
@@ -45,15 +45,19 @@ public class Playlist {
         tags = text;
     }
     
+    public void addEntry(PlaylistEntry entry){
+        entries.add(entry);
+
     public void setDate(Date date){
         createdAt = date;
     }
-    
-    public void addTrack(Track track){
-        tracks.add(track);
     }
     
     // Getters
+    
+    public String getId(){
+        return id;
+    }
     
     public String getName(){
         return name;
@@ -71,7 +75,7 @@ public class Playlist {
         return createdAt;
     }
     
-    public ArrayList<Track> getTracks(){
-        return tracks;
+    public ArrayList<PlaylistEntry> getEntries(){
+        return entries;
     }
 }

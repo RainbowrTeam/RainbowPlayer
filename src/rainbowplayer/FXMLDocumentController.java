@@ -16,6 +16,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
+import rainbowplayer.Core.FeatureManager;
+import rainbowplayer.Core.Features.PlaylistExporter;
+import rainbowplayer.Core.Features.PlaylistImporter;
+import rainbowplayer.Core.Features.TestFeature;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
 
@@ -46,9 +50,18 @@ public class FXMLDocumentController implements Initializable {
         tQueueDesktop.add(new Track("D:\\Musik\\Artists\\Crusher-P\\Echo\\echo.mp3", "Echo", "Crusher-P"));
         tQueueDesktop.add(new Track("D:\\Musik\\Artists\\Fleetwood Mac\\Fleetwood Mac Greatest Hits\\MP3\\12 Fleetwood Mac - Little Lies.mp3", "Little Lies", "Fleetwood Mac"));
         tQueueDesktop.add(new Track("D:\\Musik\\Artists\\Rammstein\\Mutter\\05 Feuer frei.mp3", "Feuer Frei", "Rammstein"));
+        tQueueDesktop.add(new Track("D:\\Musik\\Artists\\twenty one pilots\\Blurryface\\02 - Stressed Out.mp3", "Stressed Out", "twenty one pilots"));
         Playlist desktop = new Playlist("Tims Desktop-Playlist", tQueueDesktop);
+        desktop.setDescription("Das ist eine Beschreibung.");
+        desktop.setTags("Pop, Rock, Electro");
         
-        songPlayer.playPlaylist(desktop);
+        // PlaylistExporter pe = (PlaylistExporter) FeatureManager.getInstance().useFeature("PlaylistExporter");
+        // pe.savePlaylistFile(desktop, "C:\\Users\\Tim.WEISSHOME\\Desktop\\desktop.rbpls");
+        
+        PlaylistImporter pi = (PlaylistImporter) FeatureManager.getInstance().useFeature("PlaylistImporter");
+        Playlist loaded = pi.loadPlaylist("C:\\Users\\Tim.WEISSHOME\\Desktop\\desktop.rbpls");
+        
+        songPlayer.playPlaylist(loaded);
         startTimer();
     }
     

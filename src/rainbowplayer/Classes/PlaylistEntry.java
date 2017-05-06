@@ -21,6 +21,10 @@ public class PlaylistEntry {
         this.track = t;
     }
     
+    public PlaylistEntry(Track t){
+        this.track = t;
+    }
+    
     // Setters 
     
     public void setTrack(Track t){

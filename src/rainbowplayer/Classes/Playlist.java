@@ -49,6 +49,10 @@ public class Playlist {
         entries.add(entry);
     }
     
+    public void setDate(Date date){
+        createdAt = date;
+    }
+    
     // Getters
     
     public String getId(){

@@ -33,7 +33,7 @@ public class PlaylistExporter extends Feature {
     }
     
     public void savePlaylistFile(Playlist pls, String path){
-        if(pls.getTracks() != null){
+        if(pls.getEntries() != null){
             Gson gson = new Gson();
             String json = gson.toJson(pls);
             

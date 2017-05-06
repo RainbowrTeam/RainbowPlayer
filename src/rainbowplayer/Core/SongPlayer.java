@@ -15,6 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import rainbowplayer.Classes.LiveTrack;
 import rainbowplayer.Classes.Playlist;
+import rainbowplayer.Classes.PlaylistEntry;
 import rainbowplayer.FXMLDocumentController;
 
 /**
@@ -36,6 +37,7 @@ public class SongPlayer {
     private Timer songTimer;
     
     private ArrayList<Track> titleQueue;
+    private ArrayList<PlaylistEntry> titleQueue2;
     private Playlist currentPlaylist;
     
     // wee need this to update the interface
@@ -43,33 +45,34 @@ public class SongPlayer {
     
     public SongPlayer(FXMLDocumentController interf) {
         titleQueue = new ArrayList<>();
+        titleQueue2 = new ArrayList<>();
         // songTimer = new Timer();
         pInterface = interf;
     }
     
     public void playPlaylist(Playlist plist){
         currentPlaylist = plist;
-        playTitleQueue(currentPlaylist.getTracks());
+        playTitleQueue(currentPlaylist.getEntries());
     }
     
     /**
      * The entry point for playing queued titles like playlists.
      * @param tQueue The ArrayList of titles
      */
-    public void playTitleQueue(ArrayList<Track> tQueue) {
+    public void playTitleQueue(ArrayList<PlaylistEntry> tQueue) {
         stopPlayback();
-        titleQueue = tQueue;
+        titleQueue2 = tQueue;
         isQueued = true;
-        playTitle(titleQueue.get(queuePosition));
+        playTitle(titleQueue2.get(queuePosition));
     }
     
     /**
      * Skips the currently playing track and plays the next in queue.
      */
     private void skipTrack(){
-        if(titleQueue.size() > queuePosition + 1 && queuePosition >= 0) {
+        if(titleQueue2.size() > queuePosition + 1 && queuePosition >= 0) {
             queuePosition++;
-            playTitle(titleQueue.get(queuePosition));
+            playTitle(titleQueue2.get(queuePosition));
         } else {
             stopPlayback();
         }
@@ -81,7 +84,7 @@ public class SongPlayer {
     private void reverseTrack(){
         if(queuePosition != 0){
             queuePosition--;
-            playTitle(titleQueue.get(queuePosition));
+            playTitle(titleQueue2.get(queuePosition));
         } else {
             stopPlayback();
         }
@@ -89,9 +92,11 @@ public class SongPlayer {
     
     /**
      * Plays the title from the Title class.
-     * @param title The designated title.
+     * @param pe The designated PlaylistEntry.
      */
-    public void playTitle(Track title) {
+    public void playTitle(PlaylistEntry pe) {
+        Track title = pe.getTrack();
+        
         currentTitle = title;
         currentTrack = new LiveTrack(title.getFilePath(), title.getTitleName(), title.getArtistName());
         

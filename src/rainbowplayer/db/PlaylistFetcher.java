@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import rainbowplayer.Classes.Playlist;
 
 /**
- * @version UNSTABLE
+ * @version STABLE
  * @author Bruno Scheufler
  * 
  */
@@ -51,6 +51,7 @@ public class PlaylistFetcher {
                 }while(result.next());
                 
             }
+                populatePlaylist();
                 return "success";
             
         } catch (SQLException ex) {
@@ -71,29 +72,34 @@ public class PlaylistFetcher {
                 return "error";
             }
             
-            ResultSet result = db.select_query("SELECT entry_id FROM PLAYLIST_ENTRIES WHERE playlist_id='" + playlist.getId() + "'");
-            List<String> entryIds = new ArrayList<>();
+            ResultSet result = db.select_query("SELECT entry_id FROM PLAYLIST_ENTRIES WHERE playlist_id='" + playlist.getId() + "';");
+            
             if(result.next() == false){
                 //No Entries
             }else{
+                
+                List<String> entryIds = new ArrayList<>();
                 do{
-                    entryIds.add(result.getString("entry_id")); 
+                    String entryId = result.getString("entry_id");
+                    entryIds.add(entryId); 
+                    System.out.println(entryId);
                 }while(result.next());
+                
+                for(String entryId : entryIds){
                     EntryFetcher eFetch = new EntryFetcher();
-                    for(String s : entryIds){
-                        switch(eFetch.retrievePlaylistEntry(s)){
-                            case "success":
-                                playlist.addEntry(eFetch.getEntry());
-                                break;
-                            case "entry_not_found":
-                                //Entry not found in database
-                            case "track_not_found":
-                                //Track not found in database
-                            case "error":
-                            default:
-                                break;
-                        }
+                    switch(eFetch.retrievePlaylistEntry(entryId)){
+                        case "success":
+                            playlist.addEntry(eFetch.getEntry());
+                            break;
+                        case "entry_not_found":
+                            //Entry not found in database
+                        case "track_not_found":
+                            //Track not found in database
+                        case "error":
+                        default:
+                            break;
                     }
+                }
             }
             return "success";
         } catch (SQLException ex) {

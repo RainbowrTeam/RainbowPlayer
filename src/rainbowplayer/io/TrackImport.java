@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.media.Media;
 import rainbowplayer.Classes.Track;
 import rainbowplayer.db.TrackInsertion;
 
@@ -36,7 +35,6 @@ public class TrackImport {
                     return "invalid_format";
                 case "success":
                     File selectedFile = sFileSelection.getFile();
-                    Media sFileMedia = new Media(selectedFile.toURI().toString());
                     Mp3File sFileParsed = new Mp3File(sFileSelection.getFile().getPath());
                     
                     String trackTitle;
@@ -123,7 +121,6 @@ public class TrackImport {
                 int completedFiles = 0;
                 for(File selectedFile : selectedFiles){
                     try {
-                        Media sFileMedia = new Media(selectedFile.toURI().toString());
                         Mp3File sFileParsed = new Mp3File(selectedFile.getPath());
 
                         String trackTitle;

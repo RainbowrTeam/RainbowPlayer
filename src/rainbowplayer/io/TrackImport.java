@@ -7,6 +7,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -109,6 +110,7 @@ public class TrackImport {
      * @return status (success,invalid_format,no_selection,error)
      */
     public String importMultipleTracks(){
+        mTrackIds = new ArrayList<>();
         MultipleFileSelection mFileSelection = new MultipleFileSelection();
         switch(mFileSelection.selectMultipleFiles()){
             case "no_selection":

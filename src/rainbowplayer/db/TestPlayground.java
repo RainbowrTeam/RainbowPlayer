@@ -18,6 +18,8 @@ public class TestPlayground {
      * Run several integration tests using the Database and IO functions
      */
     public void run(){
+        Database db = new Database();
+        System.out.println(db.initDB());
         //STEP 1: INSERT PLAYLIST
         Playlist pll = new Playlist("TestPlayground Test Playlist");
         pll.setDescription("Playlist for testing purposes only.");
@@ -39,7 +41,11 @@ public class TestPlayground {
         //STEP 4: IMPORT SINGLE TRACK
         TrackImport tImport = new TrackImport();
         System.out.println(tImport.importSingleTrack());
+        System.out.println(tImport.importMultipleTracks());
         
+        for(String t : tImport.getMultipleTrackIds()){
+            System.out.println(t);
+        }
         //STEP 5: GET IMPORTED TRACK
         TrackFetcher tFetch = new TrackFetcher();
         System.out.println(tFetch.retrieveTrack(tImport.getSingleTrackId()));

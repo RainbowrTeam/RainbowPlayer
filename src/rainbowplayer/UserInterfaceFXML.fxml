@@ -181,12 +181,12 @@
               <Font name="fontawesome-webfont" size="24.0" />
              </font>
             </Button>
-            <Button id="Child-AddToQueueTracklistButton" prefHeight="30.0" prefWidth="30.0" onAction="#handlePAddToQueueTracklistButtonAction" GridPane.columnIndex="1" GridPane.rowIndex="3" text="add to Queue"> 
+            <Button id="Child-AddToQueueTracklistButton" prefHeight="30.0" prefWidth="30.0" onAction="#handleAddToQueueTracklistButtonAction" GridPane.columnIndex="1" GridPane.rowIndex="3" text="add to Queue"> 
              <font>
               <Font name="fontawesome-webfont" size="24.0" />
              </font>
             </Button>
-            <Button id="Child-AddToPlaylistTracklistButton" prefHeight="30.0" prefWidth="30.0" onAction="#handlePlayAllQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="add song to playlist"> 
+            <Button id="Child-AddToPlaylistTracklistButton" prefHeight="30.0" prefWidth="30.0" onAction="#handleAddToPlaylistTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="add song to playlist"> 
              <font>
               <Font name="fontawesome-webfont" size="24.0" />
              </font>

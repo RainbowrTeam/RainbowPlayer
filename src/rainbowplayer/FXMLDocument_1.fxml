@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="720" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController">
+ <children>
+  <GridPane prefHeight="720.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <children>
+        <GridPane prefHeight="200.0" GridPane.rowIndex="1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <rowConstraints>
+          <RowConstraints prefHeight="42" vgrow="SOMETIMES"/>
+         </rowConstraints>
+         <FlowPane prefHeight="200.0" GridPane.rowIndex="1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <children> 
+             <Button  prefHeight="30.0" prefWidth="30.0" onAction="#handlePrevButtonAction" text="prev"> 
+              <graphic>
+               <Polygon fill="DODGERBLUE" rotate="270.0" stroke="BLACK" strokeType="INSIDE">
+                <points>
+                 <Double fx:value="-12.5" />
+                 <Double fx:value="10.0" />
+                 <Double fx:value="12.5" />
+                 <Double fx:value="10.0" />
+                 <Double fx:value="0.0" />
+                 <Double fx:value="-15.0" />
+                </points>
+               </Polygon>
+              </graphic>
+              <FlowPane.margin>
+               <Insets right="10.0" />
+               <Insets left="10.0" />
+              </FlowPane.margin>
+             </Button>
+             <ToggleButton prefHeight="40.0" prefWidth="40.0" onAction="#handlePauseButtonAction" text="play"> 
+              <graphic>
+               <Polygon fill="DODGERBLUE" rotate="90.0" stroke="BLACK" strokeType="INSIDE">
+                <points>
+                 <Double fx:value="-25.0" />
+                 <Double fx:value="20.0" />
+                 <Double fx:value="25.0" />
+                 <Double fx:value="20.0" />
+                 <Double fx:value="0.0" />
+                 <Double fx:value="-30.0" />
+               </points>
+              </Polygon>
+             </graphic>
+             <FlowPane.margin>
+              <Insets right="10.0" />
+              <Insets left="10.0" />
+             </FlowPane.margin>
+            </ToggleButton>
+            <Button prefHeight="30.0" prefWidth="30.0" onAction="#handleSkipButtonAction" text="next"> 
+              <graphic>
+               <Polygon fill="DODGERBLUE" rotate="90.0" stroke="BLACK" strokeType="INSIDE">
+                <points>
+                 <Double fx:value="-12.5" />
+                 <Double fx:value="10.0" />
+                 <Double fx:value="12.5" />
+                 <Double fx:value="10.0" />
+                 <Double fx:value="0.0" />
+                 <Double fx:value="-15.0" />
+               </points>
+              </Polygon>
+             </graphic>
+             <FlowPane.margin>
+              <Insets right="10.0" />
+              <Insets left="10.0" />
+             </FlowPane.margin>
+            </Button>
+            <Button prefHeight="30.0" prefWidth="30.0" onAction="#handleStopButtonAction" text="stop"> 
+             <graphic>
+              <Circle fill="DODGERBLUE" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+             </graphic>
+             <FlowPane.margin>
+              <Insets top="150.0" />
+              <Insets left="10.0" />
+             </FlowPane.margin>
+            </Button>
+            <Slider orientation="VERTICAL" prefWidth="300.0">
+             <FlowPane.margin>
+              <Insets top="10.0" />
+              <Insets left="900.0" />
+             </FlowPane.margin> 
+            </Slider> 
+            <Slider orientation="HORIZONTAL" prefHeight="42.0">
+             <FlowPane.margin>
+              <Insets right="10.0" />
+              <Insets left="10.0" />
+             </FlowPane.margin> 
+            </Slider>
+          </children>
+        </FlowPane>
+        </GridPane>
+        <Pane prefHeight="520" AnchorPane.bottomAnchor="0.0" GridPane.rowIndex="2">
+         <children>
+          <TabPane prefHeight="520" prefWidth="1280" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0">
+           <tabs>
+                <Tab text="Playback">
+                 <content>
+                    <FlowPane hgap="10.0" vgap="10.0">
+                     <children>
+                        <FlowPane prefHeight="28" prefWidth="800">
+                      <children>
+                        <Label fx:id="titleLabel" layoutX="1.0" layoutY="14.0" maxWidth="800" text="Title">
+                         <FlowPane.margin>
+                          <Insets top="10" />
+                         </FlowPane.margin>
+                         <font>
+                          <Font name="System Bold" size="24.0" />
+                         </font>
+                        </Label> 
+                        <Label fx:id="authorLabel" layoutX="1.0" layoutY="14.0" maxWidth="800" text="Author">
+                         <FlowPane.margin>
+                          <Insets top="10" />
+                         </FlowPane.margin>
+                         <font>
+                          <Font name="System Bold" size="18.0" />
+                         </font>
+                        </Label> 
+                      </children>
+                        </FlowPane>
+                        <Button  onAction="#handleButtonAction" text="settings"> <!--TODO Button action -->
+                         <FlowPane.margin>
+                          <Insets left="1200" />
+                          <Insets top="10.0" />
+                         </FlowPane.margin>
+                        </Button>  
+                        <ImageView fitHeight="200.0" fitWidth="200.0"  pickOnBounds="true" preserveRatio="true">
+                         <FlowPane.margin>
+                          <Insets left="400" />
+                          <Insets top="100" />
+                         </FlowPane.margin>
+                        </ImageView>
+                     </children>
+                    </FlowPane>
+                 </content>
+                </Tab>
+                <Tab text="Playlist">
+                 <content>
+                  <FlowPane>
+                   <children>
+                      
+                   </children>
+                  </FlowPane>
+                 </content>
+                </Tab>
+           </tabs>
+          </TabPane>              
+         </children>
+        </Pane> 
+   </children>
+  </GridPane>
+ </children>
+</AnchorPane>
+
+
+
+
+
+<!--
+  <ListView prefHeight="200.0" prefWidth="200.0" />
+     
+<Button layoutX="461.0" layoutY="247.0" mnemonicParsing="false" text="Button">
+         <graphic>
+            <Circle fill="DODGERBLUE" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
+         </graphic>
+      </Button>
+     
+<Button layoutX="292.0" layoutY="259.0" mnemonicParsing="false" text="Button">
+         <graphic>
+            <Polygon fill="DODGERBLUE" rotate="90.0" stroke="BLACK" strokeType="INSIDE">
+              <points>
+                <Double fx:value="-50.0" />
+                <Double fx:value="40.0" />
+                <Double fx:value="50.0" />
+                <Double fx:value="40.0" />
+                <Double fx:value="0.0" />
+                <Double fx:value="-60.0" />
+              </points>
+            </Polygon>
+         </graphic>
+      </Button>
+    
+ <Pagination layoutX="261.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" />
+     
+<SplitMenuButton layoutX="108.0" layoutY="247.0" mnemonicParsing="false" text="SplitMenuButton">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </SplitMenuButton>
+   
+
+ <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="135.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" />
+      <Slider layoutX="165.0" layoutY="27.0" prefWidth="300.0" />
+      <ToggleButton layoutX="43.0" layoutY="65.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="600.0" text="ToggleButton" />
+ -->

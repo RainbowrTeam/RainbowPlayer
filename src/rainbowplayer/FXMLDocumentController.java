@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
@@ -20,6 +21,9 @@ public class FXMLDocumentController implements Initializable {
     
     private SongPlayer songPlayer;
     private Database db;
+    
+    @FXML
+    private Button prevButton;
     
     @FXML
     private Label titleLabel;
@@ -56,6 +60,57 @@ public class FXMLDocumentController implements Initializable {
         
     }
     
+     @FXML
+    private void handleEmptyQueueButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleLoopButtonAction(ActionEvent event) {
+        
+    } 
+    
+    @FXML
+    private void handleMixButtonAction(ActionEvent event) {
+        
+    } 
+    
+    @FXML
+    private void handleLooptButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleAddToQueueButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handlePlayAllQueueButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleImportTracklistButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleDeleteTracklistButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleAddToQueueTracklistButtonAction(ActionEvent event) {
+        
+    }  
+    
+    @FXML
+    private void handleAddToPlaylistTracklistButtonAction(ActionEvent event) {
+        
+    }
+    
+    
     @FXML
     private void handleSkipButtonAction(ActionEvent event) {
         songPlayer.skipSong();
@@ -64,6 +119,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handlePrevButtonAction(ActionEvent event) {
+        /*prevButton.setGraphic("/uf04a");*/
         songPlayer.prevSong();
         updateInterface();
     }
@@ -81,8 +137,8 @@ public class FXMLDocumentController implements Initializable {
             titleLabel.setText(songPlayer.getCurrentTitle().getTitleName());
             artistLabel.setText(songPlayer.getCurrentTitle().getArtistName());
         } else {
-            titleLabel.setText("N/A");
-            artistLabel.setText("N/A");
+            titleLabel.setText("not available");
+            artistLabel.setText("not available");
         }
     }
 }

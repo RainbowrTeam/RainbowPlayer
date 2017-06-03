@@ -101,9 +101,9 @@
                 <Tooltip text="elapsed time" />
                </tooltip>
               </Label> 
-            <Label id="Cild-RemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.column="" text=" -0:00:00 ">
+            <Label id="Cild-RemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" text=" -0:00:00 ">
                 <padding>
-                 <Insets left="20" right="20"/> 
+                 <Insets left="900" right="20"/> 
                 </padding>
                   <font>
                   <Font name="System Bold" size="12.0" />

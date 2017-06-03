@@ -15,14 +15,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 
-<GridPane fx:id="ContOutside" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController" hgap="5" vgap="5"> 
- <children>
+<GridPane fx:id="ContOutside" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController" hgap="10" vgap="10"> 
+ <gridLinesVisible>true</gridLinesVisible>
+    <children>
      
-     <GridPane id="Cont-Top" prefHeight="150" GridPane.rowIndex="1" hgap="5" vgap="5">
-      <children>
-          <GridPane id="Cont-TopButtons" GridPane.columnIndex="1" GridPane.rowIndex="1" hgap="10">  
-           <children>
-            <Button fx:id="Child-PrevButton" prefHeight="30.0" prefWidth="30.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1"> 
+     <GridPane id="Cont-Top" prefHeight="150" prefWidth="1280" GridPane.rowIndex="1">
+    <gridLinesVisible>true</gridLinesVisible>
+         <children>
+          <GridPane id="Cont-TopButtons" GridPane.columnIndex="1" GridPane.rowIndex="1" hgap="20">  
+<gridLinesVisible>true</gridLinesVisible>          
+              <children>
+            <Button id="Child-PrevButton" prefHeight="50.0" prefWidth="50.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1"> 
              <font>
               <Font name="fontawesome-webfont" size="24.0" />
              </font>
@@ -30,12 +33,12 @@
               <Tooltip id="Att-PrevButtonTooltip" text="previous song" />
              </tooltip>
             </Button>
-            <ToggleButton id="Child-PlayButton" prefHeight="40.0" prefWidth="40.0" onAction="#handlePauseButtonAction" GridPane.columnIndex="2"> 
+            <ToggleButton id="Child-PlayButton" prefHeight="70.0" prefWidth="70.0" onAction="#handlePauseButtonAction" GridPane.columnIndex="2"> 
              <font>
               <Font name="fontawesome-webfont" size="24.0" />
              </font>
             </ToggleButton>
-            <Button id="Child-SkipButton" prefHeight="30.0" prefWidth="30.0" onAction="#handleSkipButtonAction" GridPane.columnIndex="3"> 
+            <Button id="Child-SkipButton" prefHeight="50.0" prefWidth="50.0" onAction="#handleSkipButtonAction" GridPane.columnIndex="3"> 
              <font>
               <Font name="fontawesome-webfont" size="24.0" />
              </font>
@@ -43,7 +46,7 @@
               <Tooltip id="Att-SkipButtonTooltip" text="next song" />
              </tooltip>
             </Button>
-             <Button id="Child-StopButton" prefHeight="30.0" prefWidth="30.0" onAction="#handleStopButtonAction"GridPane.columnIndex="4"> 
+             <Button id="Child-StopButton" prefHeight="50.0" prefWidth="50.0" onAction="#handleStopButtonAction" GridPane.columnIndex="4"> 
               <font>
                <Font name="fontawesome-webfont" size="24.0" />
               </font>
@@ -51,7 +54,7 @@
               <Tooltip text="stop playback" />
              </tooltip>
              </Button>
-             <Slider id="Child-VolumeSlider" orientation="VERTICAL" prefHeight="100.0" GridPane.columnIndex="4">
+             <Slider id="Child-VolumeSlider" orientation="VERTICAL" prefHeight="100.0" GridPane.columnIndex="5">
              <tooltip>
               <Tooltip id="Att-VolumeSliderTooltip" text="volume" />
              </tooltip>
@@ -59,27 +62,38 @@
            </children>
           </GridPane>
           <GridPane id="Cont-TopLabels" prefWidth="600" GridPane.rowIndex="1" GridPane.columnIndex="2" hgap="5">
-           <children>
-               <Label fx:id="Child-TitleLabel" layoutX="1.0" layoutY="14.0" text="Title" GridPane.rowIndex="1">
+           <padding>
+                 <Insets top="25" right="25" bottom="25" left="200"/> 
+              </padding>
+              <gridLinesVisible>true</gridLinesVisible>
+              <children>
+               <Label id="Child-TitleLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Title" GridPane.rowIndex="1">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>
                 </Label>  
-                <Label fx:id="Chil-AuthorLabel" layoutX="1.0" layoutY="14.0" text="Author" GridPane.rowIndex="2">
+                <Label id="Chil-AuthorLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Author" GridPane.rowIndex="2">
                   <font>
                    <Font name="System Bold" size="18.0" />
                   </font>
                 </Label>  
-                <Label fx:id="albumLabel" layoutX="1.0" layoutY="14.0" maxWidth="800" text="Album" GridPane.rowIndex="3">
+                <Label id="albumLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Album" GridPane.rowIndex="3">
                   <font>
                    <Font name="System Bold" size="18.0" />
                   </font>
                 </Label>    
            </children>
           </GridPane> 
-          <GridPane id="Cont-TopSlider" GridPane.rowIndex="2" GridPane.columnIndex="1" vgap="5">
-           <children>
+          <GridPane id="Cont-TopSlider" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2">
+              <padding>
+                 <Insets top="25" right="25" bottom="25" left="25"/> 
+              </padding>
+              <gridLinesVisible>true</gridLinesVisible>          
+              <children>
               <Label id="Child-CurrentTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text=" 0:00:00 ">
+               <padding>
+                 <Insets right="50" left="10"/> 
+               </padding>
                <font>
                 <Font name="System Bold" size="12.0" />
                </font>
@@ -87,8 +101,11 @@
                 <Tooltip text="elapsed time" />
                </tooltip>
               </Label> 
-              <Label id="Cild-RemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" text=" -0:00:00 ">
-                 <font>
+            <Label id="Cild-RemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.column="" text=" -0:00:00 ">
+                <padding>
+                 <Insets left="20" right="20"/> 
+                </padding>
+                  <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
                  <tooltip>
@@ -96,14 +113,17 @@
                  </tooltip>
               </Label> 
               <Label id="Child-TotalTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="3" text="0:00:00">
-                 <font>
+                 <padding>
+                  <Insets right="10" left="10"/> 
+                 </padding>
+                  <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
                  <tooltip>
                   <Tooltip text="total time" />
                  </tooltip>
               </Label>
-              <Slider id="Child-ProgressSlider" orientation="HORIZONTAL" prefWidth="1200.0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+             <Slider id="Child-ProgressSlider" orientation="HORIZONTAL" prefWidth="1200.0" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
            </children>
           </GridPane>
       </children> 
@@ -114,7 +134,8 @@
           <Tab id="Tab-Queue" text="Queue">
            <content>
                <GridPane id="Cont-QueueControlls" prefWidth="800" prefHeight="160" hgap="10" vgap="20">
-                <children>
+<gridLinesVisible>true</gridLinesVisible>               
+                   <children>
                  <Label id="Child-TrackNrQueueLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text="playing track n of n">
                   <font>
                    <Font name="System Bold" size="12.0" />
@@ -166,7 +187,8 @@
           <Tab id="Tab-Tracklist>" text="Tracklist">
            <content>
            <GridPane id="Cont-TracklistControlls" prefWidth="800" prefHeight="160" vgap="20">
-            <Label id="Child-TrackNrTracklistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text="n tracks in Tracklist">
+            <gridLinesVisible>true</gridLinesVisible>
+               <Label id="Child-TrackNrTracklistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text="n tracks in Tracklist">
                   <font>
                    <Font name="System Bold" size="12.0" />
                   </font>

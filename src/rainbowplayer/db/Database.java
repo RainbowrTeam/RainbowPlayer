@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *
+ * @version STABLE
  * @author Bruno
  */
 public class Database {
@@ -44,7 +40,7 @@ public class Database {
                 c.close();
                 return true;
             } catch (SQLException ex) {
-                System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+                System.err.println(ex.getClass().getName() + ": " + ex.getMessage() );
                 return false;
             }
         }else{
@@ -61,13 +57,36 @@ public class Database {
         if(connect()){
             try {
                 stmt = c.createStatement();
+                
+                //TRACKS table
                 String sql = "CREATE TABLE IF NOT EXISTS TRACKS" +
-                        "(TRACK_TITLE TEXT NOT NULL," +
-                        "TRACK_ARTIST TEXT NOT NULL, " +
-                        "TRACK_ALBUM TEXT NOT NULL, " +
-                        "TRACK_RELEASE_DATE TEXT NOT NULL, " +
-                        "TRACK_GENRE TEXT NOT NULL)";
+                        "(track_id TEXT PRIMARY KEY NOT NULL," +
+                        "track_title TEXT NOT NULL," +
+                        "track_path TEXT NOT NULL," +
+                        "track_artist TEXT NOT NULL, " +
+                        "track_album TEXT NOT NULL, " +
+                        "track_release_date TEXT NOT NULL, " +
+                        "track_duration TEXT NOT NULL," +
+                        "track_genre TEXT NOT NULL)";
                 stmt.executeUpdate(sql);
+                
+                //PLAYLISTS table
+                sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS" +
+                        "(playlist_id TEXT PRIMARY KEY NOT NULL," +
+                        "playlist_name TEXT NOT NULL," +
+                        "playlist_desc TEXT NOT NULL," +
+                        "playlist_tags TEXT NOT NULL, " +
+                        "playlist_creation TEXT NOT NULL)";
+                stmt.executeUpdate(sql);
+                
+                //PLAYLIST_ENTRIES table
+                sql = "CREATE TABLE IF NOT EXISTS PLAYLIST_ENTRIES" +
+                        "(entry_id TEXT PRIMARY KEY NOT NULL," +
+                        "playlist_id TEXT NOT NULL," +
+                        "track_id TEXT NOT NULL)";
+                
+                stmt.executeUpdate(sql);
+                
                 stmt.close();
                 
                 return closeConnection();
@@ -83,7 +102,7 @@ public class Database {
     
     /**
      * Executes INSERT/UPDATE/DELETE/COUNT query 
-     * @param query
+     * @param query string
      * @return true/fals whether query was successful
      */
     public boolean execute_query(String query)
@@ -100,5 +119,24 @@ public class Database {
         }else{
             return false;
         }
+    }
+    
+    /**
+     * Executes SELECT query
+     * @param query string
+     * @return ResultSet
+     */
+    public ResultSet select_query(String query){
+        if(!connect()){
+            return null;
+        }
+         
+        try {
+                stmt = c.createStatement();
+                return stmt.executeQuery(query);
+            } catch (SQLException ex) {
+                System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
+                return null;
+            }
     }
 }

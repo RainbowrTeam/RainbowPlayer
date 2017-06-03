@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rainbowplayer.db;
+package rainbowplayer.Core.Features;
 
 /**
  *
- * @author Bruno
+ * @author Tim Weiß
  */
-public class DatabaseFetch {
-    
+public abstract class Feature {
+    public abstract boolean isAvailable();
+    public abstract String getName();
 }

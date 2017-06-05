@@ -8,3 +8,15 @@ and open the template in the editor.
     Author     : Nicolás
 */
 
+#name{
+   visibility: hidden;
+   background-color:black; 
+}
+
+#ChildTitleLabel{
+    color: dodgerblue;
+}
+
+.klasse{
+    
+}

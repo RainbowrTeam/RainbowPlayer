@@ -10,18 +10,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
-import rainbowplayer.Core.FeatureManager;
-import rainbowplayer.Core.Features.PlaylistExporter;
-import rainbowplayer.Core.Features.PlaylistImporter;
-import rainbowplayer.Core.Features.TestFeature;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
 
@@ -43,6 +42,8 @@ public class FXMLDocumentController implements Initializable {
     private Label timeLabel;
     @FXML
     private Label playlistLabel;
+    @FXML
+    private ListView ChildQueueList; 
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -154,11 +155,20 @@ public class FXMLDocumentController implements Initializable {
         /*prevButton.setGraphic("/uf04a");*/
         songPlayer.prevSong();
     }
+   
+    public void setListContent(ListView lV, ArrayList list){
+	ObservableList oL = FXCollections.observableArrayList(list);
+	lV.setItems(oL);
+    }
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         songPlayer = new SongPlayer(this);
         playerData = new HashMap<>();
+        ArrayList<String>tL = new ArrayList<>();
+        tL.add("Hi!");
+        setListContent(ChildQueueList,tL);
     }
     
     /**
@@ -166,10 +176,7 @@ public class FXMLDocumentController implements Initializable {
      */
     public void updateInterface() {
         if(songPlayer.getPlayingTrack() != null) {
-            if(songPlayer.getPlayingTrack().getIsPaused())
-                titleLabel.setText("(pausiert) " + songPlayer.getPlayingTrack().getTitleName());
-            else
-                titleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
+            titleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
             artistLabel.setText(songPlayer.getPlayingTrack().getArtistName());
             
             Duration dur = songPlayer.getPlayingTrack().getRemainingDuration();

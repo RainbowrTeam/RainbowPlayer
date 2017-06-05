@@ -14,7 +14,7 @@ public class RainbowPlayer extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("UserInterfaceFXML.fxml"));
         
         Scene scene = new Scene(root);
-        
+        //scene.getStylesheets().add(getClass().getResource("Stylesheet.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
         stage.setTitle("Rainbow Player");

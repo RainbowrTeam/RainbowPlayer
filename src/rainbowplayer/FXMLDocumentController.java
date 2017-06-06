@@ -15,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import rainbowplayer.Classes.Duration;
@@ -23,6 +22,7 @@ import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
+import rainbowplayer.db.TrackFetcher;
 
 public class FXMLDocumentController implements Initializable {
     
@@ -48,6 +48,10 @@ public class FXMLDocumentController implements Initializable {
     private Label playlistLabel;
     @FXML
     private ListView ChildQueueList; 
+    @FXML
+    private ListView ChildPlaylistList;
+    @FXML
+    private ListView ChildTracklistList;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -170,9 +174,28 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         songPlayer = new SongPlayer(this);
         playerData = new HashMap<>();
-        ArrayList<String>tL = new ArrayList<>();
-        tL.add("Hi!");
-        setListContent(ChildQueueList,tL);
+        
+        TrackFetcher trackListFetcher = new TrackFetcher();
+        ArrayList<String> trackTitles = new ArrayList<>();
+        
+        switch(trackListFetcher.retrieveAllTracks()){
+            case "success":
+                for(Track t : trackListFetcher.getAllTracks()){
+                    trackTitles.add(t.getFormattedTitle());
+                }
+                setListContent(ChildTracklistList,trackTitles);
+                break;
+            case "no_tracks_found":
+                trackTitles.add("It's empty here. Maybe you should import a track!");
+                setListContent(ChildTracklistList,trackTitles);
+                break;
+            case "error":
+            default:
+                trackTitles.add("Oops. The track import failed somehow, do you want to try it again?");
+                setListContent(ChildTracklistList,trackTitles);
+                break;
+        }
+        
     }
     
     /**

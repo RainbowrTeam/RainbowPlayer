@@ -10,17 +10,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
-import rainbowplayer.Core.FeatureManager;
-import rainbowplayer.Core.Features.PlaylistExporter;
-import rainbowplayer.Core.Features.PlaylistImporter;
-import rainbowplayer.Core.Features.TestFeature;
 import rainbowplayer.Core.SongPlayer;
 import rainbowplayer.db.Database;
 
@@ -31,14 +31,23 @@ public class FXMLDocumentController implements Initializable {
     
     private HashMap<String, String> playerData = null;
     
+   
     @FXML
-    private Label titleLabel;
+    private Label ChildTitleLabel;
     @FXML
-    private Label artistLabel;
+    private Label ChildAuthorLabel;
+    @FXML private Label ChildAlbumLabel;
+  
     @FXML
-    private Label timeLabel;
+    private Label ChildRemainTimeLabel;
+    @FXML
+    private Label ChildTotalTimeLabel;
+    @FXML
+    private Label ChildCurrentTimeLabel;
     @FXML
     private Label playlistLabel;
+    @FXML
+    private ListView ChildQueueList; 
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -89,6 +98,57 @@ public class FXMLDocumentController implements Initializable {
         
     }
     
+     @FXML
+    private void handleEmptyQueueButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleLoopButtonAction(ActionEvent event) {
+        
+    } 
+    
+    @FXML
+    private void handleMixButtonAction(ActionEvent event) {
+        
+    } 
+    
+    @FXML
+    private void handleLooptButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleAddToQueueButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handlePlayAllQueueButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleImportTracklistButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleDeleteTracklistButtonAction(ActionEvent event) {
+        
+    }
+    
+     @FXML
+    private void handleAddToQueueTracklistButtonAction(ActionEvent event) {
+        
+    }  
+    
+    @FXML
+    private void handleAddToPlaylistTracklistButtonAction(ActionEvent event) {
+        
+    }
+    
+    
     @FXML
     private void handleSkipButtonAction(ActionEvent event) {
         songPlayer.skipSong();
@@ -96,13 +156,23 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handlePrevButtonAction(ActionEvent event) {
+        /*prevButton.setGraphic("/uf04a");*/
         songPlayer.prevSong();
     }
+   
+    public void setListContent(ListView lV, ArrayList list){
+	ObservableList oL = FXCollections.observableArrayList(list);
+	lV.setItems(oL);
+    }
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         songPlayer = new SongPlayer(this);
         playerData = new HashMap<>();
+        ArrayList<String>tL = new ArrayList<>();
+        tL.add("Hi!");
+        setListContent(ChildQueueList,tL);
     }
     
     /**
@@ -110,22 +180,27 @@ public class FXMLDocumentController implements Initializable {
      */
     public void updateInterface() {
         if(songPlayer.getPlayingTrack() != null) {
-            if(songPlayer.getPlayingTrack().getIsPaused())
-                titleLabel.setText("(pausiert) " + songPlayer.getPlayingTrack().getTitleName());
-            else
-                titleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
-            artistLabel.setText(songPlayer.getPlayingTrack().getArtistName());
+            ChildTitleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
+            ChildAuthorLabel.setText(songPlayer.getPlayingTrack().getArtistName());
             
-            Duration dur = songPlayer.getPlayingTrack().getRemainingDuration();
+            Duration durTotal = songPlayer.getPlayingTrack().getRemainingDuration();
+            Duration durRemaining = songPlayer.getPlayingTrack().getRemainingDuration();
             
-            timeLabel.setText(dur.getMinutes() + ":" + dur.getSeconds());
+            ChildRemainTimeLabel.setText(durRemaining.getMinutes() + ":" + durRemaining.getSeconds());
+            ChildTotalTimeLabel.setText(durTotal.getMinutes() + ":" + durTotal.getSeconds());
+            ChildCurrentTimeLabel.setText(Integer.toString(Integer.parseInt(ChildTotalTimeLabel.getText()) - Integer.parseInt(ChildRemainTimeLabel.getText())));
             
             if(songPlayer.getPlaylist() != null){
                 playlistLabel.setText(songPlayer.getPlaylist().getName());
             }
         } else {
-            titleLabel.setText("N/A");
-            artistLabel.setText("N/A");
+            ChildTitleLabel.setText("Title: not available");
+            ChildAuthorLabel.setText("Author: not available");
+            ChildAlbumLabel.setText("Album: not available");
+            ChildRemainTimeLabel.setText("-00:00:00");
+            ChildTotalTimeLabel.setText("00:00:00");
+            ChildCurrentTimeLabel.setText("00:00:00");
+            
         }
     }
 }

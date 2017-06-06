@@ -21,14 +21,11 @@
 
 
 <GridPane fx:id="ContOutside" id="ContOutside" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController" hgap="10" vgap="10" stylesheets="@Stylesheet.css"> 
-    <gridLinesVisible>true</gridLinesVisible>
     <children>
      
      <GridPane id="ContTop" prefHeight="150" prefWidth="1280" GridPane.rowIndex="1">
-    <gridLinesVisible>true</gridLinesVisible>
          <children>
           <GridPane id="ContTopButtons" GridPane.columnIndex="1" GridPane.rowIndex="1" hgap="20">  
-<gridLinesVisible>true</gridLinesVisible>          
               <children>
             <Button id="ChildPrevButton" prefHeight="50.0" prefWidth="50.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1"> 
              <font>
@@ -70,19 +67,18 @@
            <padding>
                  <Insets top="25" right="25" bottom="25" left="200"/> 
               </padding>
-              <gridLinesVisible>true</gridLinesVisible>
               <children>
-               <Label id="ChildTitleLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Title" GridPane.rowIndex="1">
+               <Label fx:id="ChildTitleLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Title" GridPane.rowIndex="1">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>
                 </Label>  
-                <Label id="ChildAuthorLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Author" GridPane.rowIndex="2">
+                <Label fx:id="ChildAuthorLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Author" GridPane.rowIndex="2">
                   <font>
                    <Font name="System Bold" size="18.0" />
                   </font>
                 </Label>  
-                <Label id="ChildAlbumLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Album" GridPane.rowIndex="3">
+                <Label fx:id="ChildAlbumLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Album" GridPane.rowIndex="3">
                   <font>
                    <Font name="System Bold" size="18.0" />
                   </font>
@@ -93,7 +89,6 @@
               <padding>
                  <Insets top="25" right="25" bottom="25" left="25"/> 
               </padding>
-             <gridLinesVisible>true</gridLinesVisible>          
               <children>
               <Label id="ChildCurrentTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text=" 0:00:00 ">
                <padding>
@@ -139,9 +134,7 @@
           <Tab id="TabQueue" text="Queue">
            <content>
         <GridPane id="ContQueueTab" prefWidth="1280" vgap="40">
-<gridLinesVisible>true</gridLinesVisible>               
             <GridPane id="ContQueueControlls" hgap="10" vgap="15" alignment="top_left" GridPane.columnIndex="1">
-<gridLinesVisible>true</gridLinesVisible>               
                    <children>
                  <Label id="ChildTrackNrQueueLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" playing track 0 of 0 ">
                   <font>
@@ -181,7 +174,7 @@
             </Button>
              </children>
             </GridPane>
-            <ScrollPane id="ContQueueScrollpane" prefWidth="980" prefHeight="400" GridPane.columnIndex="2">
+            <ScrollPane id="ContQueueScrollpane" prefWidth="1000" prefHeight="400" GridPane.columnIndex="2">
              <content>
          <ListView fx:id="ChildQueueList" id="name" prefWidth="1000">
               <items>
@@ -197,10 +190,15 @@
           <Tab id="TabPlaylist" text="Playlist">
            <content>
              <GridPane id="ContPlaylistTab" prefWidth="1280" vgap="40">
-<gridLinesVisible>true</gridLinesVisible>               
-  <ScrollPane id="ContPlaylistScrollpane" prefWidth="980" prefHeight="400" GridPane.columnIndex="2">
+  <ScrollPane id="ContPlaylistScrollpane" prefWidth="1000" prefHeight="400" GridPane.columnIndex="2">
          <content>
-      <!--      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="304.0" prefWidth="413.0">
+      <ListView fx:id="ChildPlaylistList" id="ChildPlaylistList" prefWidth="1000">
+              <items>
+		<FXCollections fx:factory="observableArrayList">
+		</FXCollections>
+                </items>
+            </ListView>
+             <!--      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="304.0" prefWidth="413.0">
               <children>
                   <Accordion>
                     <panes>
@@ -235,7 +233,6 @@
         </content>
       </ScrollPane> 
      <GridPane id="ContPlaylistControlls" hgap="10" vgap="15" alignment="top_left" GridPane.columnIndex="1">
-     <gridLinesVisible>true</gridLinesVisible>               
             <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.columnIndex="2" text="Import Playlist">
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
@@ -258,9 +255,7 @@
           <Tab id="TabTracklist>" text="Tracklist">
            <content>
             <GridPane id="ContTracklistTab" prefWidth="1280"  vgap="40">
-<gridLinesVisible>true</gridLinesVisible>               
            <GridPane id="ContTracklistControlls"  vgap="15" hgap="10" GridPane.columnIndex="1">
-            <gridLinesVisible>true</gridLinesVisible>
                <Label id="ChildTrackNrTracklistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" 0 tracks in Tracklist ">
                   <font>
                    <Font name="System Bold" size="24.0" />
@@ -287,11 +282,14 @@
              </font>
             </Button>  
            </GridPane> 
-           <ScrollPane id="ContTracklistScrollpane" prefWidth="980" prefHeight="400" GridPane.columnIndex="2">
+           <ScrollPane id="ContTracklistScrollpane" prefWidth="1000" prefHeight="400" GridPane.columnIndex="2">
            <content>
-               <!--     <ListView id="ChildTracklistList" layoutX="192.0" layoutY="10.0" prefHeight="400.0" prefWidth="1000" >
-                   
-               </ListView> -->
+               <ListView fx:id="ChildTracklistList" id="ChildTracklistList" prefWidth="1000">
+              <items>
+		<FXCollections fx:factory="observableArrayList">
+		</FXCollections>
+                </items>
+            </ListView>
            </content>
            </ScrollPane>
            </GridPane>

@@ -35,11 +35,17 @@ public class FXMLDocumentController implements Initializable {
     private Button prevButton;
     
     @FXML
-    private Label titleLabel;
+    private Label ChildTitleLabel;
     @FXML
-    private Label artistLabel;
+    private Label ChildAuthorLabel;
+    @FXML private Label ChildAlbumLabel;
+  
     @FXML
-    private Label timeLabel;
+    private Label ChildRemainTimeLabel;
+    @FXML
+    private Label ChildTotalTimeLabel;
+    @FXML
+    private Label ChildCurrentTimeLabel;
     @FXML
     private Label playlistLabel;
     @FXML
@@ -176,19 +182,22 @@ public class FXMLDocumentController implements Initializable {
      */
     public void updateInterface() {
         if(songPlayer.getPlayingTrack() != null) {
-            titleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
-            artistLabel.setText(songPlayer.getPlayingTrack().getArtistName());
+            ChildTitleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
+            ChildAuthorLabel.setText(songPlayer.getPlayingTrack().getArtistName());
             
-            Duration dur = songPlayer.getPlayingTrack().getRemainingDuration();
+            Duration durTotal = songPlayer.getPlayingTrack().getRemainingDuration();
+            Duration durRemaining = songPlayer.getPlayingTrack().getRemainingDuration();
             
-            timeLabel.setText(dur.getMinutes() + ":" + dur.getSeconds());
+            ChildRemainTimeLabel.setText(durRemaining.getMinutes() + ":" + durRemaining.getSeconds());
+            ChildTotalTimeLabel.setText(durTotal.getMinutes() + ":" + durTotal.getSeconds());
+            ChildCurrentTimeLabel.setText(Integer.toString(Integer.parseInt(ChildTotalTimeLabel.getText()) - Integer.parseInt(ChildRemainTimeLabel.getText())));
             
             if(songPlayer.getPlaylist() != null){
                 playlistLabel.setText(songPlayer.getPlaylist().getName());
             }
         } else {
-            titleLabel.setText("not available");
-            artistLabel.setText("not available");
+            ChildTitleLabel.setText("not available");
+            ChildAuthorLabel.setText("not available");
         }
     }
 }

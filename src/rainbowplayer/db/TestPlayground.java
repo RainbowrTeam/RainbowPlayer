@@ -7,6 +7,7 @@ package rainbowplayer.db;
 
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
+import rainbowplayer.Classes.Track;
 import rainbowplayer.io.TrackImport;
 
 /**
@@ -64,5 +65,10 @@ public class TestPlayground {
         PlaylistRemoval pRem = new PlaylistRemoval();
         System.out.println(pRem.removePlaylist(pFetch.getPlaylist().getId()));
         
+        TrackFetcher completeTrackFetcher = new TrackFetcher();
+        System.out.println(completeTrackFetcher.retrieveAllTracks());
+        for(Track t : completeTrackFetcher.getAllTracks()){
+            System.out.println(t.getFormattedTitle());
+        }
     }
 }

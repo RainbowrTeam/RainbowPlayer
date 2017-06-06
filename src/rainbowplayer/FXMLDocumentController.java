@@ -31,9 +31,7 @@ public class FXMLDocumentController implements Initializable {
     
     private HashMap<String, String> playerData = null;
     
-    @FXML
-    private Button prevButton;
-    
+   
     @FXML
     private Label ChildTitleLabel;
     @FXML
@@ -196,8 +194,13 @@ public class FXMLDocumentController implements Initializable {
                 playlistLabel.setText(songPlayer.getPlaylist().getName());
             }
         } else {
-            ChildTitleLabel.setText("not available");
-            ChildAuthorLabel.setText("not available");
+            ChildTitleLabel.setText("Title: not available");
+            ChildAuthorLabel.setText("Author: not available");
+            ChildAlbumLabel.setText("Album: not available");
+            ChildRemainTimeLabel.setText("-00:00:00");
+            ChildTotalTimeLabel.setText("00:00:00");
+            ChildCurrentTimeLabel.setText("00:00:00");
+            
         }
     }
 }

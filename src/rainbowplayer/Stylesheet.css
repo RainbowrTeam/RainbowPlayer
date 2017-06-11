@@ -7,16 +7,96 @@ and open the template in the editor.
     Created on : 03.06.2017, 22:16:09
     Author     : Nicolás
 */
-
-#name{
-   visibility: hidden;
-   background-color:black; 
+.root {
+    -fx-background-image: url("bg.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+.root {
+    -fx-background-color: white;
 }
 
-#ChildTitleLabel{
-    color: dodgerblue;
+.cont{
+   -fx-background-color: transparent; 
 }
 
-.klasse{
-    
-}
+.label{
+    -fx-text-fill: linear-gradient(rgba(33,37,41,1), rgba(52,58,64,1) );  /* linear-gradient(to right, rgba(194,37,92,1), rgba(217,72,15,1), rgba(245,159,0,1), rgba(55,178,77,1), rgba(27,110,194,1), rgba(156,54,181,1) ); */
+ }
+
+
+ 
+ #ChildPrevButton{
+     -fx-background-color: linear-gradient(to right, rgba(156,54,181,1), rgba(27,110,194,1));
+ }
+ #ChildPlayButton{
+     -fx-background-color: linear-gradient(to right, rgba(27,110,194,1), rgba(55,178,77,1));
+ }
+ #ChildSkipButton{
+     -fx-background-color: linear-gradient(to right, rgba(55,178,77,1), rgba(245,159,0,1));
+ }
+ #ChildStopButton{
+     -fx-background-color: linear-gradient(to right, rgba(245,159,0,1), rgba(217,72,15,1));
+ }
+ #ChildVolumeSlider{
+     -fx-background-color: linear-gradient(to right, rgba(217,72,15,1), rgba(194,37,92,1)); 
+ }
+ 
+ 
+ #ChildProgressSlider{
+     -fx-background-color: linear-gradient(to right, rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1), rgba(245,159,0,1), rgba(217,72,15,1), rgba(194,37,92,1));
+ }
+  
+ 
+#ChildAddToQueueButton{
+     -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
+ }
+ #ChildEmptyQueueButton{
+     -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
+ }
+ #ChildPlayAllQueueButton{
+     -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
+ }
+ #ChildLoopButton{
+     -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1));
+ }
+ #ChildMixButton{
+     -fx-background-color: linear-gradient(rgba(217,72,15,1), rgba(194,37,92,1));
+ }
+ 
+ 
+ #ChildImportPlaylistButton{
+     -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1) 140%);
+ }
+ #ChildExportPlaylistButton{
+     -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
+ }
+ #ChildAddToQueuePlaylistButton{
+     -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1), rgba(194,37,92,1));
+     
+     
+ }
+ #ChildImportTracklistButton{
+-fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
+ }
+ #ChildDeleteTracklistButton{
+     -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
+ }
+ #ChildAddToQueueTracklistButton{
+     -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
+ }
+ #ChildAddToPlaylistTracklistButton{
+     -fx-background-color: linear-gradient(rgba(245,159,0,1) 0%, rgba(217,72,15,1), rgba(194,37,92,1));
+    }
+ 
+
+ .tab-pane *.tab-header-background{
+        -fx-background-color: linear-gradient(to right, rgba(240,101,149,1), rgba(255,146,43,1), rgba(255,224,102,1), rgba(140,233,154,1), rgba(102,217,232,1), rgba(218,119,242,1));
+ }
+ 
+  .button{
+     -fx-text-fill: white !important;
+ } 
+ .toggle-button{
+     -fx-text-fill: white !important;
+ }

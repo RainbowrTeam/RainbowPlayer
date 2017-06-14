@@ -9,25 +9,43 @@ import rainbowplayer.Classes.Track;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
 import rainbowplayer.Core.SongPlayer;
-import rainbowplayer.db.Database;
 import rainbowplayer.db.TrackFetcher;
+import rainbowplayer.db.TrackRemoval;
+import rainbowplayer.io.TrackImport;
 
 public class FXMLDocumentController implements Initializable {
     
     private SongPlayer songPlayer;
-    private Database db;
+    
+    //Track List Data
+    private ArrayList<Track> trackList = new ArrayList<>();
+    private int trackCount;
+    private boolean trackImportError;
+    private boolean emptyTrackListWarningEmitted = false;
+    
+    //Tracklist item deletion 
+    private boolean deleteMode = false;
     
     private HashMap<String, String> playerData = null;
     
@@ -36,7 +54,8 @@ public class FXMLDocumentController implements Initializable {
     private Label ChildTitleLabel;
     @FXML
     private Label ChildAuthorLabel;
-    @FXML private Label ChildAlbumLabel;
+    @FXML 
+    private Label ChildAlbumLabel;
   
     @FXML
     private Label ChildRemainTimeLabel;
@@ -46,10 +65,18 @@ public class FXMLDocumentController implements Initializable {
     private Label ChildCurrentTimeLabel;
     @FXML
     private Label playlistLabel;
+    
     @FXML
-    private ListView ChildQueueList; 
+    private Label ChildTrackNrTracklistLabel;
     @FXML
-    private ListView ChildPlaylistList;
+    private Button ChildDeleteTracklistButton;
+    @FXML
+    private TabPane listTabs;
+    
+    @FXML
+    private final ListView<String> ChildQueueList = new ListView<String>();
+    @FXML
+    private final ListView<String> ChildPlaylistList = new ListView<String>();
     @FXML
     private ListView ChildTracklistList;
     
@@ -82,6 +109,97 @@ public class FXMLDocumentController implements Initializable {
     private void startTimer(){
         UiWorkerThread myThread = new UiWorkerThread(playerData, 0, songPlayer, this);
         myThread.start();
+    }
+    
+    public void setListContent(ListView lV, ArrayList list){
+	ObservableList oL = FXCollections.observableArrayList(list);
+	lV.setItems(oL);
+    }
+    
+    private void populateTrackList(){
+        /*
+            Populate TrackList
+        */
+        
+        TrackFetcher trackListFetcher = new TrackFetcher();
+        ArrayList<String> trackTitles = new ArrayList<>();
+        trackList = new ArrayList<>();
+        trackCount = 0;
+        
+        switch(trackListFetcher.retrieveAllTracks()){
+            case "success":
+                trackImportError = false;
+                for(Track t : trackListFetcher.getAllTracks()){
+                    trackList.add(t);
+                    trackTitles.add(t.getFormattedTitle());
+                    trackCount++;
+                }
+                setListContent(ChildTracklistList,trackTitles);
+                ChildTrackNrTracklistLabel.setText(trackCount + " Tracks in Tracklist");
+                break;
+            case "no_tracks_found":
+                trackImportError = false;
+                setListContent(ChildTracklistList, trackTitles);
+                break;
+            case "error":
+            default:
+                trackImportError = true;
+                showAlert(AlertType.ERROR, "Could not import tracks", "Oops. An error occurred.", "The track import failed somehow, do you want to try it again?");
+                setListContent(ChildTracklistList,trackTitles);
+                break;
+        }
+    }
+    
+    private void handleListViewEvents(){
+        ChildTracklistList.setOnMouseClicked((MouseEvent event) -> {
+            int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
+            Track clickedTrack = trackList.get(clickedIndex);
+            
+            if(!deleteMode){
+                showAlert(AlertType.INFORMATION, clickedTrack.getFormattedTitle(), clickedTrack.getTitleName(), 
+                    "by " + clickedTrack.getArtistName() + " \nAlbum: " + clickedTrack.getAlbumName() + "\nGenre: " + clickedTrack.getGenreName() + "\nTrack ID: " + clickedTrack.getTrackId());
+            }else{
+                TrackRemoval tRemoval = new TrackRemoval();
+                if(tRemoval.removeTrack(clickedTrack.getTrackId())){
+                    populateTrackList();
+                }else{
+                    showAlert(AlertType.ERROR, "Could not remove track", "An error occurred!", "The track you selected could not be deleted. Please try again!");
+                }
+            }
+        });
+        
+        ChildPlaylistList.setOnMouseClicked((MouseEvent event) -> {
+            //to be added
+        });
+        
+        ChildQueueList.setOnMouseClicked((MouseEvent event) -> {
+            //to be added
+        });
+    }
+    
+    private void handleTabPaneEvents(){
+        listTabs.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
+            //TrackList tab
+            if(newTabIndex.intValue() == 2){
+                if(!trackImportError){
+                    if(trackCount == 0){
+                        if(!emptyTrackListWarningEmitted){
+                            showAlert(AlertType.INFORMATION, "Hi there!", "It's empty here!", "Do you want to import some tracks? Just hit the 'Import' button!");
+                            emptyTrackListWarningEmitted = true;
+                        }
+                    }
+                }
+            }
+        }); 
+    }
+    
+    private void showAlert(AlertType alertType, String alertTitle, String headerText, String contentText){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(alertTitle);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
+        alert.showAndWait();
     }
     
     private void timerTick(){}
@@ -135,11 +253,61 @@ public class FXMLDocumentController implements Initializable {
      @FXML
     private void handleImportTracklistButtonAction(ActionEvent event) {
         
+        TrackImport tImport = new TrackImport();
+        String importStatus;
+        
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Import Track");
+        alert.setHeaderText("Import Track");
+        alert.setContentText("You can either import a single track or select multiple tracks to import.");
+
+        ButtonType importSingleTrackButton = new ButtonType("Import Single Track");
+        ButtonType importMultiTrackButton = new ButtonType("Import Multiple Tracks");
+        ButtonType cancelActionButton = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(importSingleTrackButton, importMultiTrackButton, cancelActionButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == importSingleTrackButton){
+            //Import single track
+            importStatus = tImport.importSingleTrack();
+        } else if (result.get() == importMultiTrackButton) {
+            //Import multiple tracks
+            importStatus = tImport.importMultipleTracks();
+        } else {
+            //Cancel Import
+            importStatus = "cancelled";
+        }
+        
+        switch(importStatus){
+            case "success":
+                showAlert(AlertType.INFORMATION, "Import Successful", "Success!", "The track import was successful!");
+                populateTrackList(); //refresh track list
+                break;
+            case "no_selection":
+                showAlert(AlertType.WARNING, "Import Failed: No Track Selected", "No Track Selected", "Please select a valid track file and try again.");
+                break;
+            case "invalid_format":
+                showAlert(AlertType.WARNING, "Import Failed: Invalid Track Format", "Invalid Track Format", "RainbowPlayer only supports .mp3 and .wav files.");
+                break;
+            case "cancelled":
+                break;
+            case "error":
+            default:
+                showAlert(AlertType.ERROR, "Import Failed", "Something went wrong.", "RainbowPlayer could not import your selected track(s) successfully. Please try again.");
+                break;
+        }
     }
     
      @FXML
     private void handleDeleteTracklistButtonAction(ActionEvent event) {
-        
+        if(deleteMode){
+            deleteMode = false;
+            ChildDeleteTracklistButton.setText("Delete Track");
+        }else{
+            deleteMode = true;
+            ChildDeleteTracklistButton.setText("Exit Delete Mode");
+        }
     }
     
      @FXML
@@ -163,39 +331,20 @@ public class FXMLDocumentController implements Initializable {
         /*prevButton.setGraphic("/uf04a");*/
         songPlayer.prevSong();
     }
-   
-    public void setListContent(ListView lV, ArrayList list){
-	ObservableList oL = FXCollections.observableArrayList(list);
-	lV.setItems(oL);
-    }
     
+    @FXML 
+    private void handleTracklistMouseClick(MouseEvent event) {
+        System.out.println("clicked on " + ChildTracklistList.getSelectionModel().getSelectedItem());
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         songPlayer = new SongPlayer(this);
         playerData = new HashMap<>();
-        
-        TrackFetcher trackListFetcher = new TrackFetcher();
-        ArrayList<String> trackTitles = new ArrayList<>();
-        
-        switch(trackListFetcher.retrieveAllTracks()){
-            case "success":
-                for(Track t : trackListFetcher.getAllTracks()){
-                    trackTitles.add(t.getFormattedTitle());
-                }
-                setListContent(ChildTracklistList,trackTitles);
-                break;
-            case "no_tracks_found":
-                trackTitles.add("It's empty here. Maybe you should import a track!");
-                setListContent(ChildTracklistList,trackTitles);
-                break;
-            case "error":
-            default:
-                trackTitles.add("Oops. The track import failed somehow, do you want to try it again?");
-                setListContent(ChildTracklistList,trackTitles);
-                break;
-        }
-        
+ 
+        populateTrackList();
+        handleListViewEvents();
+        handleTabPaneEvents();
     }
     
     /**

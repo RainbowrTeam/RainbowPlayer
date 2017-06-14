@@ -129,7 +129,7 @@
       </children> 
      </GridPane> 
      
-     <TabPane id="ContBottom" prefWidth="1280" GridPane.rowIndex="2" tabClosingPolicy="UNAVAILABLE">
+     <TabPane fx:id="listTabs" id="ContBottom" prefWidth="1280" GridPane.rowIndex="2" tabClosingPolicy="UNAVAILABLE">
       <tabs>
         
           <Tab id="TabQueue" text="Queue">
@@ -255,7 +255,7 @@
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildDeleteTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleDeleteTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="Delete Track"> 
+            <Button fx:id="ChildDeleteTracklistButton" id="ChildDeleteTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleDeleteTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="Delete Track"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>

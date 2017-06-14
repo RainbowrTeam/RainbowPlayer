@@ -54,7 +54,12 @@ public class TrackImport {
                         trackGenre = metadata.getGenreDescription();
                         
                         if(metadata.getYear() != null){
-                            trackReleaseYear = Integer.parseInt(metadata.getYear());
+                            try{
+                                trackReleaseYear = Integer.parseInt(metadata.getYear());
+                            }catch(NumberFormatException ex){
+                                Calendar c = Calendar.getInstance();
+                                trackReleaseYear = c.get(Calendar.YEAR);
+                            }
                         }else{
                             Calendar c = Calendar.getInstance();
                             trackReleaseYear = c.get(Calendar.YEAR);
@@ -141,12 +146,17 @@ public class TrackImport {
                             trackGenre = metadata.getGenreDescription();
 
                             if(metadata.getYear() != null){
-                                trackReleaseYear = Integer.parseInt(metadata.getYear());
+                                try{
+                                    trackReleaseYear = Integer.parseInt(metadata.getYear());
+                                }catch(NumberFormatException ex){
+                                    Calendar c = Calendar.getInstance();
+                                    trackReleaseYear = c.get(Calendar.YEAR);
+                                }
                             }else{
                                 Calendar c = Calendar.getInstance();
                                 trackReleaseYear = c.get(Calendar.YEAR);
                             }
-                            
+
                         }else if(sFileParsed.hasId3v2Tag()){
                             ID3v2 metadata = sFileParsed.getId3v2Tag();
 
@@ -161,7 +171,7 @@ public class TrackImport {
                                 Calendar c = Calendar.getInstance();
                                 trackReleaseYear = c.get(Calendar.YEAR);
                             }
-                            
+
                         }else{
                             trackTitle = "Unknown";
                             trackArtist = "Unknown Artist";

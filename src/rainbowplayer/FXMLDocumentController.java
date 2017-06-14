@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer;
 
+import static java.awt.Desktop.getDesktop;
+import java.io.File;
+import java.io.IOException;
 import rainbowplayer.Classes.Track;
 import java.net.URL;
 import java.util.ArrayList;
@@ -111,7 +109,12 @@ public class FXMLDocumentController implements Initializable {
         myThread.start();
     }
     
-    public void setListContent(ListView lV, ArrayList list){
+    /**
+     * Replace content of ListView with supplied string ArrayList
+     * @param lV
+     * @param list 
+     */
+    public void setListContent(ListView lV, ArrayList<String> list){
 	ObservableList oL = FXCollections.observableArrayList(list);
 	lV.setItems(oL);
     }
@@ -156,22 +159,53 @@ public class FXMLDocumentController implements Initializable {
     
     private void handleListViewEvents(){
         ChildTracklistList.setOnMouseClicked((MouseEvent event) -> {
-            int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
-            if(clickedIndex <= trackCount){
-                Track clickedTrack = trackList.get(clickedIndex);
-            
-                if(!deleteMode){
-                    showAlert(AlertType.INFORMATION, clickedTrack.getFormattedTitle(), clickedTrack.getTitleName(), 
-                        "by " + clickedTrack.getArtistName() + " \nAlbum: " + clickedTrack.getAlbumName() + "\nGenre: " + clickedTrack.getGenreName() + "\nTrack ID: " + clickedTrack.getTrackId());
-                }else{
-                    TrackRemoval tRemoval = new TrackRemoval();
-                    if(tRemoval.removeTrack(clickedTrack.getTrackId())){
-                        populateTrackList();
+            try{
+                int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
+                if(clickedIndex <= trackCount){
+                    Track clickedTrack = trackList.get(clickedIndex);
+
+                    if(!deleteMode){
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle(clickedTrack.getFormattedTitle());
+                        alert.setHeaderText(clickedTrack.getTitleName());
+                        alert.setContentText("by " + clickedTrack.getArtistName() + 
+                                " \nAlbum: " + 
+                                clickedTrack.getAlbumName() + 
+                                "\nGenre: " + 
+                                clickedTrack.getGenreName() + 
+                                "\nTrack ID: " + 
+                                clickedTrack.getTrackId());
+
+                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer");
+                        ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
+
+                        alert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == openInFileSystemButton){
+                            try{
+                                File trackFile = new File(clickedTrack.getFilePath());
+                                getDesktop().open(trackFile.getParentFile());
+                            }catch(IOException e){
+                                
+                            }
+                           
+                        } else {
+                            //cancel
+                        }
                     }else{
-                        showAlert(AlertType.ERROR, "Could not remove track", "An error occurred!", "The track you selected could not be deleted. Please try again!");
+                        TrackRemoval tRemoval = new TrackRemoval();
+                        if(tRemoval.removeTrack(clickedTrack.getTrackId())){
+                            populateTrackList();
+                        }else{
+                            showAlert(AlertType.ERROR, "Could not remove track", "An error occurred!", "The track you selected could not be deleted. Please try again!");
+                        }
                     }
                 }
+            }catch(ArrayIndexOutOfBoundsException e){
+                
             }
+            
         });
         
         ChildPlaylistList.setOnMouseClicked((MouseEvent event) -> {
@@ -206,6 +240,13 @@ public class FXMLDocumentController implements Initializable {
         }); 
     }
     
+    /**
+     * Display JavaFX Alert
+     * @param alertType
+     * @param alertTitle
+     * @param headerText
+     * @param contentText 
+     */
     private void showAlert(AlertType alertType, String alertTitle, String headerText, String contentText){
         Alert alert = new Alert(alertType);
         alert.setTitle(alertTitle);
@@ -233,12 +274,12 @@ public class FXMLDocumentController implements Initializable {
         
     }
     
-     @FXML
+    @FXML
     private void handleEmptyQueueButtonAction(ActionEvent event) {
         
     }
     
-     @FXML
+    @FXML
     private void handleLoopButtonAction(ActionEvent event) {
         
     } 
@@ -253,17 +294,17 @@ public class FXMLDocumentController implements Initializable {
         
     }
     
-     @FXML
+    @FXML
     private void handleAddToQueueButtonAction(ActionEvent event) {
         
     }
     
-     @FXML
+    @FXML
     private void handlePlayAllQueueButtonAction(ActionEvent event) {
         
     }
     
-     @FXML
+    @FXML
     private void handleImportTracklistButtonAction(ActionEvent event) {
         
         TrackImport tImport = new TrackImport();
@@ -312,7 +353,7 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
-     @FXML
+    @FXML
     private void handleDeleteTracklistButtonAction(ActionEvent event) {
         if(deleteMode){
             deleteMode = false;
@@ -323,7 +364,7 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
-     @FXML
+    @FXML
     private void handleAddToQueueTracklistButtonAction(ActionEvent event) {
         
     }  

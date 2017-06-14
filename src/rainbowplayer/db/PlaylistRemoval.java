@@ -18,8 +18,9 @@ public class PlaylistRemoval {
             return false;
         }
         
-        String query = "DELETE FROM PLAYLISTS WHERE playlist_id='" + playlistId +"';";
+        String[] data = {playlistId};
+        String query = "DELETE FROM PLAYLISTS WHERE playlist_id=?;";
         
-        return db.execute_query(query);
+        return db.execute_query(query,data);
     }
 }

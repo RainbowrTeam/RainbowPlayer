@@ -29,8 +29,8 @@ public class EntryFetcher {
             if(!db.initDB()){
                 return "error";
             }
-            
-            ResultSet result = db.select_query("SELECT * FROM PLAYLIST_ENTRIES WHERE entry_id='" + entryId +"';");
+            String[] data = {entryId};
+            ResultSet result = db.select_query("SELECT * FROM PLAYLIST_ENTRIES WHERE entry_id=?;", data);
             
             if(result.next() == false){
                 //entry not found
@@ -78,8 +78,8 @@ public class EntryFetcher {
             if(!db.initDB()){
                 return "error";
             }
-            
-            ResultSet result = db.select_query("SELECT track_id FROM PLAYLIST_ENTRIES WHERE entry_id='" + entryId +"';");
+            String[] data = {entryId};
+            ResultSet result = db.select_query("SELECT track_id FROM PLAYLIST_ENTRIES WHERE entry_id=?;", data);
             
             if(result.next() == false){
               return "entry_not_found";  

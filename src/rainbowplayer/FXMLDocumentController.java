@@ -116,6 +116,9 @@ public class FXMLDocumentController implements Initializable {
 	lV.setItems(oL);
     }
     
+    /**
+     * Refresh/Populate Track List ListView with tracks retrieved from database
+     */
     private void populateTrackList(){
         /*
             Populate TrackList
@@ -140,6 +143,7 @@ public class FXMLDocumentController implements Initializable {
             case "no_tracks_found":
                 trackImportError = false;
                 setListContent(ChildTracklistList, trackTitles);
+                ChildTrackNrTracklistLabel.setText("0 Tracks in Tracklist");
                 break;
             case "error":
             default:
@@ -153,17 +157,19 @@ public class FXMLDocumentController implements Initializable {
     private void handleListViewEvents(){
         ChildTracklistList.setOnMouseClicked((MouseEvent event) -> {
             int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
-            Track clickedTrack = trackList.get(clickedIndex);
+            if(clickedIndex <= trackCount){
+                Track clickedTrack = trackList.get(clickedIndex);
             
-            if(!deleteMode){
-                showAlert(AlertType.INFORMATION, clickedTrack.getFormattedTitle(), clickedTrack.getTitleName(), 
-                    "by " + clickedTrack.getArtistName() + " \nAlbum: " + clickedTrack.getAlbumName() + "\nGenre: " + clickedTrack.getGenreName() + "\nTrack ID: " + clickedTrack.getTrackId());
-            }else{
-                TrackRemoval tRemoval = new TrackRemoval();
-                if(tRemoval.removeTrack(clickedTrack.getTrackId())){
-                    populateTrackList();
+                if(!deleteMode){
+                    showAlert(AlertType.INFORMATION, clickedTrack.getFormattedTitle(), clickedTrack.getTitleName(), 
+                        "by " + clickedTrack.getArtistName() + " \nAlbum: " + clickedTrack.getAlbumName() + "\nGenre: " + clickedTrack.getGenreName() + "\nTrack ID: " + clickedTrack.getTrackId());
                 }else{
-                    showAlert(AlertType.ERROR, "Could not remove track", "An error occurred!", "The track you selected could not be deleted. Please try again!");
+                    TrackRemoval tRemoval = new TrackRemoval();
+                    if(tRemoval.removeTrack(clickedTrack.getTrackId())){
+                        populateTrackList();
+                    }else{
+                        showAlert(AlertType.ERROR, "Could not remove track", "An error occurred!", "The track you selected could not be deleted. Please try again!");
+                    }
                 }
             }
         });
@@ -177,8 +183,15 @@ public class FXMLDocumentController implements Initializable {
         });
     }
     
+    /**
+     * EventListener of primary TabPane
+     */
     private void handleTabPaneEvents(){
         listTabs.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
+            if(deleteMode){
+                deleteMode = false;
+                ChildDeleteTracklistButton.setText("Delete Track");
+            }
             //TrackList tab
             if(newTabIndex.intValue() == 2){
                 if(!trackImportError){

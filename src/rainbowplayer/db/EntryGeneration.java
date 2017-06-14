@@ -34,11 +34,11 @@ public class EntryGeneration {
                 + "(entry_id,"
                 + "playlist_id,"
                 + "track_id) "
-                + "VALUES('" + pEntry.getEntryId() + "',"
-                + "'" + pEntry.getPlaylistId() +"',"
-                + "'" + pEntry.getTrack().getTrackId() + "')";
+                + "VALUES(?,?,?);";
         
-        return db.execute_query(query);  
+        String data[] = {pEntry.getEntryId(), pEntry.getPlaylistId(), pEntry.getTrack().getTrackId()};
+        
+        return db.execute_query(query,data);  
     }
     
     /**

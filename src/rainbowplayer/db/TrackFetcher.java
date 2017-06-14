@@ -13,7 +13,7 @@ import rainbowplayer.Classes.Track;
  */
 public class TrackFetcher {
     private Track t = null;
-    private ArrayList<Track> tracks = new ArrayList<Track>();
+    private final ArrayList<Track> tracks = new ArrayList<>();
     
     /**
      * Fetch track information and create returnable Track object
@@ -27,8 +27,8 @@ public class TrackFetcher {
             if(!db.initDB()){
                 return "error";
             }
-            
-            ResultSet result = db.select_query("SELECT * FROM TRACKS WHERE track_id='" + trackId + "';");
+            String[] data = {trackId};
+            ResultSet result = db.select_query("SELECT * FROM TRACKS WHERE track_id=?;", data);
             
             if (result.next() == false){
                 return "not_found";
@@ -56,14 +56,13 @@ public class TrackFetcher {
     
     public String retrieveAllTracks(){
         try {
-            ArrayList<Track> t = new ArrayList<>();
             Database db = new Database();
             
             if(!db.initDB()){
                 return "error";
             }
-            
-            ResultSet result = db.select_query("SELECT * FROM TRACKS;");
+            String[] data = {};
+            ResultSet result = db.select_query("SELECT * FROM TRACKS;", data);
             
             if(result.next() == false){
                 return "no_tracks_found";

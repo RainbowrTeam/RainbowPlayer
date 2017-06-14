@@ -30,9 +30,10 @@ public class PlaylistFetcher {
                 return "error";
             }
             
-            String query = "SELECT * FROM PLAYLISTS WHERE playlist_id='" + playlistId +"';";
+            String query = "SELECT * FROM PLAYLISTS WHERE playlist_id=?;";
+            String data[] = {playlistId};
             
-            ResultSet result = db.select_query(query);
+            ResultSet result = db.select_query(query,data);
             
             if (result.next() == false){
                 return "playlist_not_found";
@@ -71,8 +72,8 @@ public class PlaylistFetcher {
             if(!db.initDB()){
                 return "error";
             }
-            
-            ResultSet result = db.select_query("SELECT entry_id FROM PLAYLIST_ENTRIES WHERE playlist_id='" + playlist.getId() + "';");
+            String[] data = {playlist.getId()};
+            ResultSet result = db.select_query("SELECT entry_id FROM PLAYLIST_ENTRIES WHERE playlist_id=?;", data);
             
             if(result.next() == false){
                 //No Entries

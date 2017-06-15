@@ -151,9 +151,14 @@ public class FXMLDocumentController implements Initializable {
             case "success":
                 trackImportError = false;
                 for(Track t : trackListFetcher.getAllTracks()){
+                    ArrayList<String> trackInformation = new ArrayList<>();
+                    
+                    trackInformation.add((trackCount + 1) + ". " + t.getFormattedTitle());
+                    trackInformation.add(t.getAlbumName() + " ("+ t.getReleaseYear() +")");
+                    
                     trackList.add(t);
-                    trackTitles.add(t.getFormattedTitle());
                     trackCount++;
+                    trackTitles.add(concatenateArrayListToString(trackInformation, "\n"));
                 }
                 setListContent(ChildTracklistList,trackTitles);
                 ChildTrackNrTracklistLabel.setText(trackCount + " Tracks in Tracklist");
@@ -190,6 +195,7 @@ public class FXMLDocumentController implements Initializable {
                         contentText.add("Album: " + clickedTrack.getAlbumName());
                         contentText.add("Genre: " + clickedTrack.getGenreName());
                         contentText.add("Track ID: " + clickedTrack.getTrackId());
+                        contentText.add("Location: " + clickedTrack.getFilePath());
                         
                         trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
 

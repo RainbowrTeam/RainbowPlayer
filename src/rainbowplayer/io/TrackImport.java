@@ -200,6 +200,7 @@ public class TrackImport {
                 if(completedFiles != totalFiles){
                     System.out.println(completedFiles + " out of " + totalFiles + " files imported.");
                     System.out.println("One or more files have not been imported successfully because of an error.");
+                    return "partial_error";
                 }
                 return "success";
             default:

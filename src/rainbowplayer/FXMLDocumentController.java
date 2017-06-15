@@ -346,6 +346,10 @@ public class FXMLDocumentController implements Initializable {
                 break;
             case "cancelled":
                 break;
+            case "partial_error":
+                showAlert(AlertType.WARNING, "Import Failed: Partial Failure", "Partial Import Failure", "One or more tracks could not be imported successfully. Please try again.");
+                populateTrackList(); //refresh track list
+                break;
             case "error":
             default:
                 showAlert(AlertType.ERROR, "Import Failed", "Something went wrong.", "RainbowPlayer could not import your selected track(s) successfully. Please try again.");

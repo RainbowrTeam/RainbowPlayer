@@ -120,6 +120,21 @@ public class FXMLDocumentController implements Initializable {
     }
     
     /**
+     * Builds a string containing ArrayList content separated by given separator string
+     * @param array
+     * @param separator
+     * @return concatenated string
+     */
+    public String concatenateArrayListToString(ArrayList<String> array, String separator){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String s : array){
+            stringBuilder.append(s);
+            stringBuilder.append(separator);
+        }
+        return stringBuilder.toString();
+    }
+    
+    /**
      * Refresh/Populate Track List ListView with tracks retrieved from database
      */
     private void populateTrackList(){
@@ -165,23 +180,25 @@ public class FXMLDocumentController implements Initializable {
                     Track clickedTrack = trackList.get(clickedIndex);
 
                     if(!deleteMode){
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle(clickedTrack.getFormattedTitle());
-                        alert.setHeaderText(clickedTrack.getTitleName());
-                        alert.setContentText("by " + clickedTrack.getArtistName() + 
-                                " \nAlbum: " + 
-                                clickedTrack.getAlbumName() + 
-                                "\nGenre: " + 
-                                clickedTrack.getGenreName() + 
-                                "\nTrack ID: " + 
-                                clickedTrack.getTrackId());
+                        Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
+                        trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
+                        trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
+                        
+                        ArrayList<String> contentText = new ArrayList<>();
+                        
+                        contentText.add("by " + clickedTrack.getArtistName() + " (" + clickedTrack.getReleaseYear() +")");
+                        contentText.add("Album: " + clickedTrack.getAlbumName());
+                        contentText.add("Genre: " + clickedTrack.getGenreName());
+                        contentText.add("Track ID: " + clickedTrack.getTrackId());
+                        
+                        trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
 
-                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer");
+                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer", ButtonData.LEFT);
                         ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
 
-                        alert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
+                        trackInfoAlert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
 
-                        Optional<ButtonType> result = alert.showAndWait();
+                        Optional<ButtonType> result = trackInfoAlert.showAndWait();
                         if (result.get() == openInFileSystemButton){
                             try{
                                 File trackFile = new File(clickedTrack.getFilePath());

@@ -190,16 +190,15 @@ public class TrackImport {
                         if(tInsertion.insertTrack(t)){
                             completedFiles++;
                             mTrackIds.add(tInsertion.getTrackId());
-                            break;
                         }else{
-                            break;
+                            System.out.println("Could not import '" + selectedFile.getName() +"'");
                         }
                     } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
                         Logger.getLogger(TrackImport.class.getName()).log(Level.SEVERE, null, ex);
-                        break;
                     }
                 }
                 if(completedFiles != totalFiles){
+                    System.out.println(completedFiles + " out of " + totalFiles + " files imported.");
                     System.out.println("One or more files have not been imported successfully because of an error.");
                 }
                 return "success";

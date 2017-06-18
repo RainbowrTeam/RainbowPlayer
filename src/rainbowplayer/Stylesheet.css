@@ -11,8 +11,6 @@ and open the template in the editor.
     -fx-background-image: url("bg.jpg");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
-}
-.root {
     -fx-background-color: white;
 }
 
@@ -24,79 +22,209 @@ and open the template in the editor.
     -fx-text-fill: linear-gradient(rgba(33,37,41,1), rgba(52,58,64,1) );  /* linear-gradient(to right, rgba(194,37,92,1), rgba(217,72,15,1), rgba(245,159,0,1), rgba(55,178,77,1), rgba(27,110,194,1), rgba(156,54,181,1) ); */
  }
 
+ .tab-pane *.tab-header-background{
+        -fx-background-color: linear-gradient(to right, rgba(240,101,149,1), rgba(255,146,43,1), rgba(255,224,102,1), rgba(140,233,154,1), rgba(114,195,252,1), rgba(218,119,242,1));
+ }
+  
+  .button{
+     -fx-text-fill: white;
+     -fx-cursor: hand;
+ } 
+  .toggle-button{
+     -fx-text-fill: white;
+     -fx-cursor: hand;
+ }
+ .slider{
+     -fx-cursor: hand;
+ }
 
- 
+ .list-view{
+          -fx-cursor: hand;
+ }
+ #ChildCurrentTimeLabel{
+     -fx-cursor: hand;
+ }
+ #ChildRemainTimeLabel{
+     -fx-cursor: hand;
+ }
+ #ChildTotalTimeLabel{
+     -fx-cursor: hand;
+ }
+ /* prev */
  #ChildPrevButton{
      -fx-background-color: linear-gradient(to right, rgba(156,54,181,1), rgba(27,110,194,1));
  }
+ #ChildPrevButton:pressed{
+     -fx-background-color: linear-gradient(to right, rgba(204,93,232,1), rgba(50,154,240,1));
+ }
+  #ChildPrevButton:hover{
+     -fx-background-color: linear-gradient(to right, rgba(174,62,201,1), rgba(28,124,214,1));
+  }
+
  #ChildPlayButton{
      -fx-background-color: linear-gradient(to right, rgba(27,110,194,1), rgba(55,178,77,1));
  }
+ #ChildPlayButton:pressed{
+     -fx-background-color: linear-gradient(to right, rgba(50,154,240,1), rgba(105,219,124,1));
+ }
+  #ChildPlayButton:hover{
+     -fx-background-color: linear-gradient(to right, rgba(28,124,214,1), rgba(64,192,87,1));
+ }
+
  #ChildSkipButton{
      -fx-background-color: linear-gradient(to right, rgba(55,178,77,1), rgba(245,159,0,1));
  }
+ #ChildSkipButton:pressed{
+     -fx-background-color: linear-gradient(to right, rgba(105,219,124,1), rgba(255,212,59,1));
+ }
+  #ChildSkipButton:hover{
+     -fx-background-color: linear-gradient(to right, rgba(64,192,87,1), rgba(250,176,5,1));
+ }
+
  #ChildStopButton{
      -fx-background-color: linear-gradient(to right, rgba(245,159,0,1), rgba(217,72,15,1));
  }
+ #ChildStopButton:pressed{
+     -fx-background-color: linear-gradient(to right, rgba(255,212,59,1), rgba(253,126,20,1));
+ }
+  #ChildStopButton:hover{
+     -fx-background-color: linear-gradient(to right, rgba(250,176,5,1), rgba(232,89,12,1));
+ }
+ 
+ 
  #ChildVolumeSlider{
      -fx-background-color: linear-gradient(to right, rgba(217,72,15,1), rgba(194,37,92,1)); 
  }
  
- 
  #ChildProgressSlider{
      -fx-background-color: linear-gradient(to right, rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1), rgba(245,159,0,1), rgba(217,72,15,1), rgba(194,37,92,1));
  }
-  
+
  
-#ChildAddToQueueButton{
+  
+
+ #ChildAddToQueueButton{
      -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
  }
+ #ChildAddToQueueButton:pressed{
+     -fx-background-color: linear-gradient(rgba(204,93,232,1), rgba(50,154,240,1));
+ }
+  #ChildAddToQueueButton:hover{
+     -fx-background-color: linear-gradient(rgba(174,62,201,1), rgba(28,124,214,1));
+ }
+
  #ChildEmptyQueueButton{
      -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
  }
+ #ChildEmptyQueueButton:pressed{
+     -fx-background-color: linear-gradient(rgba(50,154,240,1), rgba(105,219,124,1));
+ }
+  #ChildEmptyQueueButton:hover{
+     -fx-background-color: linear-gradient(rgba(28,124,214,1), rgba(64,192,87,1));
+ }
+ 
  #ChildPlayAllQueueButton{
      -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
  }
+ #ChildPlayAllQueueButton:pressed{
+     -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
+ }
+  #ChildPlayAllQueueButton:hover{
+     -fx-background-color: linear-gradient(rgba(64,192,87,1), rgba(250,176,5,1));
+ }
+ 
  #ChildLoopButton{
      -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1));
  }
+ #ChildLoopButton:pressed{
+     -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1));
+ }
+  #ChildLoopButton:hover{
+     -fx-background-color: linear-gradient(rgba(250,176,5,1), rgba(232,89,12,1));
+ }
+ 
  #ChildMixButton{
      -fx-background-color: linear-gradient(rgba(217,72,15,1), rgba(194,37,92,1));
  }
+ #ChildMixButton:pressed{
+     -fx-background-color: linear-gradient(rgba(253,126,20,1), rgba(240,101,149,1));
+ }
+  #ChildMixButton:hover{
+     -fx-background-color: linear-gradient(rgba(232,89,12,1), rgba(214,51,108,1));
+ }
+ 
  
  
  #ChildImportPlaylistButton{
-     -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1) 140%);
+     -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1) 145%);
  }
+ #ChildImportPlaylistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(204,93,232,1), rgba(50,154,240,1), rgba(105,219,124,1) 145%);
+ }
+  #ChildImportPlaylistButton:hover{
+     -fx-background-color: linear-gradient(rgba(174,62,201,1), rgba(28,124,214,1), rgba(64,192,87,1) 145%);
+ }
+ 
  #ChildExportPlaylistButton{
      -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
  }
+ #ChildExportPlaylistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
+ }
+  #ChildExportPlaylistButton:hover{
+     -fx-background-color: linear-gradient(rgba(64,192,87,1), rgba(250,176,5,1));
+ }
+ 
  #ChildAddToQueuePlaylistButton{
      -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1), rgba(194,37,92,1));
-     
-     
+  }
+  #ChildAddToQueuePlaylistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1), rgba(240,101,149,1));
  }
+  #ChildAddToQueuePlaylistButton:hover{
+     -fx-background-color: linear-gradient(rgba(250,176,5,1), rgba(232,89,12,1), rgba(214,51,108,1));
+ }
+ 
  #ChildImportTracklistButton{
 -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
  }
+ #ChildImportTracklistButton:pressed{
+     -fx-background-color: linear-gradient( rgba(204,93,232,1), rgba(50,154,240,1));
+ }
+  #ChildImportTracklistButton:hover{
+     -fx-background-color: linear-gradient( rgba(174,62,201,1), rgba(28,124,214,1));
+ }
+ 
  #ChildDeleteTracklistButton{
      -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
  }
+ #ChildDeleteTracklistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(50,154,240,1), rgba(105,219,124,1));
+ }
+  #ChildDeleteTracklistButton:hover{
+     -fx-background-color: linear-gradient(rgba(28,124,214,1), rgba(64,192,87,1));
+ }
+ 
  #ChildAddToQueueTracklistButton{
      -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
  }
+ #ChildAddToQueueTracklistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
+ }
+  #ChildAddToQueueTracklistButton:hover{
+     -fx-background-color: linear-gradient(rgba(64,192,87,1), rgba(250,176,5,1));
+ }
+ 
  #ChildAddToPlaylistTracklistButton{
      -fx-background-color: linear-gradient(rgba(245,159,0,1) 0%, rgba(217,72,15,1), rgba(194,37,92,1));
     }
+    #ChildAddToPlaylistTracklistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1), rgba(240,101,149,1));
+ }
+  #ChildAddToPlaylistTracklistButton:hover{
+     -fx-background-color: linear-gradient(rgba(250,176,5,1), rgba(232,89,12,1), rgba(214,51,108,1));
+ }
+ 
  
 
- .tab-pane *.tab-header-background{
-        -fx-background-color: linear-gradient(to right, rgba(240,101,149,1), rgba(255,146,43,1), rgba(255,224,102,1), rgba(140,233,154,1), rgba(102,217,232,1), rgba(218,119,242,1));
- }
  
-  .button{
-     -fx-text-fill: white !important;
- } 
- .toggle-button{
-     -fx-text-fill: white !important;
- }

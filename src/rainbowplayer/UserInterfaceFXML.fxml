@@ -56,7 +56,7 @@
               <Tooltip text="stop playback" />
              </tooltip>
              </Button>
-             <Slider id="ChildVolumeSlider" orientation="VERTICAL" prefHeight="100.0" GridPane.columnIndex="5">
+             <Slider id="ChildVolumeSlider" fx:id="ChildVolumeSlider" orientation="VERTICAL" prefHeight="100.0" GridPane.columnIndex="5">
              <tooltip>
               <Tooltip id="AttVolumeSliderTooltip" text="volume" />
              </tooltip>
@@ -90,7 +90,7 @@
                  <Insets top="25" right="25" bottom="25" left="25"/> 
               </padding>
               <children>
-              <Label fx:id="ChildCurrentTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text=" 0:00:00 ">
+              <Label fx:id="ChildCurrentTimeLabel" id="ChildCurrentTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text=" 0:00:00 ">
                <padding>
                  <Insets right="50" left="10"/> 
                </padding>
@@ -101,7 +101,7 @@
                 <Tooltip text="elapsed time" />
                </tooltip>
               </Label> 
-            <Label fx:id="ChildRemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" text=" -0:00:00 ">
+            <Label fx:id="ChildRemainTimeLabel" id="ChildRemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" text=" -0:00:00 ">
                 <padding>
                  <Insets left="900" right="20"/> 
                 </padding>
@@ -112,7 +112,7 @@
                   <Tooltip text="remaining time" />
                  </tooltip>
               </Label> 
-              <Label fx:id="ChildTotalTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="3" text="0:00:00">
+              <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="3" text="0:00:00">
                  <padding>
                   <Insets right="10" left="10"/> 
                  </padding>
@@ -123,7 +123,7 @@
                   <Tooltip text="total time" />
                  </tooltip>
               </Label>
-             <Slider id="ChildProgressSlider" orientation="HORIZONTAL" prefWidth="1200.0" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+             <Slider id="ChildProgressSlider" fx:id="ChildProgressSlider" orientation="HORIZONTAL" prefWidth="1200.0" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
            </children>
          </GridPane>
       </children> 

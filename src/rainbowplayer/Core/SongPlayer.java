@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.Core;
 
 import rainbowplayer.Classes.Track;
@@ -13,6 +8,7 @@ import javafx.scene.media.MediaPlayer;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import javafx.util.Duration;
 import rainbowplayer.Classes.LiveTrack;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
@@ -60,6 +56,8 @@ public class SongPlayer {
      * @param tQueue The ArrayList of titles
      */
     public void playTitleQueue(ArrayList<PlaylistEntry> tQueue) {
+        if(tQueue.isEmpty())
+            return;
         stopPlayback();
         titleQueue2 = tQueue;
         isQueued = true;
@@ -91,6 +89,19 @@ public class SongPlayer {
     }
     
     /**
+     * Plays a track from the given position in the titleQueue2.
+     * @param position 
+     */
+    private void playFromPosition(int position){
+        int usablePosition = position -1;
+        if(usablePosition >= 0 && usablePosition < titleQueue2.size()){
+            playTitle(titleQueue2.get(usablePosition));
+        } else {
+            stopPlayback();
+        }
+    }
+    
+    /**
      * Plays the title from the Title class.
      * @param pe The designated PlaylistEntry.
      */
@@ -99,6 +110,9 @@ public class SongPlayer {
         
         currentTitle = title;
         currentTrack = new LiveTrack(title.getFilePath(), title.getTitleName(), title.getArtistName());
+        
+        if(!"".equals(title.getAlbumName()))
+            currentTrack.setAlbumName(title.getAlbumName());
         
         Media tMedia = new Media(new File(currentTrack.getFilePath()).toURI().toString());
         
@@ -116,7 +130,9 @@ public class SongPlayer {
         // we need to run the timer after the player loaded the song
         mediaPlayer.setOnReady(() -> {
             currentTrack.setDuration((int) tMedia.getDuration().toSeconds());
+            currentTrack.setTotalSeconds((int) tMedia.getDuration().toSeconds());
             trackStarted();
+            changeVolume(setVol);
         });
     }
     
@@ -186,6 +202,33 @@ public class SongPlayer {
             pInterface.updateInterface();
         }
     }
+    /**
+     * Jumps to a position in the queue.
+     * @param position Position of the track in queue.
+     */
+    public void jumpInQueue(int position) {
+        playFromPosition(position);
+    }
+    
+    double setVol = 1.0;
+    
+    /**
+     * Changes the playback volume to given value.
+     * @param vol Desired volume.
+     */
+    public void changeVolume(double vol) {
+        double volume = vol;
+        if(vol > 1.0) {
+            volume = 1.0;
+        }
+        if(vol < 0.0) {
+            volume = 0.0;
+        }
+        
+        setVol = volume;
+        
+        mediaPlayer.setVolume(volume);
+    }
     
     /**
      * Retrieves the currently playing title.
@@ -201,6 +244,10 @@ public class SongPlayer {
     
     public Playlist getPlaylist(){
         return currentPlaylist;
+    }
+    
+    public ArrayList<PlaylistEntry> getPlaybackQueue() {
+        return titleQueue2;
     }
     
     /**
@@ -223,5 +270,15 @@ public class SongPlayer {
     
     public boolean isPlaybackActive(){
         return isPlaying;
+    }
+    
+    public void seekSong(int sec){
+        if(mediaPlayer != null && isPlaying){
+            mediaPlayer.seek(Duration.seconds(sec));
+            
+            int remSeconds = currentTrack.getTotalDuration().getTotalSeconds() - (int) mediaPlayer.getCurrentTime().toSeconds();
+            songRemainingSeconds = remSeconds;
+            currentTrack.setRemainingSeconds(remSeconds);
+        }
     }
 }

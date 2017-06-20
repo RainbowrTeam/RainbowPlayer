@@ -22,6 +22,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import rainbowplayer.Classes.Duration;
@@ -47,6 +48,11 @@ public class FXMLDocumentController implements Initializable {
     
     private HashMap<String, String> playerData = null;
     
+    // Track Queue Data
+    private ArrayList<PlaylistEntry> trackQueue = new ArrayList<>();
+    
+    // private ArrayList<PlaylistEntry> playlist = new ArrayList<>();
+    
    
     @FXML
     private Label ChildTitleLabel;
@@ -65,6 +71,11 @@ public class FXMLDocumentController implements Initializable {
     private Label playlistLabel;
     
     @FXML
+    private Slider volumeSlider;
+    @FXML
+    private Slider trackPositionSlider;
+    
+    @FXML
     private Label ChildTrackNrTracklistLabel;
     @FXML
     private Button ChildDeleteTracklistButton;
@@ -72,37 +83,17 @@ public class FXMLDocumentController implements Initializable {
     private TabPane listTabs;
     
     @FXML
-    private final ListView<String> ChildQueueList = new ListView<String>();
-    @FXML
-    private final ListView<String> ChildPlaylistList = new ListView<String>();
-    @FXML
-    private ListView ChildTracklistList;
+    private Label ChildTrackNrQueueLabel;
     
     @FXML
-    private void handleButtonAction(ActionEvent event) {
-        ArrayList<PlaylistEntry> tQueueNotebook = new ArrayList<>();
-        tQueueNotebook.add(new PlaylistEntry(new Track("C:\\Users\\Tim\\Music\\01 - we came to gangbang.mp3", "we came to gangbang", "goreshit")));
-        tQueueNotebook.add(new PlaylistEntry(new Track("C:\\Users\\Tim\\Music\\05 - Awg.mp3", "Awg", "Farin Urlaub Racing Team")));
-        Playlist notebook = new Playlist("Tims Notebook-Playlist", tQueueNotebook);
-        
-        ArrayList<PlaylistEntry> tQueueDesktop = new ArrayList<>();
-        tQueueDesktop.add(new PlaylistEntry(new Track("D:\\Musik\\Artists\\Crusher-P\\Echo\\echo.mp3", "Echo", "Crusher-P")));
-        tQueueDesktop.add(new PlaylistEntry(new Track("D:\\Musik\\Artists\\Fleetwood Mac\\Fleetwood Mac Greatest Hits\\MP3\\12 Fleetwood Mac - Little Lies.mp3", "Little Lies", "Fleetwood Mac")));
-        tQueueDesktop.add(new PlaylistEntry(new Track("D:\\Musik\\Artists\\Rammstein\\Mutter\\05 Feuer frei.mp3", "Feuer Frei", "Rammstein")));
-        tQueueDesktop.add(new PlaylistEntry(new Track("D:\\Musik\\Artists\\twenty one pilots\\Blurryface\\02 - Stressed Out.mp3", "Stressed Out", "twenty one pilots")));
-        Playlist desktop = new Playlist("Tims Desktop-Playlist", tQueueDesktop);
-        desktop.setDescription("Das ist eine Beschreibung.");
-        desktop.setTags("Pop, Rock, Electro");
-        
-        // PlaylistExporter pe = (PlaylistExporter) FeatureManager.getInstance().useFeature("PlaylistExporter");
-        // pe.savePlaylistFile(desktop, "C:\\Users\\Tim.WEISSHOME\\Desktop\\desktop.rbpls");
-        
-        // PlaylistImporter pi = (PlaylistImporter) FeatureManager.getInstance().useFeature("PlaylistImporter");
-        // Playlist loaded = pi.loadPlaylist("C:\\Users\\Tim.WEISSHOME\\Desktop\\desktop.rbpls");
-        
-        songPlayer.playPlaylist(desktop);
-        startTimer();
-    }
+    private Label ChildPlaylistLabel;
+    
+    @FXML
+    private ListView ChildQueueList;
+    @FXML
+    private ListView ChildPlaylistList;
+    @FXML
+    private ListView ChildTracklistList;
     
     private void startTimer(){
         UiWorkerThread myThread = new UiWorkerThread(playerData, 0, songPlayer, this);
@@ -213,7 +204,7 @@ public class FXMLDocumentController implements Initializable {
         });
         
         ChildQueueList.setOnMouseClicked((MouseEvent event) -> {
-            //to be added
+            selectQueueTrack();
         });
     }
     
@@ -265,7 +256,8 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handlePauseButtonAction(ActionEvent event) {
-        songPlayer.pausePlayback();
+        if(songPlayer.getCurrentTitle() != null)
+            songPlayer.pausePlayback();
     }
     
     
@@ -276,7 +268,8 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleEmptyQueueButtonAction(ActionEvent event) {
-        
+        if(!trackQueue.isEmpty())
+            trackQueue.clear();
     }
     
     @FXML
@@ -296,12 +289,13 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleAddToQueueButtonAction(ActionEvent event) {
-        
+        // addTrackFromTracklistToList(ChildPlaylistList, trackQueue);
     }
     
     @FXML
     private void handlePlayAllQueueButtonAction(ActionEvent event) {
-        
+        songPlayer.playTitleQueue(trackQueue);
+        startTimer();
     }
     
     @FXML
@@ -366,12 +360,12 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleAddToQueueTracklistButtonAction(ActionEvent event) {
-        
+        addTrackFromTracklistToList(ChildTracklistList, trackQueue);
     }  
     
     @FXML
     private void handleAddToPlaylistTracklistButtonAction(ActionEvent event) {
-        
+        // addTrackFromTracklistToList(ChildTracklistList, playlist);
     }
     
     
@@ -399,6 +393,7 @@ public class FXMLDocumentController implements Initializable {
         populateTrackList();
         handleListViewEvents();
         handleTabPaneEvents();
+        bindSliderActions();
     }
     
     /**
@@ -408,13 +403,23 @@ public class FXMLDocumentController implements Initializable {
         if(songPlayer.getPlayingTrack() != null) {
             ChildTitleLabel.setText(songPlayer.getPlayingTrack().getTitleName());
             ChildAuthorLabel.setText(songPlayer.getPlayingTrack().getArtistName());
+            ChildAlbumLabel.setText(songPlayer.getPlayingTrack().getAlbumName());
             
-            Duration durTotal = songPlayer.getPlayingTrack().getRemainingDuration();
+            Duration durTotal = songPlayer.getPlayingTrack().getTotalDuration();
             Duration durRemaining = songPlayer.getPlayingTrack().getRemainingDuration();
             
-            ChildRemainTimeLabel.setText(durRemaining.getMinutes() + ":" + durRemaining.getSeconds());
-            ChildTotalTimeLabel.setText(durTotal.getMinutes() + ":" + durTotal.getSeconds());
-            ChildCurrentTimeLabel.setText(Integer.toString(Integer.parseInt(ChildTotalTimeLabel.getText()) - Integer.parseInt(ChildRemainTimeLabel.getText())));
+            Duration durPlayed = new Duration();
+            durPlayed.setTotalSeconds(durTotal.getTotalSeconds() - durRemaining.getTotalSeconds());
+            
+            ChildRemainTimeLabel.setText("-" + String.format("%02d", durRemaining.getMinutes()) + ":" + String.format("%02d", durRemaining.getSeconds()));
+            ChildTotalTimeLabel.setText(String.format("%02d", durTotal.getMinutes()) + ":" + String.format("%02d", durTotal.getSeconds()));
+            ChildCurrentTimeLabel.setText(String.format("%02d", durPlayed.getMinutes()) + ":" + String.format("%02d", durPlayed.getSeconds()));
+            
+            if(durPlayed.getTotalSeconds() != (int) trackPositionSlider.getMax())
+                trackPositionSlider.setMax(durTotal.getTotalSeconds());
+            
+            if(!trackPositionSlider.isPressed())
+                trackPositionSlider.setValue(durPlayed.getTotalSeconds());
             
             if(songPlayer.getPlaylist() != null){
                 playlistLabel.setText(songPlayer.getPlaylist().getName());
@@ -428,5 +433,86 @@ public class FXMLDocumentController implements Initializable {
             ChildCurrentTimeLabel.setText("00:00:00");
             
         }
+    }
+    
+    private void bindSliderActions(){
+         volumeSlider.valueProperty().addListener((ov) -> {
+            songPlayer.changeVolume(volumeSlider.getValue() / 100);
+         });
+         trackPositionSlider.valueProperty().addListener((ov) -> {
+            if(trackPositionSlider.isPressed())
+                songPlayer.seekSong((int) trackPositionSlider.getValue());
+         });
+    }
+    
+    /**
+     * Refresh/Populate 
+     */
+    private void updateQueueList(){
+        ArrayList<String> trackTitles = new ArrayList<>();
+        
+        for(PlaylistEntry pe : trackQueue){
+            trackTitles.add(pe.getTrack().getFormattedTitle());
+        }
+        setListContent(ChildQueueList,trackTitles);
+        
+        int trackCount = trackTitles.size();
+        String labelText = "Track";
+        if(trackCount > 1)
+            labelText = "Tracks";
+        
+        ChildTrackNrQueueLabel.setText(trackCount + " " + labelText);
+    }
+    
+    /**
+     * Refresh/Populate 
+     
+    private void updatePlaylistList(){
+        ArrayList<String> trackTitles = new ArrayList<>();
+        
+        for(PlaylistEntry pe : playlist){
+            trackTitles.add(pe.getTrack().getFormattedTitle());
+        }
+        setListContent(ChildPlaylistList, trackTitles);
+        
+        int trackCount = trackTitles.size();
+        String labelText = "Track";
+        if(trackCount > 1)
+            labelText = "Tracks";
+        
+        ChildPlaylistLabel.setText(trackCount + " " + labelText);
+    }
+    * */
+    
+    private void addTrackFromTracklistToList(ListView source, ArrayList<PlaylistEntry> tartget) {
+        int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
+            if(clickedIndex <= trackCount){
+                Track clickedTrack = trackList.get(clickedIndex);
+                PlaylistEntry qTrack = new PlaylistEntry(clickedTrack);
+
+                tartget.add(qTrack);
+            }
+            
+        if(tartget == trackQueue)
+            updateQueueList();
+        /*if(tartget == playlist)
+            updatePlaylistList();*/
+    }
+    
+    private void selectQueueTrack() {
+        if(songPlayer.getPlaybackQueue().isEmpty()){
+            songPlayer.playTitleQueue(trackQueue);
+        }
+        
+        int clickedIndex = ChildQueueList.getSelectionModel().getSelectedIndex();
+        if(clickedIndex <= trackQueue.size() - 1){
+            PlaylistEntry clickedTrack = trackQueue.get(clickedIndex);
+
+            if(clickedTrack != null)
+                songPlayer.jumpInQueue(clickedIndex + 1);
+        }
+        
+        if(songPlayer.isPlaybackActive())
+            startTimer();
     }
 }

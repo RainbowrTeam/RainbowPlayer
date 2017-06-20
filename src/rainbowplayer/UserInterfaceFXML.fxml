@@ -147,7 +147,7 @@
             </ScrollPane>
             <GridPane id="ContQueueControlls" hgap="10" vgap="15" alignment="top_left" GridPane.columnIndex="1">
                    <children>
-                 <Label fx:id="ChildTrackNrQueueLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" playing track 0 of 0 ">
+                 <Label fx:id="ChildTrackNrQueueLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" Playing Track 0 of 0 ">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>
@@ -206,7 +206,7 @@
          <padding>
                  <Insets right="11"/>
              </padding>   
-         <Label fx:id="ChildPlaylistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" 0 Playlists          ">
+         <Label fx:id="ChildPlaylistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text="0 Playlists">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>

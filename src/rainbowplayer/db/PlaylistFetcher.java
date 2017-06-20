@@ -2,7 +2,10 @@ package rainbowplayer.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +19,7 @@ import rainbowplayer.Classes.Playlist;
 public class PlaylistFetcher {
     
     private Playlist playlist;
-    
+    private ArrayList<Playlist> playlists = new ArrayList<>();
     /**
      * Retrieve Playlist object
      * @param playlistId
@@ -39,7 +42,7 @@ public class PlaylistFetcher {
                 return "playlist_not_found";
             }else{ 
                 do{
-                    String playlistName = result.getString("playlist_id");
+                    String playlistName = result.getString("playlist_name");
                     String playlistDesc = result.getString("playlist_desc");
                     String playlistTags = result.getString("playlist_tags");
                     String playlistCreation = result.getString("playlist_creation"); //add creation setter to Playlist object
@@ -51,10 +54,64 @@ public class PlaylistFetcher {
                     
                 }while(result.next());
                 
-            }
-                populatePlaylist();
+                populatePlaylist(playlist);
                 return "success";
+                
+            }
+                
             
+        } catch (SQLException ex) {
+            Logger.getLogger(PlaylistFetcher.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
+    }
+    
+    /**
+     * Retrieve all playlists from database
+     * @return status (error, no_playlists_found, success)
+     */
+    public String retrieveAllPlaylists(){
+        try {
+            Database db = new Database();
+            
+            if(!db.initDB()){
+                return "error";
+            }
+            
+            String[] data = {};
+            String query = "SELECT * FROM PLAYLISTS;";
+            
+            ResultSet result = db.select_query(query, data);
+            
+            if(result.next() == false){
+                return "no_playlists_found";
+            }else{
+                do{
+                    String playlistId = result.getString("playlist_id");
+                    String playlistName = result.getString("playlist_name");
+                    String playlistDesc = result.getString("playlist_desc");
+                    String playlistTags = result.getString("playlist_tags");
+                    String playlistCreation = result.getString("playlist_creation"); //add creation setter to Playlist object
+                    long playlistCreationTimeStamp = Long.parseLong(playlistCreation);
+                    
+                    Calendar playlistCreationDate = Calendar.getInstance();
+                    
+                    playlistCreationDate.setTimeInMillis(playlistCreationTimeStamp);
+                    
+                    Playlist p = new Playlist(playlistName);
+                    p.setId(playlistId);
+                    p.setDescription(playlistDesc);
+                    p.setTags(playlistTags);
+                    p.setDate(playlistCreationDate);
+                    playlists.add(p);
+                }while(result.next());
+                
+                for(Playlist p : playlists){
+                    populatePlaylist(p);
+                }
+                
+                return "success";
+            }
         } catch (SQLException ex) {
             Logger.getLogger(PlaylistFetcher.class.getName()).log(Level.SEVERE, null, ex);
             return "error";
@@ -63,16 +120,17 @@ public class PlaylistFetcher {
 
     /**
      * Additional step to add entries to the playlist
+     * @param p
      * @return status
      */
-    public String populatePlaylist(){
+    public String populatePlaylist(Playlist p){
         try {
             Database db = new Database();
             
             if(!db.initDB()){
                 return "error";
             }
-            String[] data = {playlist.getId()};
+            String[] data = {p.getId()};
             ResultSet result = db.select_query("SELECT entry_id FROM PLAYLIST_ENTRIES WHERE playlist_id=?;", data);
             
             if(result.next() == false){
@@ -90,7 +148,7 @@ public class PlaylistFetcher {
                     EntryFetcher eFetch = new EntryFetcher();
                     switch(eFetch.retrievePlaylistEntry(entryId)){
                         case "success":
-                            playlist.addEntry(eFetch.getEntry());
+                            p.addEntry(eFetch.getEntry());
                             break;
                         case "entry_not_found":
                             //Entry not found in database
@@ -109,7 +167,19 @@ public class PlaylistFetcher {
         }
     }
     
+    /**
+     * Get Playlist retrieved with retrievePlaylist(playlistId)
+     * @return 
+     */
     public Playlist getPlaylist(){
         return playlist;
+    }
+    
+    /**
+     * Get ArrayList of playlists loaded with retrieveAllPlaylists()
+     * @return playlists
+     */
+    public ArrayList<Playlist> getAllPlaylists(){
+        return playlists;
     }
 }

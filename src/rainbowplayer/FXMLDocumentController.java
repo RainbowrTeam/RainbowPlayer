@@ -7,6 +7,7 @@ import rainbowplayer.Classes.Track;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -16,19 +17,25 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
 import rainbowplayer.Core.SongPlayer;
+import rainbowplayer.db.PlaylistCreation;
 import rainbowplayer.db.PlaylistFetcher;
 import rainbowplayer.db.TrackFetcher;
 import rainbowplayer.db.TrackRemoval;
@@ -51,7 +58,7 @@ public class FXMLDocumentController implements Initializable {
     private boolean emptyPlaylistListWarningEmitted = false;
     
     //Tracklist item deletion 
-    private boolean deleteMode = false;
+    private boolean trackDeleteMode = false;
     
     private HashMap<String, String> playerData = null;
     
@@ -247,7 +254,7 @@ public class FXMLDocumentController implements Initializable {
                 if(clickedIndex <= trackCount){
                     Track clickedTrack = trackList.get(clickedIndex);
 
-                    if(!deleteMode){
+                    if(!trackDeleteMode){
                         Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
                         trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
                         trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
@@ -337,8 +344,8 @@ public class FXMLDocumentController implements Initializable {
      */
     private void handleTabPaneEvents(){
         listTabs.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
-            if(deleteMode){
-                deleteMode = false;
+            if(trackDeleteMode){
+                trackDeleteMode = false;
                 ChildDeleteTracklistButton.setText("Delete Track");
             }
             
@@ -432,6 +439,68 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @FXML
+    private void handleCreatePlaylistButtonAction(ActionEvent event){
+        
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Create Playlist");
+        
+        ButtonType submitButtonType = new ButtonType("Create Playlist", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+        GridPane contentGrid = new GridPane();
+        contentGrid.setHgap(2);
+        contentGrid.setVgap(2); //spacing between elements
+        
+        TextField playlistName = new TextField();
+        TextField playlistDescription = new TextField();
+        TextField playlistTags = new TextField();
+
+        contentGrid.add(new Label("Playlist Name:"), 0, 0);
+        contentGrid.add(playlistName, 1, 0);
+        contentGrid.add(new Label("Playlist Description:"), 0, 1);
+        contentGrid.add(playlistDescription, 1, 1);
+        contentGrid.add(new Label("Playlist Tags:"), 0, 2);
+        contentGrid.add(playlistTags, 1, 2);
+
+        dialog.getDialogPane().setContent(contentGrid);
+
+        Optional result = dialog.showAndWait();
+        if(result.get() == submitButtonType){
+            String playlistNameValue = playlistName.getText();
+            String playlistDescValue = playlistDescription.getText();
+            String playlistTagValue = playlistTags.getText();
+            
+            if(playlistNameValue.length() < 1 || playlistDescValue.length() < 1){
+                showAlert(AlertType.ERROR, "Invalid Input", "Invalid Input", "Please enter a valid playlist name and description.");
+                return;
+            }
+            
+            Playlist p = new Playlist(playlistNameValue);
+            
+            p.setTags(playlistTagValue);
+            p.setDescription(playlistDescValue);
+           
+            PlaylistCreation pCreation = new PlaylistCreation();
+            
+            if(pCreation.insertPlaylist(p)){
+                populatePlaylistList();
+                showAlert(AlertType.INFORMATION, "Success", "Playlist Created!", "Your playlist was successfully created!");
+            }else{
+                showAlert(AlertType.ERROR, "Error", "Something went wrong.", "RainbowPlayer could not create your playlist, please try again.");
+            }
+            
+        }else{
+            //Cancel
+        }
+    }
+    
+    @FXML
+    private void handleDeletePlaylistButtonAction(ActionEvent event){
+        
+    }
+    
+    @FXML
     private void handleImportTracklistButtonAction(ActionEvent event) {
         
         TrackImport tImport = new TrackImport();
@@ -486,11 +555,11 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleDeleteTracklistButtonAction(ActionEvent event) {
-        if(deleteMode){
-            deleteMode = false;
+        if(trackDeleteMode){
+            trackDeleteMode = false;
             ChildDeleteTracklistButton.setText("Delete Track");
         }else{
-            deleteMode = true;
+            trackDeleteMode = true;
             ChildDeleteTracklistButton.setText("Exit Delete Mode");
         }
     }

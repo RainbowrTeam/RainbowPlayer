@@ -7,7 +7,6 @@ import rainbowplayer.Classes.Track;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -17,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -31,7 +29,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.util.Pair;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
@@ -106,13 +103,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label ChildTrackNrQueueLabel;
 
-    @FXML
-    private Label ChildPlaylistLabel;
-    
-    @FXML
-    private ListView ChildQueueList;
-    @FXML
-    private ListView ChildPlaylistList;
     @FXML
     private ListView ChildTracklistList;
     

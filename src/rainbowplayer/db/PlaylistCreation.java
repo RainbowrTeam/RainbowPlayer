@@ -1,5 +1,4 @@
 package rainbowplayer.db;
-import java.time.Instant;
 import java.util.UUID;
 import rainbowplayer.Classes.Playlist;
 
@@ -21,11 +20,11 @@ public class PlaylistCreation {
         if(!db.initDB()){
             return false;
         }
-        Instant timestamp = Instant.now();
+        
         String pId = UUID.randomUUID().toString();
         
         String query = "INSERT INTO PLAYLISTS(playlist_id,playlist_name,playlist_desc,playlist_tags,playlist_creation) VALUES(?,?,?,?,?);";
-        String data[] = {pId, playlist.getName(), playlist.getDescription(), playlist.getTags(), String.valueOf(timestamp.toEpochMilli()) };
+        String data[] = {pId, playlist.getName(), playlist.getDescription(), playlist.getTags(), String.valueOf(System.currentTimeMillis()) };
         
         playlist.setId(pId);
         

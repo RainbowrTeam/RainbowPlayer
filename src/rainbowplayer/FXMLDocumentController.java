@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import rainbowplayer.Classes.Track;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -15,20 +17,27 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import rainbowplayer.Classes.Duration;
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
 import rainbowplayer.Core.SongPlayer;
+import rainbowplayer.db.PlaylistCreation;
+import rainbowplayer.db.PlaylistFetcher;
 import rainbowplayer.db.TrackFetcher;
 import rainbowplayer.db.TrackRemoval;
 import rainbowplayer.io.TrackImport;
@@ -40,11 +49,17 @@ public class FXMLDocumentController implements Initializable {
     //Track List Data
     private ArrayList<Track> trackList = new ArrayList<>();
     private int trackCount;
-    private boolean trackImportError;
+    private boolean trackListLoadError;
     private boolean emptyTrackListWarningEmitted = false;
     
+    //Playlist List Data
+    private ArrayList<Playlist> playlistList = new ArrayList<>();
+    private int playlistCount;
+    private boolean playlistLoadError = false;
+    private boolean emptyPlaylistListWarningEmitted = false;
+    
     //Tracklist item deletion 
-    private boolean deleteMode = false;
+    private boolean trackDeleteMode = false;
     
     private HashMap<String, String> playerData = null;
     
@@ -71,6 +86,8 @@ public class FXMLDocumentController implements Initializable {
     private Label playlistLabel;
     
     @FXML
+    private Label ChildPlaylistLabel;
+    @FXML
     private Slider volumeSlider;
     @FXML
     private Slider trackPositionSlider;
@@ -83,8 +100,12 @@ public class FXMLDocumentController implements Initializable {
     private TabPane listTabs;
     
     @FXML
+    private ListView ChildQueueList;
+    @FXML
+    private ListView ChildPlaylistList;
+    @FXML
     private Label ChildTrackNrQueueLabel;
-    
+
     @FXML
     private Label ChildPlaylistLabel;
     
@@ -111,6 +132,21 @@ public class FXMLDocumentController implements Initializable {
     }
     
     /**
+     * Builds a string containing ArrayList content separated by given separator string
+     * @param array
+     * @param separator
+     * @return concatenated string
+     */
+    public String concatenateArrayListToString(ArrayList<String> array, String separator){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String s : array){
+            stringBuilder.append(s);
+            stringBuilder.append(separator);
+        }
+        return stringBuilder.toString();
+    }
+    
+    /**
      * Refresh/Populate Track List ListView with tracks retrieved from database
      */
     private void populateTrackList(){
@@ -125,25 +161,83 @@ public class FXMLDocumentController implements Initializable {
         
         switch(trackListFetcher.retrieveAllTracks()){
             case "success":
-                trackImportError = false;
+                trackListLoadError = false;
                 for(Track t : trackListFetcher.getAllTracks()){
+                    ArrayList<String> trackInformation = new ArrayList<>();
+                    
+                    trackInformation.add((trackCount + 1) + ". " + t.getFormattedTitle());
+                    trackInformation.add(t.getAlbumName() + " ("+ t.getReleaseYear() +")");
+                    
                     trackList.add(t);
-                    trackTitles.add(t.getFormattedTitle());
                     trackCount++;
+                    trackTitles.add(concatenateArrayListToString(trackInformation, "\n"));
                 }
                 setListContent(ChildTracklistList,trackTitles);
                 ChildTrackNrTracklistLabel.setText(trackCount + " Tracks in Tracklist");
                 break;
             case "no_tracks_found":
-                trackImportError = false;
+                trackListLoadError = false;
                 setListContent(ChildTracklistList, trackTitles);
                 ChildTrackNrTracklistLabel.setText("0 Tracks in Tracklist");
                 break;
             case "error":
             default:
-                trackImportError = true;
-                showAlert(AlertType.ERROR, "Could not import tracks", "Oops. An error occurred.", "The track import failed somehow, do you want to try it again?");
+                trackListLoadError = true;
+                showAlert(AlertType.ERROR, "Could not load tracks", "Oops. An error occurred.", "The track loading process failed somehow, do you want to try it again?");
                 setListContent(ChildTracklistList,trackTitles);
+                break;
+        }
+    }
+    
+    /**
+     * Refresh/Populate Playlist ListView with data retrieved from database
+     */
+    private void populatePlaylistList(){
+        /*
+            Populate Playlist List
+        */
+        
+        PlaylistFetcher playListFetcher = new PlaylistFetcher();
+        ArrayList<String> playlistInfo = new ArrayList<>();
+        
+        playlistList = new ArrayList<>();
+        playlistCount = 0;
+        
+        switch(playListFetcher.retrieveAllPlaylists()){
+            case "success":
+                playlistLoadError = false;
+                
+                for(Playlist p : playListFetcher.getAllPlaylists()){
+                    
+                    ArrayList<String> playlistShortInformation = new ArrayList<>();
+                    int playlistEntryCount = 0;
+                    
+                    for(PlaylistEntry e : p.getEntries()){
+                        playlistEntryCount++;
+                    }
+                    
+                    playlistShortInformation.add(p.getName() + " (" + playlistEntryCount +" Tracks)");
+                    playlistShortInformation.add(p.getDescription() + " ("+ p.getTags() +")");
+                    
+                    playlistList.add(p);
+                    playlistCount++;
+                    playlistInfo.add(concatenateArrayListToString(playlistShortInformation, "\n"));
+                }
+                
+                setListContent(ChildPlaylistList,playlistInfo);
+                ChildPlaylistLabel.setText(playlistCount + " Playlists");
+                
+                break;
+            case "no_playlists_found":
+                playlistLoadError = false;
+                setListContent(ChildPlaylistList, playlistInfo);
+                ChildPlaylistLabel.setText("0 Playlists");
+                break;
+            case "error":
+            default:
+                playlistLoadError = true;
+                showAlert(AlertType.ERROR, "Could not load playlists", "Oops. An error occurred.", "RainbowPlayer could not load your playlists, do you want to try again?");
+                setListContent(ChildPlaylistList,playlistInfo);
                 break;
         }
     }
@@ -155,24 +249,27 @@ public class FXMLDocumentController implements Initializable {
                 if(clickedIndex <= trackCount){
                     Track clickedTrack = trackList.get(clickedIndex);
 
-                    if(!deleteMode){
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle(clickedTrack.getFormattedTitle());
-                        alert.setHeaderText(clickedTrack.getTitleName());
-                        alert.setContentText("by " + clickedTrack.getArtistName() + 
-                                " \nAlbum: " + 
-                                clickedTrack.getAlbumName() + 
-                                "\nGenre: " + 
-                                clickedTrack.getGenreName() + 
-                                "\nTrack ID: " + 
-                                clickedTrack.getTrackId());
+                    if(!trackDeleteMode){
+                        Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
+                        trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
+                        trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
+                        
+                        ArrayList<String> contentText = new ArrayList<>();
+                        
+                        contentText.add("by " + clickedTrack.getArtistName() + " (" + clickedTrack.getReleaseYear() +")");
+                        contentText.add("Album: " + clickedTrack.getAlbumName());
+                        contentText.add("Genre: " + clickedTrack.getGenreName());
+                        contentText.add("Track ID: " + clickedTrack.getTrackId());
+                        contentText.add("Location: " + clickedTrack.getFilePath());
+                        
+                        trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
 
-                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer");
+                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer", ButtonData.LEFT);
                         ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
 
-                        alert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
+                        trackInfoAlert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
 
-                        Optional<ButtonType> result = alert.showAndWait();
+                        Optional<ButtonType> result = trackInfoAlert.showAndWait();
                         if (result.get() == openInFileSystemButton){
                             try{
                                 File trackFile = new File(clickedTrack.getFilePath());
@@ -200,7 +297,36 @@ public class FXMLDocumentController implements Initializable {
         });
         
         ChildPlaylistList.setOnMouseClicked((MouseEvent event) -> {
-            //to be added
+            try{
+                int clickedIndex = ChildPlaylistList.getSelectionModel().getSelectedIndex();
+                if(clickedIndex <= playlistCount){
+                    Playlist clickedPlaylist = playlistList.get(clickedIndex);
+                    Alert playlistInfoAlert = new Alert(AlertType.INFORMATION);
+                    ArrayList<String> contentText = new ArrayList<>();
+                    
+                    SimpleDateFormat dateDisplayFormat = new SimpleDateFormat("EEEE dd 'of' yyyy kk:mm");
+                    String formattedCreationDate = dateDisplayFormat.format(clickedPlaylist.getCreatedAtDate().getTime());
+                    
+                    playlistInfoAlert.setTitle(clickedPlaylist.getName());
+                    playlistInfoAlert.setHeaderText(clickedPlaylist.getName());
+                    
+                    contentText.add("Description: " + clickedPlaylist.getDescription());
+                    contentText.add("Tags: " + clickedPlaylist.getTags());
+                    contentText.add("Created " + formattedCreationDate);
+
+                    playlistInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
+
+                    ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
+                    playlistInfoAlert.getButtonTypes().setAll(closeDialog);
+                    Optional<ButtonType> result = playlistInfoAlert.showAndWait();
+
+                    if (result.get() == closeDialog){
+                        //cancel
+                    }
+                }
+            }catch(ArrayIndexOutOfBoundsException e){
+                
+            }
         });
         
         ChildQueueList.setOnMouseClicked((MouseEvent event) -> {
@@ -213,13 +339,25 @@ public class FXMLDocumentController implements Initializable {
      */
     private void handleTabPaneEvents(){
         listTabs.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
-            if(deleteMode){
-                deleteMode = false;
+            if(trackDeleteMode){
+                trackDeleteMode = false;
                 ChildDeleteTracklistButton.setText("Delete Track");
             }
-            //TrackList tab
+            
+            //Playlists Tab
+            if(newTabIndex.intValue() == 1){
+                if(!playlistLoadError){
+                    if(playlistCount == 0){
+                        if(!emptyPlaylistListWarningEmitted){
+                            showAlert(AlertType.INFORMATION, "Hi there!", "It's empty here!", "Do you want to create some playlists? Just hit the 'Create Playlist' button!");
+                            emptyPlaylistListWarningEmitted = true;
+                        }
+                    }
+                }
+            }
+            //TrackList Tab
             if(newTabIndex.intValue() == 2){
-                if(!trackImportError){
+                if(!trackListLoadError){
                     if(trackCount == 0){
                         if(!emptyTrackListWarningEmitted){
                             showAlert(AlertType.INFORMATION, "Hi there!", "It's empty here!", "Do you want to import some tracks? Just hit the 'Import' button!");
@@ -243,7 +381,7 @@ public class FXMLDocumentController implements Initializable {
         alert.setTitle(alertTitle);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
-
+        
         alert.showAndWait();
     }
     
@@ -299,6 +437,68 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @FXML
+    private void handleCreatePlaylistButtonAction(ActionEvent event){
+        
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Create Playlist");
+        
+        ButtonType submitButtonType = new ButtonType("Create Playlist", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+        GridPane contentGrid = new GridPane();
+        contentGrid.setHgap(2);
+        contentGrid.setVgap(2); //spacing between elements
+        
+        TextField playlistName = new TextField();
+        TextField playlistDescription = new TextField();
+        TextField playlistTags = new TextField();
+
+        contentGrid.add(new Label("Playlist Name:"), 0, 0);
+        contentGrid.add(playlistName, 1, 0);
+        contentGrid.add(new Label("Playlist Description:"), 0, 1);
+        contentGrid.add(playlistDescription, 1, 1);
+        contentGrid.add(new Label("Playlist Tags:"), 0, 2);
+        contentGrid.add(playlistTags, 1, 2);
+
+        dialog.getDialogPane().setContent(contentGrid);
+
+        Optional result = dialog.showAndWait();
+        if(result.get() == submitButtonType){
+            String playlistNameValue = playlistName.getText();
+            String playlistDescValue = playlistDescription.getText();
+            String playlistTagValue = playlistTags.getText();
+            
+            if(playlistNameValue.length() < 1 || playlistDescValue.length() < 1){
+                showAlert(AlertType.ERROR, "Invalid Input", "Invalid Input", "Please enter a valid playlist name and description.");
+                return;
+            }
+            
+            Playlist p = new Playlist(playlistNameValue);
+            
+            p.setTags(playlistTagValue);
+            p.setDescription(playlistDescValue);
+           
+            PlaylistCreation pCreation = new PlaylistCreation();
+            
+            if(pCreation.insertPlaylist(p)){
+                populatePlaylistList();
+                showAlert(AlertType.INFORMATION, "Success", "Playlist Created!", "Your playlist was successfully created!");
+            }else{
+                showAlert(AlertType.ERROR, "Error", "Something went wrong.", "RainbowPlayer could not create your playlist, please try again.");
+            }
+            
+        }else{
+            //Cancel
+        }
+    }
+    
+    @FXML
+    private void handleDeletePlaylistButtonAction(ActionEvent event){
+        
+    }
+    
+    @FXML
     private void handleImportTracklistButtonAction(ActionEvent event) {
         
         TrackImport tImport = new TrackImport();
@@ -329,8 +529,8 @@ public class FXMLDocumentController implements Initializable {
         
         switch(importStatus){
             case "success":
-                showAlert(AlertType.INFORMATION, "Import Successful", "Success!", "The track import was successful!");
                 populateTrackList(); //refresh track list
+                showAlert(AlertType.INFORMATION, "Import Successful", "Success!", "The track import was successful!");
                 break;
             case "no_selection":
                 showAlert(AlertType.WARNING, "Import Failed: No Track Selected", "No Track Selected", "Please select a valid track file and try again.");
@@ -339,6 +539,10 @@ public class FXMLDocumentController implements Initializable {
                 showAlert(AlertType.WARNING, "Import Failed: Invalid Track Format", "Invalid Track Format", "RainbowPlayer only supports .mp3 and .wav files.");
                 break;
             case "cancelled":
+                break;
+            case "partial_error":
+                populateTrackList(); //refresh track list
+                showAlert(AlertType.WARNING, "Import Failed: Partial Failure", "Partial Import Failure", "One or more tracks could not be imported successfully. Please try again.");
                 break;
             case "error":
             default:
@@ -349,11 +553,11 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleDeleteTracklistButtonAction(ActionEvent event) {
-        if(deleteMode){
-            deleteMode = false;
+        if(trackDeleteMode){
+            trackDeleteMode = false;
             ChildDeleteTracklistButton.setText("Delete Track");
         }else{
-            deleteMode = true;
+            trackDeleteMode = true;
             ChildDeleteTracklistButton.setText("Exit Delete Mode");
         }
     }
@@ -391,6 +595,7 @@ public class FXMLDocumentController implements Initializable {
         playerData = new HashMap<>();
  
         populateTrackList();
+        populatePlaylistList();
         handleListViewEvents();
         handleTabPaneEvents();
         bindSliderActions();

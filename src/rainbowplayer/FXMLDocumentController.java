@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -37,6 +38,8 @@ import rainbowplayer.db.PlaylistCreation;
 import rainbowplayer.db.PlaylistFetcher;
 import rainbowplayer.db.TrackFetcher;
 import rainbowplayer.db.TrackRemoval;
+import rainbowplayer.db.TrackUpdate;
+import rainbowplayer.io.MetadataUpdater;
 import rainbowplayer.io.TrackImport;
 
 public class FXMLDocumentController implements Initializable {
@@ -241,37 +244,40 @@ public class FXMLDocumentController implements Initializable {
 
                     if(!trackDeleteMode){
                         if(event.getClickCount() == 2){
-                        Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
-                        trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
-                        trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
+                            Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
+                            trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
+                            trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
 
-                        ArrayList<String> contentText = new ArrayList<>();
+                            ArrayList<String> contentText = new ArrayList<>();
 
-                        contentText.add("by " + clickedTrack.getArtistName() + " (" + clickedTrack.getReleaseYear() +")");
-                        contentText.add("Album: " + clickedTrack.getAlbumName());
-                        contentText.add("Genre: " + clickedTrack.getGenreName());
-                        contentText.add("Track ID: " + clickedTrack.getTrackId());
-                        contentText.add("Location: " + clickedTrack.getFilePath());
+                            contentText.add("by " + clickedTrack.getArtistName() + " (" + clickedTrack.getReleaseYear() +")");
+                            contentText.add("Album: " + clickedTrack.getAlbumName());
+                            contentText.add("Genre: " + clickedTrack.getGenreName());
+                            contentText.add("Track ID: " + clickedTrack.getTrackId());
+                            contentText.add("Location: " + clickedTrack.getFilePath());
 
-                        trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
+                            trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
 
-                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer", ButtonData.LEFT);
-                        ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
+                            ButtonType openInFileSystemButton = new ButtonType("Open in Explorer", ButtonData.LEFT);
+                            ButtonType editTrackButton = new ButtonType("Edit Track");
+                            ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
 
-                        trackInfoAlert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
+                            trackInfoAlert.getButtonTypes().setAll(openInFileSystemButton, editTrackButton, closeDialog);
 
-                        Optional<ButtonType> result = trackInfoAlert.showAndWait();
-                        if (result.get() == openInFileSystemButton){
-                            try{
-                                File trackFile = new File(clickedTrack.getFilePath());
-                                getDesktop().open(trackFile.getParentFile());
-                            }catch(IOException e){
+                            Optional<ButtonType> result = trackInfoAlert.showAndWait();
+                            if (result.get() == openInFileSystemButton){
+                                try{
+                                    File trackFile = new File(clickedTrack.getFilePath());
+                                    getDesktop().open(trackFile.getParentFile());
+                                }catch(IOException e){
 
+                                }
+
+                            } else if(result.get() == editTrackButton){
+                                editTrack(clickedTrack);
+                            } else {
+                                //cancel
                             }
-
-                        } else {
-                            //cancel
-                        }
                         }
                     }else{
                         TrackRemoval tRemoval = new TrackRemoval();
@@ -377,6 +383,89 @@ public class FXMLDocumentController implements Initializable {
         alert.setContentText(contentText);
         
         alert.showAndWait();
+    }
+    
+    /**
+     * Edit Track
+     * @param t 
+     */
+    private void editTrack(Track t){
+        Dialog editTrackDialog = new Dialog();
+        editTrackDialog.setTitle("Edit Track");
+        editTrackDialog.setHeaderText("Edit Track");
+        
+        ButtonType submitButtonType = new ButtonType("Apply", ButtonData.OK_DONE);
+        editTrackDialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+        GridPane contentGrid = new GridPane();
+        contentGrid.setHgap(2);
+        contentGrid.setVgap(2); //spacing between elements
+        
+        TextField trackName = new TextField();
+        TextField trackArtist = new TextField();
+        TextField trackAlbum = new TextField();
+        TextField trackReleaseYear = new TextField();
+        TextField trackGenre = new TextField();
+        CheckBox changeFileMetadataCheckbox = new CheckBox();
+        
+        trackName.setText(t.getTitleName());
+        trackAlbum.setText(t.getAlbumName());
+        trackArtist.setText(t.getArtistName());
+        trackReleaseYear.setText(String.valueOf(t.getReleaseYear()));
+        trackGenre.setText(t.getGenreName());
+        
+        contentGrid.add(new Label("Track Name:"), 0, 0);
+        contentGrid.add(trackName, 1, 0);
+        contentGrid.add(new Label("Track Album:"), 0, 1);
+        contentGrid.add(trackAlbum, 1, 1);
+        contentGrid.add(new Label("Track Artist:"), 0, 2);
+        contentGrid.add(trackArtist, 1, 2);
+        contentGrid.add(new Label("Track Genre:"), 0, 3);
+        contentGrid.add(trackGenre, 1, 3);
+        contentGrid.add(new Label("Track Release Year:"), 0, 4);
+        contentGrid.add(trackReleaseYear, 1, 4);
+        contentGrid.add(new Label("Apply changes to file metadata"), 0, 5);
+        contentGrid.add(changeFileMetadataCheckbox, 1 , 5);
+
+        editTrackDialog.getDialogPane().setContent(contentGrid);
+
+        Optional result = editTrackDialog.showAndWait();
+        if(result.get() == submitButtonType){
+            String trackNameValue = trackName.getText();
+            String trackAlbumValue = trackAlbum.getText();
+            String trackArtistValue = trackArtist.getText();
+            String trackReleaseYearValue = trackReleaseYear.getText();
+            String trackGenreValue = trackGenre.getText();
+            boolean updateFileMetadata = changeFileMetadataCheckbox.isSelected();
+            
+            Track updatedTrack = new Track(
+                    t.getTrackId(),
+                    t.getFilePath(),
+                    trackNameValue,
+                    trackArtistValue,
+                    trackAlbumValue,
+                    trackGenreValue,Integer.parseInt(trackReleaseYearValue)
+            );
+            
+            TrackUpdate trackUpdate = new TrackUpdate();
+
+            if(trackUpdate.updateTrack(updatedTrack)){
+                if(updateFileMetadata){
+                    MetadataUpdater metaUpdate = new MetadataUpdater();
+                    if(metaUpdate.updateMetadata(updatedTrack)){
+                        populateTrackList();
+                        showAlert(AlertType.INFORMATION, "Track Updated", "Track Updated", "The track was successfully updated.");
+                    }else{
+                        populateTrackList();
+                        showAlert(AlertType.INFORMATION, "Track Updated Failed Partially", "Track Updated With Errors", "The track was successfully updated but the file metadata could not be updated successfully.");
+                    }
+                }
+            }else{
+                showAlert(AlertType.ERROR, "Track Update Failed", "Something went wrong", "The track could not be updated. Please try again.");
+            }
+        }else{
+            //Cancel
+        }
     }
     
     private void timerTick(){}

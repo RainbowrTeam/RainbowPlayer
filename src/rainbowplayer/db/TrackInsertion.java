@@ -35,7 +35,8 @@ public class TrackInsertion {
                 + "VALUES(?,?,?,?,?,?,?,?);";
         
         String[] data = {
-            tId, t.getTitleName(),
+            tId,
+            t.getTitleName(),
             t.getFilePath(),
             t.getArtistName(),
             t.getAlbumName(),

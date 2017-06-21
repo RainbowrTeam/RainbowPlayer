@@ -113,10 +113,6 @@ public class FXMLDocumentController implements Initializable {
         
     } 
     
-    @FXML
-    private void handleLooptButtonAction(ActionEvent event) {
-        
-    }
     
      @FXML
     private void handleAddToQueueButtonAction(ActionEvent event) {
@@ -137,7 +133,26 @@ public class FXMLDocumentController implements Initializable {
     private void handleDeleteTracklistButtonAction(ActionEvent event) {
         
     }
-    
+    @FXML
+    private void handleCreatePlaylistButtonAction(ActionEvent event) {
+        
+    }
+    @FXML
+    private void handleDeletePlaylistButtonAction(ActionEvent event) {
+        
+    }
+    @FXML
+    private void handleImportPlaylistButtonAction(ActionEvent event) {
+        
+    }
+    @FXML
+    private void handleExportPlaylistButtonAction(ActionEvent event) {
+        
+    }
+    @FXML
+    private void handleToQueuePlaylistButtonAction(ActionEvent event) {
+        
+    }
      @FXML
     private void handleAddToQueueTracklistButtonAction(ActionEvent event) {
         

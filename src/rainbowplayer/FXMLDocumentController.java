@@ -235,6 +235,9 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    /**
+     * Handle ListView events
+     */
     private void handleListViewEvents(){
         ChildTracklistList.setOnMouseClicked((MouseEvent event) -> {
             try{
@@ -452,7 +455,25 @@ public class FXMLDocumentController implements Initializable {
             if(trackUpdate.updateTrack(updatedTrack)){
                 if(updateFileMetadata){
                     MetadataUpdater metaUpdate = new MetadataUpdater();
-                    if(metaUpdate.updateMetadata(updatedTrack)){
+                    boolean metaDataUpdateSuccess = false;
+                    //Try updating metadata 3 times
+                    metaDataUpdateLoop : {
+                        for(int attempts = 0; attempts < 3; attempts++){
+                            switch(metaUpdate.updateMetadata(updatedTrack)){
+                                case "success":
+                                    metaDataUpdateSuccess = true;
+                                    break;
+                                case "tmpfile_delete_error":
+                                case "rename_error":
+                                case "exception":
+                                default:
+                                    break;
+                            }
+                            break metaDataUpdateLoop;
+                        } 
+                    }
+                    
+                    if(metaDataUpdateSuccess){
                         populateTrackList();
                         showAlert(AlertType.INFORMATION, "Track Updated", "Track Updated", "The track was successfully updated.");
                     }else{

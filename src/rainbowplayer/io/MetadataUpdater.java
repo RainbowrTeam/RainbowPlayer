@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.io;
 
 import com.mpatric.mp3agic.ID3v2;
@@ -27,49 +22,53 @@ public class MetadataUpdater {
      * @param t
      * @return status
      */
-    public boolean updateMetadata(Track t){
+    public String updateMetadata(Track t){
         try {
             //Rename file to use old file name later
             File trackFile = new File(t.getFilePath());
             //Create temporary file to use
             File tmpFile = new File(trackFile.getParent() + File.separator + t.getTitleName() + " (updating).mp3");
             
-            trackFile.renameTo(tmpFile);
-            
-            String originalFilePath = trackFile.getPath();
-            String tmpFilePath = tmpFile.getPath();
-            
-            //Copies whole track file, the data will be written into the old file path
-            Mp3File trackMP3File = new Mp3File(tmpFilePath);
-            
-            ID3v2 updatedID3v2Tag = new ID3v24Tag();
-            //ID3v1 updatedID3v1Tag = new ID3v1Tag();
-            if (trackMP3File.hasId3v1Tag()) {
-                trackMP3File.removeId3v1Tag();
-            }
-            if (trackMP3File.hasId3v2Tag()) {
-                trackMP3File.removeId3v2Tag();
-            }
-            if (trackMP3File.hasCustomTag()) {
-                trackMP3File.removeCustomTag();
-            }
+            if(trackFile.renameTo(tmpFile)){
+                String originalFilePath = trackFile.getPath();
+                String tmpFilePath = tmpFile.getPath();
 
-            updatedID3v2Tag.setTitle(t.getTitleName());
-            updatedID3v2Tag.setAlbum(t.getAlbumName());
-            updatedID3v2Tag.setArtist(t.getArtistName());
-            updatedID3v2Tag.setGenreDescription(t.getGenreName());
-            updatedID3v2Tag.setYear(String.valueOf(t.getReleaseYear()));
-            
-            trackMP3File.setId3v2Tag(updatedID3v2Tag);
-            
-            //Create "original" file in original path with updated metadata
-            trackMP3File.save(originalFilePath);
-            //Delete updating temporary file
-            tmpFile.delete();
-            return true;
+                //Copies whole track file, the data will be written into the old file path
+                Mp3File trackMP3File = new Mp3File(tmpFilePath);
+
+                ID3v2 updatedID3v2Tag = new ID3v24Tag();
+                //ID3v1 updatedID3v1Tag = new ID3v1Tag();
+                if (trackMP3File.hasId3v1Tag()) {
+                    trackMP3File.removeId3v1Tag();
+                }
+                if (trackMP3File.hasId3v2Tag()) {
+                    trackMP3File.removeId3v2Tag();
+                }
+                if (trackMP3File.hasCustomTag()) {
+                    trackMP3File.removeCustomTag();
+                }
+
+                updatedID3v2Tag.setTitle(t.getTitleName());
+                updatedID3v2Tag.setAlbum(t.getAlbumName());
+                updatedID3v2Tag.setArtist(t.getArtistName());
+                updatedID3v2Tag.setGenreDescription(t.getGenreName());
+                updatedID3v2Tag.setYear(String.valueOf(t.getReleaseYear()));
+
+                trackMP3File.setId3v2Tag(updatedID3v2Tag);
+
+                //Create "original" file in original path with updated metadata
+                trackMP3File.save(originalFilePath);
+                //Delete updating temporary file
+                if(tmpFile.delete()){
+                    return "success";
+                }else{
+                    return "tmpfile_delete_error";
+                }
+            }
+            return "rename_error";
         } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException ex) {
             Logger.getLogger(MetadataUpdater.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            return "exception";
         }
     }
 }

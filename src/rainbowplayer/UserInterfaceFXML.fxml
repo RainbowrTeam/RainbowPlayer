@@ -18,22 +18,17 @@
 <?import javafx.collections.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import rainbowplayer.AwesomeIcon?>
-<!-- <?import RainbowPlayer.src.rainbowplayer.Font.fontawesome-webfont?> -->
 
-<GridPane fx:id="ContOutside" id="ContOutside" styleClass="cont" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController" stylesheets="@Stylesheet.css"> 
+
+<GridPane fx:id="ContOutside" id="ContOutside" styleClass="cont" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController" hgap="10" vgap="10" stylesheets="@Stylesheet.css"> 
     <children>
      
-     <GridPane id="ContTop" styleClass="cont" minHeight="190" prefWidth="1280" GridPane.rowIndex="1">
-         <padding>
-             <Insets top="30" bottom="30"/>
-            </padding>
+     <GridPane id="ContTop" styleClass="cont" prefHeight="150" prefWidth="1280" GridPane.rowIndex="1">
          <children>
           <GridPane id="ContTopButtons" styleClass="cont" GridPane.columnIndex="1" GridPane.rowIndex="1" hgap="20">  
               <children>
-            <Button  id="ChildPrevButton" prefHeight="70.0" prefWidth="70.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1" text="prev"> <!--styleClass="awesome" style="-fx-font-family: FontAwesome; -fx-font-size: 16.0;"--> 
-         <!--       <text> <AwesomeIcon fx:constant=""/> </text> -->
-                <font>
+            <Button id="ChildPrevButton" prefHeight="70.0" prefWidth="70.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1" text="prev"> 
+             <font>
               <Font name="fontawesome-webfont" size="16.0" />
              </font>
              <tooltip>
@@ -61,18 +56,11 @@
               <Tooltip text="stop playback" />
              </tooltip>
              </Button>
-             <Pane id="ContVolume" minHeight="120" GridPane.columnIndex="5" prefWidth="20">  
-               <children>
-             <Slider id="ChildVolumeSlider" fx:id="ChildVolumeSlider" orientation="VERTICAL" minHeight="100.0" GridPane.columnIndex="5">
-            <padding>
-                 <Insets left="3" top="10" bottom="10"/> 
-              </padding>
-                 <tooltip>
+             <Slider id="ChildVolumeSlider" fx:id="ChildVolumeSlider" orientation="VERTICAL" prefHeight="100.0" GridPane.columnIndex="5">
+             <tooltip>
               <Tooltip id="AttVolumeSliderTooltip" text="volume" />
              </tooltip>
              </Slider>
-               </children>
-             </Pane>
            </children>
           </GridPane>
           <GridPane id="ContTopLabels" styleClass="cont" prefWidth="600" GridPane.rowIndex="1" GridPane.columnIndex="2" hgap="5">
@@ -97,15 +85,15 @@
                 </Label>    
            </children>
           </GridPane> 
-          <GridPane id="ContTopSlider" styleClass="cont" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" vgap="10" hgap="15">
-             <gridLinesVisible>true</gridLinesVisible>               
+          <GridPane id="ContTopSlider" styleClass="cont" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2">
               <padding>
-                 <Insets left="30" right="30" top="5" bottom="5"/>
-             </padding>
+                 <Insets top="25" right="25" bottom="25" left="25"/> 
+              </padding>
               <children>
-              <Pane styleClass="ContTime" prefWidth="30" GridPane.rowIndex="1" GridPane.columnIndex="1">
-              <children>
-              <Label fx:id="ChildCurrentTimeLabel" id="ChildCurrentTimeLabel" text=" 0:00:00 ">
+              <Label fx:id="ChildCurrentTimeLabel" id="ChildCurrentTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="1" text=" 0:00:00 ">
+               <padding>
+                 <Insets right="50" left="10"/> 
+               </padding>
                <font>
                 <Font name="System Bold" size="12.0" />
                </font>
@@ -113,23 +101,21 @@
                 <Tooltip text="elapsed time" />
                </tooltip>
               </Label> 
-              </children>
-              </Pane>
-              <Pane styleClass="ContTime" prefWidth="30" GridPane.rowIndex="1" GridPane.columnIndex="2" >
-                <children>
-                  <Label fx:id="ChildRemainTimeLabel" id="ChildRemainTimeLabel" text=" -0:00:00 ">
-                 <font>
+            <Label fx:id="ChildRemainTimeLabel" id="ChildRemainTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="2" text=" -0:00:00 ">
+                <padding>
+                 <Insets left="900" right="20"/> 
+                </padding>
+                  <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
                  <tooltip>
                   <Tooltip text="remaining time" />
                  </tooltip>
               </Label> 
-                </children>
-              </Pane>
-              <Pane styleClass="ContTime" prefWidth="30" GridPane.rowIndex="1" GridPane.columnIndex="3">
-              <children>
-                  <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" text="0:00:00">
+              <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnIndex="3" text="0:00:00">
+                 <padding>
+                  <Insets right="10" left="10"/> 
+                 </padding>
                   <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
@@ -137,17 +123,7 @@
                   <Tooltip text="total time" />
                  </tooltip>
               </Label>
-              </children>
-              </Pane>
-              <Pane id="ContProgress" minHeight="20" GridPane.rowIndex="2" GridPane.columnSpan="3" prefWidth="1220.0">  
-               <children>
-             <Slider id="ChildProgressSlider" fx:id="ChildProgressSlider" orientation="HORIZONTAL" minHeight="5" prefWidth="1100.0">
-               <padding>
-                   <Insets left="30" right="30" top="3"/>
-               </padding>
-           </Slider>
-               </children>
-           </Pane>
+             <Slider id="ChildProgressSlider" fx:id="ChildProgressSlider" orientation="HORIZONTAL" prefWidth="1200.0" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
            </children>
          </GridPane>
       </children> 
@@ -160,7 +136,7 @@
            <content>
         <GridPane id="ContQueueTab" styleClass="cont" prefWidth="1280" vgap="40">
            <padding>
-                    <Insets top="15" left="15" bottom="30"/>
+                    <Insets top="15" left="15" />
                 </padding>
          <ScrollPane hbarPolicy="NEVER" id="ContQueueScrollpane" styleClass="cont" prefWidth="1000" prefHeight="400" GridPane.columnIndex="2">
              <content>
@@ -241,27 +217,17 @@
                    <Font name="System Bold" size="24.0" />
                   </font>
                  </Label>
-                  <Button id="ChildCreatePlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="2" text="Create Playlist" onAction="#handleCreatePlaylistButtonAction">
-             <font>
-              <Font name="fontawesome-webfont" size="18.0" />
-             </font>
-                  </Button>
- <Button id="ChildDeletePlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="3" GridPane.columnIndex="2" text="Delete Playlist" onAction="#handleDeletePlaylistButtonAction">
-             <font>
-              <Font name="fontawesome-webfont" size="18.0" />
-             </font>
-            </Button>         
-            <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#handleImportPlaylistButtonAction" text="import Playlist">
+         <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="2" text="Import Playlist">
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildExportPlaylistButton"  prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#handleExportPlaylistButtonAction" text="export Playlist">
+            <Button id="ChildExportPlaylistButton"  prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="3" GridPane.columnIndex="2" text="export Playlist">
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildAddToQueuePlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#handleToQueuePlaylistButtonAction" text="add to Queue">    
+            <Button id="ChildAddToQueuePlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="2" text="add to Queue">    
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>

@@ -12,31 +12,23 @@ and open the template in the editor.
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-color: white;
-    -icons-color: rgba(61,114,144,1);
 }
 
 .cont{
    -fx-background-color: transparent; 
 }
 
- .label{
-    -fx-text-fill: linear-gradient(to right, rgba(52,58,64,1), rgba(33,37,41,1) );  
+.label{
+    -fx-text-fill: linear-gradient(rgba(33,37,41,1), rgba(52,58,64,1) );  /* linear-gradient(to right, rgba(194,37,92,1), rgba(217,72,15,1), rgba(245,159,0,1), rgba(55,178,77,1), rgba(27,110,194,1), rgba(156,54,181,1) ); */
  }
 
  .tab-pane *.tab-header-background{
         -fx-background-color: linear-gradient(to right, rgba(240,101,149,1), rgba(255,146,43,1), rgba(255,224,102,1), rgba(140,233,154,1), rgba(114,195,252,1), rgba(218,119,242,1));
  }
- .tab *.tab-label{
-               -fx-cursor: hand;
-               -fx-text-fill: linear-gradient(rgba(33,37,41,1), rgba(52,58,64,1));
-               -fx-font-size: 14px;
-               -fx-background: linear-gradient(to right, rgba(255,240,246,1), rgba(255,244,230,1), rgba(255,249,219,1), rgba(235,251,238,1), rgba(232,247,255,1), rgba(248,240,252,1)); 
-               -fx-color: white;
- }  
- .button{
+  
+  .button{
      -fx-text-fill: white;
      -fx-cursor: hand;
-     
  } 
   .toggle-button{
      -fx-text-fill: white;
@@ -44,27 +36,25 @@ and open the template in the editor.
  }
  .slider{
      -fx-cursor: hand;
-     
  }
 
  .list-view{
-          -fx-cursor: hand; 
+          -fx-cursor: hand;
  }
- 
- .ContTime{
+ #ChildCurrentTimeLabel{
      -fx-cursor: hand;
-     -fx-background-color: rgba(222,226,230,0.7);
-     -fx-border-radius: 10px;
  }
-
- #ContBottom{
-    -fx-background-color: rgba(33,37,41,0.2);
+ #ChildRemainTimeLabel{
+     -fx-cursor: hand;
+ }
+ #ChildTotalTimeLabel{
+     -fx-cursor: hand;
  }
  /* prev */
  #ChildPrevButton{
      -fx-background-color: linear-gradient(to right, rgba(156,54,181,1), rgba(27,110,194,1));
  }
- #ChildPrevButton:active{
+ #ChildPrevButton:pressed{
      -fx-background-color: linear-gradient(to right, rgba(204,93,232,1), rgba(50,154,240,1));
  }
   #ChildPrevButton:hover{
@@ -74,7 +64,7 @@ and open the template in the editor.
  #ChildPlayButton{
      -fx-background-color: linear-gradient(to right, rgba(27,110,194,1), rgba(55,178,77,1));
  }
- #ChildPlayButton:toggled{
+ #ChildPlayButton:pressed{
      -fx-background-color: linear-gradient(to right, rgba(50,154,240,1), rgba(105,219,124,1));
  }
   #ChildPlayButton:hover{
@@ -84,7 +74,7 @@ and open the template in the editor.
  #ChildSkipButton{
      -fx-background-color: linear-gradient(to right, rgba(55,178,77,1), rgba(245,159,0,1));
  }
- #ChildSkipButton:active{
+ #ChildSkipButton:pressed{
      -fx-background-color: linear-gradient(to right, rgba(105,219,124,1), rgba(255,212,59,1));
  }
   #ChildSkipButton:hover{
@@ -94,7 +84,7 @@ and open the template in the editor.
  #ChildStopButton{
      -fx-background-color: linear-gradient(to right, rgba(245,159,0,1), rgba(217,72,15,1));
  }
- #ChildStopButton:active{
+ #ChildStopButton:pressed{
      -fx-background-color: linear-gradient(to right, rgba(255,212,59,1), rgba(253,126,20,1));
  }
   #ChildStopButton:hover{
@@ -102,14 +92,12 @@ and open the template in the editor.
  }
  
  
- #ContVolume{
+ #ChildVolumeSlider{
      -fx-background-color: linear-gradient(to right, rgba(217,72,15,1), rgba(194,37,92,1)); 
-      -fx-border-radius: 10px;
  }
  
- #ContProgress{
+ #ChildProgressSlider{
      -fx-background-color: linear-gradient(to right, rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1), rgba(245,159,0,1), rgba(217,72,15,1), rgba(194,37,92,1));
-      -fx-border-radius: 10px;
  }
 
  
@@ -118,7 +106,7 @@ and open the template in the editor.
  #ChildAddToQueueButton{
      -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
  }
- #ChildAddToQueueButton:active{
+ #ChildAddToQueueButton:pressed{
      -fx-background-color: linear-gradient(rgba(204,93,232,1), rgba(50,154,240,1));
  }
   #ChildAddToQueueButton:hover{
@@ -128,7 +116,7 @@ and open the template in the editor.
  #ChildEmptyQueueButton{
      -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
  }
- #ChildEmptyQueueButton:active{
+ #ChildEmptyQueueButton:pressed{
      -fx-background-color: linear-gradient(rgba(50,154,240,1), rgba(105,219,124,1));
  }
   #ChildEmptyQueueButton:hover{
@@ -138,7 +126,7 @@ and open the template in the editor.
  #ChildPlayAllQueueButton{
      -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
  }
- #ChildPlayAllQueueButton:active{
+ #ChildPlayAllQueueButton:pressed{
      -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
  }
   #ChildPlayAllQueueButton:hover{
@@ -148,7 +136,7 @@ and open the template in the editor.
  #ChildLoopButton{
      -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1));
  }
- #ChildLoopButton:toggled{
+ #ChildLoopButton:pressed{
      -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1));
  }
   #ChildLoopButton:hover{
@@ -158,7 +146,7 @@ and open the template in the editor.
  #ChildMixButton{
      -fx-background-color: linear-gradient(rgba(217,72,15,1), rgba(194,37,92,1));
  }
- #ChildMixButton:toggled{
+ #ChildMixButton:pressed{
      -fx-background-color: linear-gradient(rgba(253,126,20,1), rgba(240,101,149,1));
  }
   #ChildMixButton:hover{
@@ -167,60 +155,40 @@ and open the template in the editor.
  
  
  
-  #ChildCreatePlaylistButton{
-     -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
- }
- #ChildCreatePlaylistButton:active{
-     -fx-background-color: linear-gradient(rgba(204,93,232,1), rgba(50,154,240,1));
- }
-  #ChildCreatePlaylistButton:hover{
-     -fx-background-color: linear-gradient(rgba(174,62,201,1), rgba(28,124,214,1));
- }
-
- #ChildDeletePlaylistButton{
-     -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
- }
- #ChildDeletePlaylistButton:active{
-     -fx-background-color: linear-gradient(rgba(50,154,240,1), rgba(105,219,124,1));
- }
- #ChildDeletePlaylistButton :hover{
-     -fx-background-color: linear-gradient(rgba(28,124,214,1), rgba(64,192,87,1));
- }
- 
  #ChildImportPlaylistButton{
-     -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
+     -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1), rgba(55,178,77,1) 145%);
  }
- #ChildImportPlaylistButton:active{
-     -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
+ #ChildImportPlaylistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(204,93,232,1), rgba(50,154,240,1), rgba(105,219,124,1) 145%);
  }
   #ChildImportPlaylistButton:hover{
-     -fx-background-color: linear-gradient(rgba(64,192,87,1), rgba(250,176,5,1));
+     -fx-background-color: linear-gradient(rgba(174,62,201,1), rgba(28,124,214,1), rgba(64,192,87,1) 145%);
  }
  
  #ChildExportPlaylistButton{
-     -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1));
+     -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
  }
- #ChildExportPlaylistButton:toggled{
-     -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1));
+ #ChildExportPlaylistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
  }
   #ChildExportPlaylistButton:hover{
-     -fx-background-color: linear-gradient(rgba(250,176,5,1), rgba(232,89,12,1));
+     -fx-background-color: linear-gradient(rgba(64,192,87,1), rgba(250,176,5,1));
  }
  
  #ChildAddToQueuePlaylistButton{
-     -fx-background-color: linear-gradient(rgba(217,72,15,1), rgba(194,37,92,1));
- }
- #ChildAddToQueuePlaylistButton:toggled{
-     -fx-background-color: linear-gradient(rgba(253,126,20,1), rgba(240,101,149,1));
+     -fx-background-color: linear-gradient(rgba(245,159,0,1), rgba(217,72,15,1), rgba(194,37,92,1));
+  }
+  #ChildAddToQueuePlaylistButton:pressed{
+     -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1), rgba(240,101,149,1));
  }
   #ChildAddToQueuePlaylistButton:hover{
-     -fx-background-color: linear-gradient(rgba(232,89,12,1), rgba(214,51,108,1));
+     -fx-background-color: linear-gradient(rgba(250,176,5,1), rgba(232,89,12,1), rgba(214,51,108,1));
  }
  
  #ChildImportTracklistButton{
 -fx-background-color: linear-gradient(rgba(156,54,181,1), rgba(27,110,194,1));
  }
- #ChildImportTracklistButton:active{
+ #ChildImportTracklistButton:pressed{
      -fx-background-color: linear-gradient( rgba(204,93,232,1), rgba(50,154,240,1));
  }
   #ChildImportTracklistButton:hover{
@@ -230,7 +198,7 @@ and open the template in the editor.
  #ChildDeleteTracklistButton{
      -fx-background-color: linear-gradient(rgba(27,110,194,1), rgba(55,178,77,1));
  }
- #ChildDeleteTracklistButton:active{
+ #ChildDeleteTracklistButton:pressed{
      -fx-background-color: linear-gradient(rgba(50,154,240,1), rgba(105,219,124,1));
  }
   #ChildDeleteTracklistButton:hover{
@@ -240,7 +208,7 @@ and open the template in the editor.
  #ChildAddToQueueTracklistButton{
      -fx-background-color: linear-gradient(rgba(55,178,77,1), rgba(245,159,0,1));
  }
- #ChildAddToQueueTracklistButton:active{
+ #ChildAddToQueueTracklistButton:pressed{
      -fx-background-color: linear-gradient(rgba(105,219,124,1), rgba(255,212,59,1));
  }
   #ChildAddToQueueTracklistButton:hover{
@@ -250,7 +218,7 @@ and open the template in the editor.
  #ChildAddToPlaylistTracklistButton{
      -fx-background-color: linear-gradient(rgba(245,159,0,1) 0%, rgba(217,72,15,1), rgba(194,37,92,1));
     }
-    #ChildAddToPlaylistTracklistButton:active{
+    #ChildAddToPlaylistTracklistButton:pressed{
      -fx-background-color: linear-gradient(rgba(255,212,59,1), rgba(253,126,20,1), rgba(240,101,149,1));
  }
   #ChildAddToPlaylistTracklistButton:hover{

@@ -17,8 +17,9 @@ public class EntryRemoval {
             return false;
         }
         
-        String query = "DELETE FROM PLAYLIST_ENTRIES WHERE entry_id='" + entryId +"';";
+        String query = "DELETE FROM PLAYLIST_ENTRIES WHERE entry_id=?;";
+        String data[] = {entryId};
         
-        return db.execute_query(query);
+        return db.execute_query(query,data);
     }
 }

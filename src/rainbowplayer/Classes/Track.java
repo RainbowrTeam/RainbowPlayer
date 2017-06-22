@@ -84,4 +84,8 @@ public class Track {
     public void setDuration(int seconds) {
         duration = seconds;
     }
+    
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
 }

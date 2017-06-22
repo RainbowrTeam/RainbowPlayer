@@ -2,6 +2,7 @@ package rainbowplayer.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,12 +14,12 @@ import java.sql.Statement;
 public class Database {
     private Connection c = null;
     private Statement stmt = null;
+    private PreparedStatement pstmt = null;
     /**
      * Connects to database or creates new database file
      * @return true/false whether connection was established and database file created if it hadn't existed before
      */
-    public boolean connect()
-    {
+    public boolean connect(){
         try {
           Class.forName("org.sqlite.JDBC");
           c = DriverManager.getConnection("jdbc:sqlite:storage.db");
@@ -52,38 +53,37 @@ public class Database {
      * Creates default tables in database if they don't exist
      * @return true/false whether connection was created and table(s) were generated if they didn't exist
      */
-    public boolean initDB()
-    {
+    public boolean initDB(){
         if(connect()){
             try {
                 stmt = c.createStatement();
                 
                 //TRACKS table
                 String sql = "CREATE TABLE IF NOT EXISTS TRACKS" +
-                        "(track_id TEXT PRIMARY KEY NOT NULL," +
-                        "track_title TEXT NOT NULL," +
-                        "track_path TEXT NOT NULL," +
-                        "track_artist TEXT NOT NULL, " +
-                        "track_album TEXT NOT NULL, " +
-                        "track_release_date TEXT NOT NULL, " +
-                        "track_duration TEXT NOT NULL," +
-                        "track_genre TEXT NOT NULL)";
+                        "(track_id TEXT PRIMARY KEY," +
+                        "track_title TEXT," +
+                        "track_path TEXT," +
+                        "track_artist TEXT, " +
+                        "track_album TEXT, " +
+                        "track_release_date TEXT, " +
+                        "track_duration TEXT," +
+                        "track_genre TEXT)";
                 stmt.executeUpdate(sql);
                 
                 //PLAYLISTS table
                 sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS" +
-                        "(playlist_id TEXT PRIMARY KEY NOT NULL," +
-                        "playlist_name TEXT NOT NULL," +
-                        "playlist_desc TEXT NOT NULL," +
-                        "playlist_tags TEXT NOT NULL, " +
-                        "playlist_creation TEXT NOT NULL)";
+                        "(playlist_id TEXT PRIMARY KEY," +
+                        "playlist_name TEXT," +
+                        "playlist_desc TEXT," +
+                        "playlist_tags TEXT, " +
+                        "playlist_creation TEXT)";
                 stmt.executeUpdate(sql);
                 
                 //PLAYLIST_ENTRIES table
                 sql = "CREATE TABLE IF NOT EXISTS PLAYLIST_ENTRIES" +
-                        "(entry_id TEXT PRIMARY KEY NOT NULL," +
-                        "playlist_id TEXT NOT NULL," +
-                        "track_id TEXT NOT NULL)";
+                        "(entry_id TEXT PRIMARY KEY," +
+                        "playlist_id TEXT," +
+                        "track_id TEXT)";
                 
                 stmt.executeUpdate(sql);
                 
@@ -103,14 +103,17 @@ public class Database {
     /**
      * Executes INSERT/UPDATE/DELETE/COUNT query 
      * @param query string
+     * @param data
      * @return true/fals whether query was successful
      */
-    public boolean execute_query(String query)
-    {
+    public boolean execute_query(String query, String[] data){
         if(connect()){
             try{
-                stmt = c.createStatement();
-                stmt.executeUpdate(query);
+                pstmt = c.prepareStatement(query);
+                for(int i = 0; i < data.length; i++){
+                    pstmt.setString(i + 1, data[i]);
+                }
+                pstmt.executeUpdate();
                 return closeConnection();
             }catch (SQLException ex){
                 System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
@@ -124,16 +127,20 @@ public class Database {
     /**
      * Executes SELECT query
      * @param query string
+     * @param data
      * @return ResultSet
      */
-    public ResultSet select_query(String query){
+    public ResultSet select_query(String query,String[] data){
         if(!connect()){
             return null;
         }
          
         try {
-                stmt = c.createStatement();
-                return stmt.executeQuery(query);
+                pstmt = c.prepareStatement(query);
+                for(int i = 0; i < data.length; i++){
+                    pstmt.setString(i + 1, data[i]);
+                }
+                return pstmt.executeQuery();
             } catch (SQLException ex) {
                 System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
                 return null;

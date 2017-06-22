@@ -4,8 +4,9 @@ import java.util.UUID;
 import rainbowplayer.Classes.Track;
 
 /**
- *
- * @author Bruno
+ * @version STABLE
+ * @author Bruno Scheufler
+ * 
  */
 public class TrackInsertion {
     private String trackId = null;
@@ -32,18 +33,21 @@ public class TrackInsertion {
                 + "track_release_date,"
                 + "track_duration,"
                 + "track_genre) "
-                + "VALUES('" + tId + "',"
-                + "'" + t.getTitleName() +"',"
-                + "'" + t.getFilePath() + "',"
-                + "'" + t.getArtistName() +"',"
-                + "'" + t.getAlbumName() +"',"
-                + "'" + t.getReleaseYear() + "',"
-                + "'" + t.getDuration() + "',"
-                + "'" + t.getGenreName() +"')";
+                + "VALUES(?,?,?,?,?,?,?,?);";
         
+        String[] data = {
+            tId,
+            t.getTitleName(),
+            t.getFilePath(),
+            t.getArtistName(),
+            t.getAlbumName(),
+            String.valueOf(t.getReleaseYear()),
+            String.valueOf(t.getDuration()),
+            t.getGenreName()
+        };
         trackId = tId;
         //execute query
-        return db.execute_query(query);
+        return db.execute_query(query, data);
         
     }
     

@@ -1,7 +1,7 @@
 package rainbowplayer.Classes;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * A simple playlist data holding class.
@@ -12,7 +12,7 @@ public class Playlist {
     private String name;
     private String description;
     private String tags;
-    private Date createdAt;
+    private Calendar createdAt;
     private ArrayList<PlaylistEntry> entries;
     
     // Constructors
@@ -49,7 +49,7 @@ public class Playlist {
         entries.add(entry);
     }
     
-    public void setDate(Date date){
+    public void setDate(Calendar date){
         createdAt = date;
     }
     
@@ -71,7 +71,7 @@ public class Playlist {
         return tags;
     }
 
-    public Date getCreatedAtDate(){
+    public Calendar getCreatedAtDate(){
         return createdAt;
     }
     

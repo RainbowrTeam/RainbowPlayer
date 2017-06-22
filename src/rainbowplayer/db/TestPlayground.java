@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rainbowplayer.db;
 
 import rainbowplayer.Classes.Playlist;
 import rainbowplayer.Classes.PlaylistEntry;
+import rainbowplayer.Classes.Track;
 import rainbowplayer.io.TrackImport;
 
 /**
@@ -18,6 +14,8 @@ public class TestPlayground {
      * Run several integration tests using the Database and IO functions
      */
     public void run(){
+        Database db = new Database();
+        System.out.println(db.initDB());
         //STEP 1: INSERT PLAYLIST
         Playlist pll = new Playlist("TestPlayground Test Playlist");
         pll.setDescription("Playlist for testing purposes only.");
@@ -39,7 +37,11 @@ public class TestPlayground {
         //STEP 4: IMPORT SINGLE TRACK
         TrackImport tImport = new TrackImport();
         System.out.println(tImport.importSingleTrack());
+        System.out.println(tImport.importMultipleTracks());
         
+        for(String t : tImport.getMultipleTrackIds()){
+            System.out.println(t);
+        }
         //STEP 5: GET IMPORTED TRACK
         TrackFetcher tFetch = new TrackFetcher();
         System.out.println(tFetch.retrieveTrack(tImport.getSingleTrackId()));
@@ -58,5 +60,10 @@ public class TestPlayground {
         PlaylistRemoval pRem = new PlaylistRemoval();
         System.out.println(pRem.removePlaylist(pFetch.getPlaylist().getId()));
         
+        TrackFetcher completeTrackFetcher = new TrackFetcher();
+        System.out.println(completeTrackFetcher.retrieveAllTracks());
+        for(Track t : completeTrackFetcher.getAllTracks()){
+            System.out.println(t.getFormattedTitle());
+        }
     }
 }

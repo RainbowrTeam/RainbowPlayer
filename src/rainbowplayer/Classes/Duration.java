@@ -64,4 +64,8 @@ public class Duration {
     public int getHours(){
         return totalSeconds/60/60;
     }
+    
+    public int getTotalSeconds() {
+        return totalSeconds;
+    }
 }

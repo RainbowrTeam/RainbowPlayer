@@ -39,6 +39,7 @@ import rainbowplayer.db.PlaylistFetcher;
 import rainbowplayer.db.TrackFetcher;
 import rainbowplayer.db.TrackRemoval;
 import rainbowplayer.db.TrackUpdate;
+import rainbowplayer.io.ExtensionUtil;
 import rainbowplayer.io.MetadataUpdater;
 import rainbowplayer.io.TrackImport;
 
@@ -247,7 +248,8 @@ public class FXMLDocumentController implements Initializable {
                 int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
                 if(clickedIndex <= trackCount){
                     Track clickedTrack = trackList.get(clickedIndex);
-
+                    File trackFile = new File(clickedTrack.getFilePath());
+                    
                     if(!trackDeleteMode){
                         if(event.getClickCount() == 2){
                             Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
@@ -272,15 +274,14 @@ public class FXMLDocumentController implements Initializable {
 
                             Optional<ButtonType> result = trackInfoAlert.showAndWait();
                             if (result.get() == openInFileSystemButton){
-                                try{
-                                    File trackFile = new File(clickedTrack.getFilePath());
-                                    getDesktop().open(trackFile.getParentFile());
-                                }catch(IOException e){
-
-                                }
-
+                                getDesktop().open(trackFile.getParentFile());
                             } else if(result.get() == editTrackButton){
-                                editTrack(clickedTrack);
+                                ExtensionUtil exUtil = new ExtensionUtil();
+                                if(exUtil.isMp3(trackFile)){
+                                    editTrack(clickedTrack, true);    
+                                }else{
+                                    editTrack(clickedTrack, false); 
+                                }
                             } else {
                                 //cancel
                             }
@@ -294,7 +295,7 @@ public class FXMLDocumentController implements Initializable {
                         }
                     }
                 }
-            }catch(ArrayIndexOutOfBoundsException e){
+            }catch(ArrayIndexOutOfBoundsException | IOException e){
                 
             }
             
@@ -395,7 +396,7 @@ public class FXMLDocumentController implements Initializable {
      * Edit Track
      * @param t 
      */
-    private void editTrack(Track t){
+    private void editTrack(Track t, boolean supportedMetadataOverwriteMediaType){
         Dialog editTrackDialog = new Dialog();
         editTrackDialog.setTitle("Edit Track");
         editTrackDialog.setHeaderText("Edit Track");
@@ -413,6 +414,10 @@ public class FXMLDocumentController implements Initializable {
         TextField trackReleaseYear = new TextField();
         TextField trackGenre = new TextField();
         CheckBox changeFileMetadataCheckbox = new CheckBox();
+        
+        if(!supportedMetadataOverwriteMediaType){
+            changeFileMetadataCheckbox.setDisable(true);
+        }
         
         trackName.setText(t.getTitleName());
         trackAlbum.setText(t.getAlbumName());

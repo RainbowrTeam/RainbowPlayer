@@ -26,16 +26,13 @@ public class SingleFileSelection {
         if(sFile == null){
           return "no_selection";
         }
-        
-        switch(getExtension(sFile)){
-            case "mp3":
-            case "wav":
+        ExtensionUtil exUtil = new ExtensionUtil();
+            if(exUtil.isMp3(sFile) || exUtil.isWav(sFile)){
                 finalFile = sFile;
                 return "success";
-            default:
+            }else{
                 return "invalid_format";
-        }
-        
+            }
     }
     
     /**
@@ -47,20 +44,6 @@ public class SingleFileSelection {
             return finalFile;
         }else{
             return null;
-        }
-    }
-    
-    /**
-     * Returns extension of given file object
-     * @param file
-     * @return file extension
-     */
-    public String getExtension(File file) {
-        String name = file.getName();
-        if(name.lastIndexOf(".") != -1 && name.lastIndexOf(".") != 0){
-            return name.substring(name.lastIndexOf(".")+1);
-        }else{
-            return "";
         }
     }
 }

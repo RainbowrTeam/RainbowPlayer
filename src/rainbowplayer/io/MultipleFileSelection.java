@@ -35,13 +35,9 @@ public class MultipleFileSelection {
         
         for (Iterator<File> iter = trackFiles.listIterator(); iter.hasNext(); ) {
             File f = iter.next();
-            switch(getExtension(f)){
-                case "mp3":
-                case "wav":
-                    break;
-                default:
-                    iter.remove();
-                    break;
+            ExtensionUtil exUtil = new ExtensionUtil();
+            if(!exUtil.isMp3(f) && !exUtil.isWav(f)){
+                iter.remove();
             }
         }
         
@@ -62,20 +58,6 @@ public class MultipleFileSelection {
             return trackFiles;
         }else{
             return null;
-        }
-    }
-    
-    /**
-     * Returns extension of given file object
-     * @param file
-     * @return file extension
-     */
-    public String getExtension(File file) {
-        String name = file.getName();
-        if(name.lastIndexOf(".") != -1 && name.lastIndexOf(".") != 0){
-            return name.substring(name.lastIndexOf(".")+1);
-        }else{
-            return "";
         }
     }
 }

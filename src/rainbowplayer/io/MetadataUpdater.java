@@ -13,8 +13,9 @@ import java.util.logging.Logger;
 import rainbowplayer.Classes.Track;
 
 /**
- *
+ * @version STABLE
  * @author Bruno Scheufler
+ * 
  */
 public class MetadataUpdater {
     /**

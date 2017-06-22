@@ -3,8 +3,9 @@ package rainbowplayer.db;
 import rainbowplayer.Classes.Track;
 
 /**
- *
+ * @version STABLE
  * @author Bruno Scheufler
+ * 
  */
 public class TrackUpdate {
     /**

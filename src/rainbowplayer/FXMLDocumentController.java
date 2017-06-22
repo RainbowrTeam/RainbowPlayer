@@ -109,6 +109,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ListView ChildTracklistList;
     
+    /**
+     * Launch separate timer thread
+     */
     private void startTimer(){
         UiWorkerThread myThread = new UiWorkerThread(playerData, 0, songPlayer, this);
         myThread.start();
@@ -456,6 +459,7 @@ public class FXMLDocumentController implements Initializable {
                 if(updateFileMetadata){
                     MetadataUpdater metaUpdate = new MetadataUpdater();
                     boolean metaDataUpdateSuccess = false;
+                    String metaDataUpdateErrorCode = "none";
                     //Try updating metadata 3 times
                     metaDataUpdateLoop : {
                         for(int attempts = 0; attempts < 3; attempts++){
@@ -464,9 +468,15 @@ public class FXMLDocumentController implements Initializable {
                                     metaDataUpdateSuccess = true;
                                     break;
                                 case "tmpfile_delete_error":
+                                    metaDataUpdateErrorCode = "tmpfile_del_err";
+                                    break;
                                 case "rename_error":
+                                    metaDataUpdateErrorCode = "rename_err";
+                                    break;
                                 case "exception":
+                                    metaDataUpdateErrorCode = "uncaught_err";
                                 default:
+                                    metaDataUpdateErrorCode = "err";
                                     break;
                             }
                             break metaDataUpdateLoop;
@@ -478,7 +488,7 @@ public class FXMLDocumentController implements Initializable {
                         showAlert(AlertType.INFORMATION, "Track Updated", "Track Updated", "The track was successfully updated.");
                     }else{
                         populateTrackList();
-                        showAlert(AlertType.INFORMATION, "Track Updated Failed Partially", "Track Updated With Errors", "The track was successfully updated but the file metadata could not be updated successfully.");
+                        showAlert(AlertType.INFORMATION, "Track Updated Failed Partially", "Track Updated With Errors", "The track was successfully updated but the file metadata could not be updated successfully. (ERR_CODE: " + metaDataUpdateErrorCode + ")");
                     }
                 }
             }else{

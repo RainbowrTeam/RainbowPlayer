@@ -28,6 +28,9 @@ public class RainbowPlayer extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+        
+        //Stop all threads and kill process
+        System.exit(0);
     }
     
 }

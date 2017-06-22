@@ -214,17 +214,27 @@
                          <Font name="System Bold" size="24.0" />
                         </font>
                        </Label>
-               <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" text="Import Playlist" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                <Button id="ChildCreatePlaylistButton" prefHeight="25.0" prefWidth="200.0" text="Create Playlist" onAction="#handleCreatePlaylistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="2">
                    <font>
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>
                   </Button>
-                  <Button id="ChildExportPlaylist" prefHeight="25.0" prefWidth="200.0" text="Export Playlist" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                 <Button id="ChildDeletePlaylistButton" prefHeight="25.0" prefWidth="200.0" text="Delete Playlist" onAction="#handleDeletePlaylistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                   <font>
+                    <Font name="fontawesome-webfont" size="18.0" />
+                   </font>
+                  </Button>       
+               <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" text="Import Playlist" GridPane.columnIndex="2" GridPane.rowIndex="4">
                    <font>
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>
                   </Button>
-                  <Button id="ChildAddToQueuePlaylistButton" onAction="#handleAddToQueueButtonAction" prefHeight="25.0" prefWidth="200.0" text="Add to Queue" GridPane.columnIndex="2" GridPane.rowIndex="4">    
+                  <Button id="ChildExportPlaylist" prefHeight="25.0" prefWidth="200.0" text="Export Playlist" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                   <font>
+                    <Font name="fontawesome-webfont" size="18.0" />
+                   </font>
+                  </Button>
+                  <Button id="ChildAddToQueuePlaylistButton" onAction="#handleAddToQueueButtonAction" prefHeight="25.0" prefWidth="200.0" text="Add to Queue" GridPane.columnIndex="2" GridPane.rowIndex="6">    
                    <font>
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>
@@ -262,7 +272,7 @@
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>
                   </Button>
-                  <Button id="ChildDeleteTracklistButton" fx:id="ChildDeleteTracklistButton" onAction="#handleDeleteTracklistButtonAction" prefHeight="30.0" prefWidth="200.0" text="Delete Track" GridPane.columnIndex="2" GridPane.rowIndex="3"> 
+                  <Button id="ChildDeleteTracklistButton" fx:id="ChildDeleteTracklistButton" onAction="#handleDeleteTracklistButtonAction" prefHeight="30.0" prefWidth="200.0" text="Delete Tracks" GridPane.columnIndex="2" GridPane.rowIndex="3"> 
                    <font>
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>

@@ -9,7 +9,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * @version STABLE
- * @author Bruno
+ * @author Bruno Scheufler
+ * 
  */
 public class MultipleFileSelection {
     private List<File> trackFiles;

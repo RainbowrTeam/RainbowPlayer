@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -37,6 +38,8 @@ import rainbowplayer.db.PlaylistCreation;
 import rainbowplayer.db.PlaylistFetcher;
 import rainbowplayer.db.TrackFetcher;
 import rainbowplayer.db.TrackRemoval;
+import rainbowplayer.db.TrackUpdate;
+import rainbowplayer.io.MetadataUpdater;
 import rainbowplayer.io.TrackImport;
 
 public class FXMLDocumentController implements Initializable {
@@ -106,6 +109,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ListView ChildTracklistList;
     
+    /**
+     * Launch separate timer thread
+     */
     private void startTimer(){
         UiWorkerThread myThread = new UiWorkerThread(playerData, 0, songPlayer, this);
         myThread.start();
@@ -232,6 +238,9 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+    /**
+     * Handle ListView events
+     */
     private void handleListViewEvents(){
         ChildTracklistList.setOnMouseClicked((MouseEvent event) -> {
             try{
@@ -240,36 +249,41 @@ public class FXMLDocumentController implements Initializable {
                     Track clickedTrack = trackList.get(clickedIndex);
 
                     if(!trackDeleteMode){
-                        Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
-                        trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
-                        trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
-                        
-                        ArrayList<String> contentText = new ArrayList<>();
-                        
-                        contentText.add("by " + clickedTrack.getArtistName() + " (" + clickedTrack.getReleaseYear() +")");
-                        contentText.add("Album: " + clickedTrack.getAlbumName());
-                        contentText.add("Genre: " + clickedTrack.getGenreName());
-                        contentText.add("Track ID: " + clickedTrack.getTrackId());
-                        contentText.add("Location: " + clickedTrack.getFilePath());
-                        
-                        trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
+                        if(event.getClickCount() == 2){
+                            Alert trackInfoAlert = new Alert(AlertType.INFORMATION);
+                            trackInfoAlert.setTitle(clickedTrack.getFormattedTitle());
+                            trackInfoAlert.setHeaderText(clickedTrack.getTitleName());
 
-                        ButtonType openInFileSystemButton = new ButtonType("Open in Explorer", ButtonData.LEFT);
-                        ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
+                            ArrayList<String> contentText = new ArrayList<>();
 
-                        trackInfoAlert.getButtonTypes().setAll(openInFileSystemButton, closeDialog);
+                            contentText.add("by " + clickedTrack.getArtistName() + " (" + clickedTrack.getReleaseYear() +")");
+                            contentText.add("Album: " + clickedTrack.getAlbumName());
+                            contentText.add("Genre: " + clickedTrack.getGenreName());
+                            contentText.add("Track ID: " + clickedTrack.getTrackId());
+                            contentText.add("Location: " + clickedTrack.getFilePath());
 
-                        Optional<ButtonType> result = trackInfoAlert.showAndWait();
-                        if (result.get() == openInFileSystemButton){
-                            try{
-                                File trackFile = new File(clickedTrack.getFilePath());
-                                getDesktop().open(trackFile.getParentFile());
-                            }catch(IOException e){
-                                
+                            trackInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
+
+                            ButtonType openInFileSystemButton = new ButtonType("Open in Explorer", ButtonData.LEFT);
+                            ButtonType editTrackButton = new ButtonType("Edit Track");
+                            ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
+
+                            trackInfoAlert.getButtonTypes().setAll(openInFileSystemButton, editTrackButton, closeDialog);
+
+                            Optional<ButtonType> result = trackInfoAlert.showAndWait();
+                            if (result.get() == openInFileSystemButton){
+                                try{
+                                    File trackFile = new File(clickedTrack.getFilePath());
+                                    getDesktop().open(trackFile.getParentFile());
+                                }catch(IOException e){
+
+                                }
+
+                            } else if(result.get() == editTrackButton){
+                                editTrack(clickedTrack);
+                            } else {
+                                //cancel
                             }
-                           
-                        } else {
-                            //cancel
                         }
                     }else{
                         TrackRemoval tRemoval = new TrackRemoval();
@@ -288,30 +302,32 @@ public class FXMLDocumentController implements Initializable {
         
         ChildPlaylistList.setOnMouseClicked((MouseEvent event) -> {
             try{
-                int clickedIndex = ChildPlaylistList.getSelectionModel().getSelectedIndex();
-                if(clickedIndex <= playlistCount){
-                    Playlist clickedPlaylist = playlistList.get(clickedIndex);
-                    Alert playlistInfoAlert = new Alert(AlertType.INFORMATION);
-                    ArrayList<String> contentText = new ArrayList<>();
-                    
-                    SimpleDateFormat dateDisplayFormat = new SimpleDateFormat("EEEE dd 'of' yyyy kk:mm");
-                    String formattedCreationDate = dateDisplayFormat.format(clickedPlaylist.getCreatedAtDate().getTime());
-                    
-                    playlistInfoAlert.setTitle(clickedPlaylist.getName());
-                    playlistInfoAlert.setHeaderText(clickedPlaylist.getName());
-                    
-                    contentText.add("Description: " + clickedPlaylist.getDescription());
-                    contentText.add("Tags: " + clickedPlaylist.getTags());
-                    contentText.add("Created " + formattedCreationDate);
+                if(event.getClickCount() == 2){
+                    int clickedIndex = ChildPlaylistList.getSelectionModel().getSelectedIndex();
+                    if(clickedIndex <= playlistCount){
+                        Playlist clickedPlaylist = playlistList.get(clickedIndex);
+                        Alert playlistInfoAlert = new Alert(AlertType.INFORMATION);
+                        ArrayList<String> contentText = new ArrayList<>();
 
-                    playlistInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
+                        SimpleDateFormat dateDisplayFormat = new SimpleDateFormat("EEEE dd 'of' yyyy kk:mm");
+                        String formattedCreationDate = dateDisplayFormat.format(clickedPlaylist.getCreatedAtDate().getTime());
 
-                    ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
-                    playlistInfoAlert.getButtonTypes().setAll(closeDialog);
-                    Optional<ButtonType> result = playlistInfoAlert.showAndWait();
+                        playlistInfoAlert.setTitle(clickedPlaylist.getName());
+                        playlistInfoAlert.setHeaderText(clickedPlaylist.getName());
 
-                    if (result.get() == closeDialog){
-                        //cancel
+                        contentText.add("Description: " + clickedPlaylist.getDescription());
+                        contentText.add("Tags: " + clickedPlaylist.getTags());
+                        contentText.add("Created " + formattedCreationDate);
+
+                        playlistInfoAlert.setContentText(concatenateArrayListToString(contentText, "\n"));
+
+                        ButtonType closeDialog = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
+                        playlistInfoAlert.getButtonTypes().setAll(closeDialog);
+                        Optional<ButtonType> result = playlistInfoAlert.showAndWait();
+
+                        if (result.get() == closeDialog){
+                            //cancel
+                        }
                     }
                 }
             }catch(ArrayIndexOutOfBoundsException e){
@@ -331,7 +347,7 @@ public class FXMLDocumentController implements Initializable {
         listTabs.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
             if(trackDeleteMode){
                 trackDeleteMode = false;
-                ChildDeleteTracklistButton.setText("Delete Track");
+                ChildDeleteTracklistButton.setText("Delete Tracks");
             }
             
             //Playlists Tab
@@ -373,6 +389,114 @@ public class FXMLDocumentController implements Initializable {
         alert.setContentText(contentText);
         
         alert.showAndWait();
+    }
+    
+    /**
+     * Edit Track
+     * @param t 
+     */
+    private void editTrack(Track t){
+        Dialog editTrackDialog = new Dialog();
+        editTrackDialog.setTitle("Edit Track");
+        editTrackDialog.setHeaderText("Edit Track");
+        
+        ButtonType submitButtonType = new ButtonType("Apply", ButtonData.OK_DONE);
+        editTrackDialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+        GridPane contentGrid = new GridPane();
+        contentGrid.setHgap(2);
+        contentGrid.setVgap(2); //spacing between elements
+        
+        TextField trackName = new TextField();
+        TextField trackArtist = new TextField();
+        TextField trackAlbum = new TextField();
+        TextField trackReleaseYear = new TextField();
+        TextField trackGenre = new TextField();
+        CheckBox changeFileMetadataCheckbox = new CheckBox();
+        
+        trackName.setText(t.getTitleName());
+        trackAlbum.setText(t.getAlbumName());
+        trackArtist.setText(t.getArtistName());
+        trackReleaseYear.setText(String.valueOf(t.getReleaseYear()));
+        trackGenre.setText(t.getGenreName());
+        
+        contentGrid.add(new Label("Track Name:"), 0, 0);
+        contentGrid.add(trackName, 1, 0);
+        contentGrid.add(new Label("Track Album:"), 0, 1);
+        contentGrid.add(trackAlbum, 1, 1);
+        contentGrid.add(new Label("Track Artist:"), 0, 2);
+        contentGrid.add(trackArtist, 1, 2);
+        contentGrid.add(new Label("Track Genre:"), 0, 3);
+        contentGrid.add(trackGenre, 1, 3);
+        contentGrid.add(new Label("Track Release Year:"), 0, 4);
+        contentGrid.add(trackReleaseYear, 1, 4);
+        contentGrid.add(new Label("Apply changes to file metadata"), 0, 5);
+        contentGrid.add(changeFileMetadataCheckbox, 1 , 5);
+
+        editTrackDialog.getDialogPane().setContent(contentGrid);
+
+        Optional result = editTrackDialog.showAndWait();
+        if(result.get() == submitButtonType){
+            String trackNameValue = trackName.getText();
+            String trackAlbumValue = trackAlbum.getText();
+            String trackArtistValue = trackArtist.getText();
+            String trackReleaseYearValue = trackReleaseYear.getText();
+            String trackGenreValue = trackGenre.getText();
+            boolean updateFileMetadata = changeFileMetadataCheckbox.isSelected();
+            
+            Track updatedTrack = new Track(
+                    t.getTrackId(),
+                    t.getFilePath(),
+                    trackNameValue,
+                    trackArtistValue,
+                    trackAlbumValue,
+                    trackGenreValue,Integer.parseInt(trackReleaseYearValue)
+            );
+            
+            TrackUpdate trackUpdate = new TrackUpdate();
+
+            if(trackUpdate.updateTrack(updatedTrack)){
+                if(updateFileMetadata){
+                    MetadataUpdater metaUpdate = new MetadataUpdater();
+                    boolean metaDataUpdateSuccess = false;
+                    String metaDataUpdateErrorCode = "none";
+                    //Try updating metadata 3 times
+                    metaDataUpdateLoop : {
+                        for(int attempts = 0; attempts < 3; attempts++){
+                            switch(metaUpdate.updateMetadata(updatedTrack)){
+                                case "success":
+                                    metaDataUpdateSuccess = true;
+                                    break;
+                                case "tmpfile_delete_error":
+                                    metaDataUpdateErrorCode = "tmpfile_del_err";
+                                    break;
+                                case "rename_error":
+                                    metaDataUpdateErrorCode = "rename_err";
+                                    break;
+                                case "exception":
+                                    metaDataUpdateErrorCode = "uncaught_err";
+                                default:
+                                    metaDataUpdateErrorCode = "err";
+                                    break;
+                            }
+                            break metaDataUpdateLoop;
+                        } 
+                    }
+                    
+                    if(metaDataUpdateSuccess){
+                        populateTrackList();
+                        showAlert(AlertType.INFORMATION, "Track Updated", "Track Updated", "The track was successfully updated.");
+                    }else{
+                        populateTrackList();
+                        showAlert(AlertType.INFORMATION, "Track Updated Failed Partially", "Track Updated With Errors", "The track was successfully updated but the file metadata could not be updated successfully. (ERR_CODE: " + metaDataUpdateErrorCode + ")");
+                    }
+                }
+            }else{
+                showAlert(AlertType.ERROR, "Track Update Failed", "Something went wrong", "The track could not be updated. Please try again.");
+            }
+        }else{
+            //Cancel
+        }
     }
     
     private void timerTick(){}
@@ -417,7 +541,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleAddToQueueButtonAction(ActionEvent event) {
-        // addTrackFromTracklistToList(ChildPlaylistList, trackQueue);
+        
     }
     
     @FXML
@@ -545,10 +669,10 @@ public class FXMLDocumentController implements Initializable {
     private void handleDeleteTracklistButtonAction(ActionEvent event) {
         if(trackDeleteMode){
             trackDeleteMode = false;
-            ChildDeleteTracklistButton.setText("Delete Track");
+            ChildDeleteTracklistButton.setText("Delete Tracks");
         }else{
             trackDeleteMode = true;
-            ChildDeleteTracklistButton.setText("Exit Delete Mode");
+            ChildDeleteTracklistButton.setText("Exit Deletion Mode");
         }
     }
     
@@ -559,7 +683,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleAddToPlaylistTracklistButtonAction(ActionEvent event) {
-        // addTrackFromTracklistToList(ChildTracklistList, playlist);
+        
     }
     
     
@@ -610,11 +734,15 @@ public class FXMLDocumentController implements Initializable {
             ChildTotalTimeLabel.setText(String.format("%02d", durTotal.getMinutes()) + ":" + String.format("%02d", durTotal.getSeconds()));
             ChildCurrentTimeLabel.setText(String.format("%02d", durPlayed.getMinutes()) + ":" + String.format("%02d", durPlayed.getSeconds()));
             
-            if(durPlayed.getTotalSeconds() != (int) trackPositionSlider.getMax())
+            if(durPlayed.getTotalSeconds() != (int) trackPositionSlider.getMax()){
                 trackPositionSlider.setMax(durTotal.getTotalSeconds());
+            }
+                
             
-            if(!trackPositionSlider.isPressed())
+            if(!trackPositionSlider.isPressed()){
                 trackPositionSlider.setValue(durPlayed.getTotalSeconds());
+            }
+                
             
             if(songPlayer.getPlaylist() != null){
                 playlistLabel.setText(songPlayer.getPlaylist().getName());
@@ -635,8 +763,9 @@ public class FXMLDocumentController implements Initializable {
             songPlayer.changeVolume(volumeSlider.getValue() / 100);
          });
          trackPositionSlider.valueProperty().addListener((ov) -> {
-            if(trackPositionSlider.isPressed())
+            if(trackPositionSlider.isPressed()){
                 songPlayer.seekSong((int) trackPositionSlider.getValue());
+            }
          });
     }
     
@@ -653,31 +782,12 @@ public class FXMLDocumentController implements Initializable {
         
         int trackCount = trackTitles.size();
         String labelText = "Track";
-        if(trackCount > 1)
+        if(trackCount > 1){
             labelText = "Tracks";
+        } 
         
         ChildTrackNrQueueLabel.setText(trackCount + " " + labelText);
     }
-    
-    /**
-     * Refresh/Populate 
-     
-    private void updatePlaylistList(){
-        ArrayList<String> trackTitles = new ArrayList<>();
-        
-        for(PlaylistEntry pe : playlist){
-            trackTitles.add(pe.getTrack().getFormattedTitle());
-        }
-        setListContent(ChildPlaylistList, trackTitles);
-        
-        int trackCount = trackTitles.size();
-        String labelText = "Track";
-        if(trackCount > 1)
-            labelText = "Tracks";
-        
-        ChildPlaylistLabel.setText(trackCount + " " + labelText);
-    }
-    * */
     
     private void addTrackFromTracklistToList(ListView source, ArrayList<PlaylistEntry> tartget) {
         int clickedIndex = ChildTracklistList.getSelectionModel().getSelectedIndex();
@@ -688,10 +798,9 @@ public class FXMLDocumentController implements Initializable {
                 tartget.add(qTrack);
             }
             
-        if(tartget == trackQueue)
-            updateQueueList();
-        /*if(tartget == playlist)
-            updatePlaylistList();*/
+            if(tartget == trackQueue){
+                updateQueueList();
+            }
     }
     
     private void selectQueueTrack() {
@@ -703,11 +812,15 @@ public class FXMLDocumentController implements Initializable {
         if(clickedIndex <= trackQueue.size() - 1){
             PlaylistEntry clickedTrack = trackQueue.get(clickedIndex);
 
-            if(clickedTrack != null)
+            if(clickedTrack != null){
                 songPlayer.jumpInQueue(clickedIndex + 1);
+            }
+                
         }
         
-        if(songPlayer.isPlaybackActive())
+        if(songPlayer.isPlaybackActive()){
             startTimer();
+        }
+            
     }
 }

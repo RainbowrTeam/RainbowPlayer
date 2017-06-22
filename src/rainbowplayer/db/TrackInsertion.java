@@ -4,8 +4,9 @@ import java.util.UUID;
 import rainbowplayer.Classes.Track;
 
 /**
- *
- * @author Bruno
+ * @version STABLE
+ * @author Bruno Scheufler
+ * 
  */
 public class TrackInsertion {
     private String trackId = null;
@@ -35,7 +36,8 @@ public class TrackInsertion {
                 + "VALUES(?,?,?,?,?,?,?,?);";
         
         String[] data = {
-            tId, t.getTitleName(),
+            tId,
+            t.getTitleName(),
             t.getFilePath(),
             t.getArtistName(),
             t.getAlbumName(),

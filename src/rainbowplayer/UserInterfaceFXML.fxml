@@ -19,7 +19,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import rainbowplayer.AwesomeIcon?>
-<!-- <?import RainbowPlayer.src.rainbowplayer.Font.fontawesome-webfont?> -->
 
 <GridPane fx:id="ContOutside" id="ContOutside" styleClass="cont" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rainbowplayer.FXMLDocumentController" stylesheets="@Stylesheet.css"> 
     <children>
@@ -32,7 +31,6 @@
           <GridPane id="ContTopButtons" styleClass="cont" GridPane.columnIndex="1" GridPane.rowIndex="1" hgap="20">  
               <children>
             <Button  id="ChildPrevButton" prefHeight="70.0" prefWidth="70.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1" text="prev"> <!--styleClass="awesome" style="-fx-font-family: FontAwesome; -fx-font-size: 16.0;"--> 
-         <!--       <text> <AwesomeIcon fx:constant=""/> </text> -->
                 <font>
               <Font name="fontawesome-webfont" size="16.0" />
              </font>
@@ -97,14 +95,16 @@
                 </Label>    
            </children>
           </GridPane> 
-          <GridPane id="ContTopSlider" styleClass="cont" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" vgap="10" hgap="15">
-             <gridLinesVisible>true</gridLinesVisible>               
+          <GridPane id="ContTopSlider" styleClass="cont" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" vgap="5" hgap="80">
               <padding>
                  <Insets left="30" right="30" top="5" bottom="5"/>
              </padding>
               <children>
               <Pane styleClass="ContTime" prefWidth="30" GridPane.rowIndex="1" GridPane.columnIndex="1">
-              <children>
+             <padding>
+                 <Insets bottom="5" right="890"/> 
+              </padding>
+                  <children>
               <Label fx:id="ChildCurrentTimeLabel" id="ChildCurrentTimeLabel" text=" 0:00:00 ">
                <font>
                 <Font name="System Bold" size="12.0" />
@@ -116,7 +116,10 @@
               </children>
               </Pane>
               <Pane styleClass="ContTime" prefWidth="30" GridPane.rowIndex="1" GridPane.columnIndex="2" >
-                <children>
+              <padding>
+                 <Insets  bottom="5"/> 
+              </padding>
+                  <children>
                   <Label fx:id="ChildRemainTimeLabel" id="ChildRemainTimeLabel" text=" -0:00:00 ">
                  <font>
                   <Font name="System Bold" size="12.0" />
@@ -128,8 +131,11 @@
                 </children>
               </Pane>
               <Pane styleClass="ContTime" prefWidth="30" GridPane.rowIndex="1" GridPane.columnIndex="3">
-              <children>
-                  <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" text="0:00:00">
+             <padding>
+                 <Insets bottom="5"/> 
+              </padding>
+                  <children>
+                  <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" text=" 0:00:00 ">
                   <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
@@ -139,11 +145,11 @@
               </Label>
               </children>
               </Pane>
-              <Pane id="ContProgress" minHeight="20" GridPane.rowIndex="2" GridPane.columnSpan="3" prefWidth="1220.0">  
+              <Pane id="ContProgress" minHeight="20" GridPane.rowIndex="2" GridPane.columnSpan="4" prefWidth="1220">  
                <children>
-             <Slider id="ChildProgressSlider" fx:id="ChildProgressSlider" orientation="HORIZONTAL" minHeight="5" prefWidth="1100.0">
+             <Slider id="ChildProgressSlider" fx:id="ChildProgressSlider" orientation="HORIZONTAL" minHeight="5" minWidth="1160">
                <padding>
-                   <Insets left="30" right="30" top="3"/>
+                   <Insets left="30" top="3"/>
                </padding>
            </Slider>
                </children>

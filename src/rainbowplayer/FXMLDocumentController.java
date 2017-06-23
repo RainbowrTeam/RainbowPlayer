@@ -89,16 +89,16 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label ChildPlaylistLabel;
     @FXML
-    private Slider volumeSlider;
+    private Slider ChildVolumeSlider;
     @FXML
-    private Slider trackPositionSlider;
+    private Slider ChildProgressSlider;
     
     @FXML
     private Label ChildTrackNrTracklistLabel;
     @FXML
     private Button ChildDeleteTracklistButton;
     @FXML
-    private TabPane listTabs;
+    private TabPane ChildTabList;
     
     @FXML
     private ListView ChildQueueList;
@@ -345,7 +345,7 @@ public class FXMLDocumentController implements Initializable {
      * EventListener of primary TabPane
      */
     private void handleTabPaneEvents(){
-        listTabs.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
+        ChildTabList.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldTabIndex, Number newTabIndex) -> {
             if(trackDeleteMode){
                 trackDeleteMode = false;
                 ChildDeleteTracklistButton.setText("Delete Tracks");
@@ -677,14 +677,6 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     @FXML
-    private void handleCreatePlaylistButtonAction(ActionEvent event) {
-        
-    }
-    @FXML
-    private void handleDeletePlaylistButtonAction(ActionEvent event) {
-        
-    }
-    @FXML
     private void handleImportPlaylistButtonAction(ActionEvent event) {
         
     }
@@ -754,13 +746,13 @@ public class FXMLDocumentController implements Initializable {
             ChildTotalTimeLabel.setText(String.format("%02d", durTotal.getMinutes()) + ":" + String.format("%02d", durTotal.getSeconds()));
             ChildCurrentTimeLabel.setText(String.format("%02d", durPlayed.getMinutes()) + ":" + String.format("%02d", durPlayed.getSeconds()));
             
-            if(durPlayed.getTotalSeconds() != (int) trackPositionSlider.getMax()){
-                trackPositionSlider.setMax(durTotal.getTotalSeconds());
+            if(durPlayed.getTotalSeconds() != (int) ChildProgressSlider.getMax()){
+                ChildProgressSlider.setMax(durTotal.getTotalSeconds());
             }
                 
             
-            if(!trackPositionSlider.isPressed()){
-                trackPositionSlider.setValue(durPlayed.getTotalSeconds());
+            if(!ChildProgressSlider.isPressed()){
+                ChildProgressSlider.setValue(durPlayed.getTotalSeconds());
             }
                 
             
@@ -779,12 +771,12 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void bindSliderActions(){
-         volumeSlider.valueProperty().addListener((ov) -> {
-            songPlayer.changeVolume(volumeSlider.getValue() / 100);
+         ChildVolumeSlider.valueProperty().addListener((ov) -> {
+            songPlayer.changeVolume(ChildVolumeSlider.getValue() / 100);
          });
-         trackPositionSlider.valueProperty().addListener((ov) -> {
-            if(trackPositionSlider.isPressed()){
-                songPlayer.seekSong((int) trackPositionSlider.getValue());
+         ChildProgressSlider.valueProperty().addListener((ov) -> {
+            if(ChildProgressSlider.isPressed()){
+                songPlayer.seekSong((int) ChildProgressSlider.getValue());
             }
          });
     }

@@ -30,43 +30,43 @@
          <children>
           <GridPane id="ContTopButtons" styleClass="cont" GridPane.columnIndex="1" GridPane.rowIndex="1" hgap="20">  
               <children>
-            <Button  id="ChildPrevButton" prefHeight="70.0" prefWidth="70.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1" text="prev"> <!--styleClass="awesome" style="-fx-font-family: FontAwesome; -fx-font-size: 16.0;"--> 
+            <Button  id="ChildPrevButton" prefHeight="70.0" prefWidth="70.0" onAction="#handlePrevButtonAction" GridPane.columnIndex="1" text="PREV"> <!--styleClass="awesome" style="-fx-font-family: FontAwesome; -fx-font-size: 16.0;"--> 
                 <font>
               <Font name="fontawesome-webfont" size="16.0" />
              </font>
              <tooltip>
-              <Tooltip id="AttPrevButtonTooltip" text="previous song" />
+              <Tooltip id="AttPrevButtonTooltip" text="Previous Track" />
              </tooltip>
             </Button>
-            <ToggleButton id="ChildPlayButton" prefHeight="100.0" prefWidth="100.0" onAction="#handlePauseButtonAction" GridPane.columnIndex="2" text="play"> 
+            <ToggleButton id="ChildPlayButton" prefHeight="100.0" prefWidth="100.0" onAction="#handlePauseButtonAction" GridPane.columnIndex="2" text="PLAY"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </ToggleButton>
-            <Button id="ChildSkipButton" prefHeight="70.0" prefWidth="70.0" onAction="#handleSkipButtonAction" GridPane.columnIndex="3" text="skip"> 
+            <Button id="ChildSkipButton" prefHeight="70.0" prefWidth="70.0" onAction="#handleSkipButtonAction" GridPane.columnIndex="3" text="SKIP"> 
              <font>
               <Font name="fontawesome-webfont" size="16.0" />
              </font> 
               <tooltip>
-              <Tooltip id="AttSkipButtonTooltip" text="next song" />
+              <Tooltip id="AttSkipButtonTooltip" text="Next Song" />
              </tooltip>
             </Button>
-             <Button id="ChildStopButton" prefHeight="70.0" prefWidth="70.0" onAction="#handleStopButtonAction" GridPane.columnIndex="4" text="stop"> 
+             <Button id="ChildStopButton" prefHeight="70.0" prefWidth="70.0" onAction="#handleStopButtonAction" GridPane.columnIndex="4" text="STOP"> 
               <font>
                <Font name="fontawesome-webfont" size="16.0" />
               </font>
                <tooltip>
-              <Tooltip text="stop playback" />
+              <Tooltip text="Stop Playback" />
              </tooltip>
              </Button>
              <Pane id="ContVolume" minHeight="120" GridPane.columnIndex="5" prefWidth="20">  
                <children>
-             <Slider id="ChildVolumeSlider" fx:id="ChildVolumeSlider" orientation="VERTICAL" minHeight="100.0" GridPane.columnIndex="5">
+             <Slider id="ChildVolumeSlider" fx:id="ChildVolumeSlider" orientation="VERTICAL" minHeight="100.0" GridPane.columnIndex="5" value="100">
             <padding>
                  <Insets left="3" top="10" bottom="10"/> 
               </padding>
                  <tooltip>
-              <Tooltip id="AttVolumeSliderTooltip" text="volume" />
+              <Tooltip id="AttVolumeSliderTooltip" text="Volume" />
              </tooltip>
              </Slider>
                </children>
@@ -83,7 +83,7 @@
                    <Font name="System Bold" size="24.0" />
                   </font>
                 </Label>  
-                <Label fx:id="ChildAuthorLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Author" GridPane.rowIndex="2">
+                <Label fx:id="ChildAuthorLabel" layoutX="1.0" layoutY="14.0" prefWidth="600" text="Artist" GridPane.rowIndex="2">
                   <font>
                    <Font name="System Bold" size="18.0" />
                   </font>
@@ -105,12 +105,12 @@
                  <Insets bottom="5" right="890"/> 
               </padding>
                   <children>
-              <Label fx:id="ChildCurrentTimeLabel" id="ChildCurrentTimeLabel" text=" 0:00:00 ">
+              <Label fx:id="ChildCurrentTimeLabel" id="ChildCurrentTimeLabel" text="0:00:00">
                <font>
                 <Font name="System Bold" size="12.0" />
                </font>
                <tooltip>
-                <Tooltip text="elapsed time" />
+                <Tooltip text="Elapsed Time" />
                </tooltip>
               </Label> 
               </children>
@@ -120,12 +120,12 @@
                  <Insets  bottom="5"/> 
               </padding>
                   <children>
-                  <Label fx:id="ChildRemainTimeLabel" id="ChildRemainTimeLabel" text=" -0:00:00 ">
+                  <Label fx:id="ChildRemainTimeLabel" id="ChildRemainTimeLabel" text="-0:00:00">
                  <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
                  <tooltip>
-                  <Tooltip text="remaining time" />
+                  <Tooltip text="Remaining Time" />
                  </tooltip>
               </Label> 
                 </children>
@@ -135,12 +135,12 @@
                  <Insets bottom="5"/> 
               </padding>
                   <children>
-                  <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" text=" 0:00:00 ">
+                  <Label fx:id="ChildTotalTimeLabel" id="ChildTotalTimeLabel" text="0:00:00">
                   <font>
                   <Font name="System Bold" size="12.0" />
                  </font>
                  <tooltip>
-                  <Tooltip text="total time" />
+                  <Tooltip text="Total Time" />
                  </tooltip>
               </Label>
               </children>
@@ -159,7 +159,7 @@
       </children> 
      </GridPane> 
      
-     <TabPane id="ContBottom" styleClass="cont" prefWidth="1280" GridPane.rowIndex="2" tabClosingPolicy="UNAVAILABLE">
+     <TabPane fx:id="ChildTabList" id="ContBottom" styleClass="cont" prefWidth="1280" GridPane.rowIndex="2" tabClosingPolicy="UNAVAILABLE">
       <tabs>
         
           <Tab id="TabQueue" text="Queue">
@@ -180,38 +180,38 @@
             </ScrollPane>
             <GridPane id="ContQueueControlls" styleClass="cont" hgap="10" vgap="15" alignment="top_left" GridPane.columnIndex="1">
                    <children>
-                 <Label fx:id="ChildTrackNrQueueLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" playing track 0 of 0 ">
+                 <Label fx:id="ChildTrackNrQueueLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text="Playing Track 0 of 0 ">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>
                  </Label>
-                  <Button id="ChildAddToQueueButton" maxHeight="10.0" prefWidth="200.0" onAction="#handleAddToQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="2" text="add song to Queue"> 
+                  <Button id="ChildAddToQueueButton" maxHeight="10.0" prefWidth="200.0" onAction="#handleAddToQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="2" text="Add Track"> 
                    <font>
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>
                   </Button> 
-                  <Button id="ChildEmptyQueueButton" maxHeight="10.0" prefWidth="200.0" onAction="#handleEmptyQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="empty Queue"> 
+                  <Button id="ChildEmptyQueueButton" maxHeight="10.0" prefWidth="200.0" onAction="#handleEmptyQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="Empty Queue"> 
                    <font>
                     <Font name="fontawesome-webfont" size="18.0" />
                    </font>
                   </Button>
-                 <ToggleButton id="ChildLoopButton" mnemonicParsing="false" maxHeight="20.0" prefWidth="200.0" onAction="#handleLoopButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="5" text="loop"> 
+                 <ToggleButton id="ChildLoopButton" mnemonicParsing="false" maxHeight="20.0" prefWidth="200.0" onAction="#handleLoopButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="5" text="Loop"> 
                   <font>
                    <Font name="fontawesome-webfont" size="18.0" />
                   </font>
                   <tooltip>
-                   <Tooltip id="AttLoopButtonTooltip" text="play Queue in an endless loop" />
+                   <Tooltip id="AttLoopButtonTooltip" text="Play Queue in an endless loop" />
                   </tooltip>
                  </ToggleButton>
-                    <ToggleButton id="ChildMixButton" mnemonicParsing="false" maxHeight="20.0" prefWidth="200.0" onAction="#handleMixButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="6" text="mix"> 
+                    <ToggleButton id="ChildMixButton" mnemonicParsing="false" maxHeight="20.0" prefWidth="200.0" onAction="#handleMixButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="6" text="Mix"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
               <tooltip>
-              <Tooltip id="AttMixButtonTooltip" text="play songs in random order" />
+              <Tooltip id="AttMixButtonTooltip" text="Play Tracks in random order" />
              </tooltip>
             </ToggleButton>
-                    <Button id="ChildPlayAllQueueButton" maxHeight="10.0" prefWidth="200.0" onAction="#handlePlayAllQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="4" text="play all"> 
+                    <Button id="ChildPlayAllQueueButton" maxHeight="10.0" prefWidth="200.0" onAction="#handlePlayAllQueueButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="4" text="Play All"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
@@ -242,7 +242,7 @@
          <padding>
                  <Insets right="11"/>
              </padding>   
-         <Label fx:id="ChildPlaylistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" 0 Playlists          ">
+         <Label fx:id="ChildPlaylistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text="0 Playlists">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>
@@ -257,17 +257,17 @@
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>         
-            <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#handleImportPlaylistButtonAction" text="import Playlist">
+            <Button id="ChildImportPlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#handleImportPlaylistButtonAction" text="Import Playlist">
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildExportPlaylistButton"  prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#handleExportPlaylistButtonAction" text="export Playlist">
+            <Button id="ChildExportPlaylistButton"  prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#handleExportPlaylistButtonAction" text="Export Playlist">
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildAddToQueuePlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#handleToQueuePlaylistButtonAction" text="add to Queue">    
+            <Button id="ChildAddToQueuePlaylistButton" prefHeight="25.0" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#handleToQueuePlaylistButtonAction" text="Add to Queue">    
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
@@ -294,27 +294,27 @@
            </content>
            </ScrollPane>
            <GridPane id="ContTracklistControlls" styleClass="cont"  vgap="15" hgap="10" GridPane.columnIndex="1">
-               <Label fx:id="ChildTrackNrTracklistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text=" 0 tracks in Tracklist ">
+               <Label fx:id="ChildTrackNrTracklistLabel" layoutX="1.0" layoutY="14.0" GridPane.rowIndex="1" GridPane.columnSpan="3" text="0 Tracks in Tracklist">
                   <font>
                    <Font name="System Bold" size="24.0" />
                   </font>
                  </Label>
-            <Button id="ChildImportTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleImportTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="2" text="import song"> 
+            <Button fx:id="ChildImportTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleImportTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="2" text="Import Track"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildDeleteTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleDeleteTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="delete song"> 
+            <Button fx:id="ChildDeleteTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleDeleteTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="3" text="Delete Track"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildAddToQueueTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleAddToQueueTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="4" text="add to Queue"> 
+            <Button id="ChildAddToQueueTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleAddToQueueTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="4" text="Add to Queue"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
             </Button>
-            <Button id="ChildAddToPlaylistTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleAddToPlaylistTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="5" text="add song to playlist"> 
+            <Button id="ChildAddToPlaylistTracklistButton" prefHeight="30.0" prefWidth="200.0" onAction="#handleAddToPlaylistTracklistButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="5" text="Add to Playlist"> 
              <font>
               <Font name="fontawesome-webfont" size="18.0" />
              </font>
